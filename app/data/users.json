@@ -1,0 +1,24 @@
+[
+  {
+    "id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "username": "admin",
+    "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "role": "admin"
+  },
+  {
+    "id": "065d9b72-6c84-4116-b089-9931e5e1e099",
+    "username": "123123",
+    "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "role": "staff",
+    "name": "123",
+    "dob": "2025-08-09",
+    "phone": "123",
+    "email": "123",
+    "address": "123",
+    "gender": "Nam",
+    "avatar": "123",
+    "created_at": "2025-08-09T08:41:57",
+    "updated_at": "2025-08-09T08:41:57",
+    "last_login": ""
+  }
+]
