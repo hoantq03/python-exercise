@@ -23,3 +23,30 @@ class CustomerService:
 
     def delete(self, _id: str):
         return self.storage.delete(_id)
+
+    def find_or_create_customer(self, customer_info: dict) -> str:
+        """
+        Tìm khách hàng theo SĐT, nếu không có thì tạo mới.
+        Luôn trả về ID của khách hàng.
+        """
+        phone = customer_info.get("phone")
+        if not phone:
+            raise ValueError("Số điện thoại là bắt buộc để tìm hoặc tạo khách hàng.")
+
+        # Tìm khách hàng theo SĐT
+        all_customers = self.storage.all()
+        found_customer = next((c for c in all_customers if c.get("phone") == phone), None)
+
+        if found_customer:
+            return found_customer["id"]
+        else:
+            # Nếu không tìm thấy, tạo khách hàng mới
+            new_customer = {
+                "id": str(uuid.uuid4()),  # Cần import uuid
+                "name": customer_info.get("name"),
+                "phone": phone,
+                "email": customer_info.get("email", ""),
+                "address": customer_info.get("address", "")
+            }
+            self.storage.create(new_customer)
+            return new_customer["id"]

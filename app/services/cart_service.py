@@ -2,12 +2,10 @@ from app.models.cart import Cart
 from app.models.cart_item import CartItem
 from app.models.storage import JsonStorage
 
-# ----- BẠN CẦN THÊM CÁC DÒNG NÀY VÀO ĐẦU FILE -----
-from dataclasses import asdict  # Công cụ để chuyển dataclass thành dict
+from dataclasses import asdict
 from typing import Dict, List
 import uuid
 
-# (Dán code model Cart và CartItem đã tạo ở bước trước vào đây hoặc import chúng)
 from dataclasses import dataclass, field
 
 

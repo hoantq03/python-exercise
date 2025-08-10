@@ -79,9 +79,10 @@ class ProductsView(ttk.Frame):
         },
     }
 
-    def __init__(self, master, service, can_edit: bool):
+    def __init__(self, master, product_service, cart_service, can_edit: bool):
         super().__init__(master)
-        self.service = service
+        self.product_service = product_service  # Đổi tên để rõ ràng hơn
+        self.cart_service = cart_service      # NEW: Lưu lại cart_service
         self.can_edit = can_edit
 
         # **Performance optimization variables**
@@ -398,7 +399,7 @@ class ProductsView(ttk.Frame):
 
     def _get_filtered_products(self, kw, min_price, max_price, sort_by):
         """Get và filter products với proper sorting"""
-        products_all = self.service.list()
+        products_all = self.product_service.list()
 
         # Apply filters
         if kw:
@@ -534,6 +535,17 @@ class ProductsView(ttk.Frame):
         btn_frame = tk.Frame(parent_frame)
         btn_frame.pack(side=tk.BOTTOM, pady=(4, 6))
 
+        # NEW: Thêm nút "Thêm vào giỏ"
+        stock = product.get('stock', 0)
+        add_to_cart_btn = ttk.Button(
+            btn_frame,
+            text="🛒 Thêm vào giỏ",
+            command=partial(self._add_to_cart, product),
+            # Vô hiệu hóa nút nếu hết hàng
+            state=tk.NORMAL if stock > 0 else tk.DISABLED
+        )
+        add_to_cart_btn.pack(pady=2)
+
         ttk.Button(btn_frame, text="👁 Chi tiết",
                    command=partial(self.show_detail, product)).pack(pady=1)
 
@@ -545,6 +557,24 @@ class ProductsView(ttk.Frame):
                        command=partial(self.edit, product["id"])).pack(side=tk.LEFT, padx=1)
             ttk.Button(edit_frame, text="🗑️", width=4,
                        command=partial(self.delete, product["id"])).pack(side=tk.LEFT, padx=1)
+
+    def _add_to_cart(self, product):
+        """Thêm 1 sản phẩm vào giỏ hàng và hiển thị thông báo."""
+        try:
+            # Gọi service để thêm 1 sản phẩm
+            self.cart_service.add_item(product, 1)
+
+            # Hiển thị thông báo thành công
+            messagebox.showinfo(
+                "Thành công",
+                f"Đã thêm '{product['name']}' vào giỏ hàng.",
+                parent=self
+            )
+            print(f"🛒 Added {product['name']} to cart.")
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Không thể thêm vào giỏ hàng: {e}", parent=self)
+            print(f"❌ Error adding to cart: {e}")
+
 
     def _show_empty_message(self):
         """Show empty state"""
@@ -638,8 +668,8 @@ class ProductsView(ttk.Frame):
 
     # CRUD Operations - giữ nguyên từ code trước
     def show_detail(self, product):
-        """Show product detail"""
-        ProductDetailView(self, product)
+        """Show product detail, truyền cả cart_service vào"""
+        ProductDetailView(self, self.cart_service, product) # MODIFIED
 
     def add(self):
         """Add new product"""
@@ -651,13 +681,13 @@ class ProductsView(ttk.Frame):
         now_iso = datetime.now().isoformat(timespec="seconds")
         payload['created_at'] = now_iso
         payload['updated_at'] = now_iso
-        self.service.create(payload)
+        self.product_service.create(payload)  # MODIFIED
         self.refresh(reset_page=True)
 
     def edit(self, product_id):
         """Edit product"""
         try:
-            product = next(x for x in self.service.list() if x["id"] == product_id)
+            product = next(x for x in self.product_service.list() if x["id"] == product_id) # MODIFIED
             ProductDialog(self, "Sửa sản phẩm", product=product,
                           on_submit=partial(self._edit_submit, product_id))
         except StopIteration:
@@ -666,13 +696,13 @@ class ProductsView(ttk.Frame):
     def _edit_submit(self, product_id, patch):
         """Handle edit submit"""
         patch['updated_at'] = datetime.now().isoformat(timespec="seconds")
-        self.service.update(product_id, patch)
+        self.product_service.update(product_id, patch) # MODIFIED
         self.refresh()
 
     def delete(self, product_id):
         """Delete product"""
         if messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa sản phẩm này?"):
-            self.service.delete(product_id)
+            self.product_service.delete(product_id) # MODIFIED
             self.refresh()
 
 
@@ -805,13 +835,14 @@ class ProductDialog(tk.Toplevel):
 class ProductDetailView(tk.Toplevel):
     """Optimized product detail view"""
 
-    def __init__(self, master, product):
+    def __init__(self, master, cart_service, product):
         super().__init__(master)
         self.title(f"Chi tiết: {product.get('name', '')}")
         self.geometry("600x800")
         self.resizable(True, True)
         self.grab_set()
         self.product = product
+        self.cart_service = cart_service  # NEW: Lưu lại cart_service
 
         self._create_detail_view()
 
@@ -839,7 +870,18 @@ class ProductDetailView(tk.Toplevel):
         # Close button
         btn_frame = ttk.Frame(content)
         btn_frame.pack(fill="x", pady=(20, 0))
-        ttk.Button(btn_frame, text="🚪 Đóng", command=self.destroy).pack()
+
+        stock = self.product.get('stock', 0)
+        add_to_cart_btn = ttk.Button(
+            btn_frame,
+            text="🛒 Thêm vào giỏ",
+            command=self._add_to_cart,
+            state=tk.NORMAL if stock > 0 else tk.DISABLED
+        )
+        add_to_cart_btn.pack(side=tk.LEFT, padx=(0, 10), expand=True, fill=tk.X)
+
+        ttk.Button(btn_frame, text="🚪 Đóng", command=self.destroy).pack(side=tk.RIGHT, expand=True, fill=tk.X)
+
 
     def _create_image_section(self, parent):
         """Create image section"""

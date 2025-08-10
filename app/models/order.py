@@ -1,17 +1,20 @@
+# File: app/models/order.py
+import uuid
 from dataclasses import dataclass, field
-from typing import List, Dict, Any
-@dataclass
-class OrderItem:
-    product_id: str
-    qty: int
-    price: float
+from datetime import datetime
+from typing import Dict, List, Any
+
 
 @dataclass
 class Order:
-    id: str
-    customer_id: str
-    items: List[OrderItem] = field(default_factory=list)
-    total: float = 0.0
-    status: str = "NEW"  # NEW | PAID | CANCELED
-    created_at: str = ""
-    created_by: str = ""
+    # --- THÊM DÒNG NÀY ---
+    customer_id: str  # ID của khách hàng đặt đơn
+
+    customer_info: Dict[str, str]
+    items: List[Dict[str, Any]]
+    total_amount: float
+    user_id: str
+
+    status: str = "completed"
+    order_date: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
+    id: str = field(default_factory=lambda: str(uuid.uuid4()))

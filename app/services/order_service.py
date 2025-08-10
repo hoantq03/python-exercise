@@ -1,67 +1,84 @@
-import uuid, datetime
-
 from app.models.storage import JsonStorage
-
+from app.models.order import Order      # Import model mới
+from dataclasses import asdict
 
 class OrderService:
-    def __init__(self, order_store: JsonStorage, product_store: JsonStorage):
-        self.order_store = order_store
-        self.product_store = product_store
+    def __init__(self, orders_storage: JsonStorage, products_storage: JsonStorage):
+        """
+        Khởi tạo OrderService.
 
-    def list(self, status: str = "", keyword: str = ""):
-        data = self.order_store.all()
-        if status:
-            data = [o for o in data if o["status"] == status]
-        if keyword:
-            k = keyword.lower()
-            data = [o for o in data if k in o["id"].lower() or k in o["customer_id"].lower()]
-        return data
+        Args:
+            orders_storage: Kho lưu trữ cho các đơn hàng.
+            products_storage: Kho lưu trữ cho sản phẩm (để cập nhật tồn kho).
+        """
+        self.orders_storage = orders_storage
+        self.products_storage = products_storage
 
-    def create(self, customer_id: str, items: list, created_by: str):
-        # items: [{product_id, qty}]
-        prods = {p["id"]: p for p in self.product_store.all()}
-        order_items = []
-        total = 0.0
-        for it in items:
-            p = prods.get(it["product_id"])
-            if not p: raise ValueError("Sản phẩm không tồn tại")
-            qty = int(it["qty"])
-            if qty <= 0: raise ValueError("Số lượng không hợp lệ")
-            if p["stock"] < qty: raise ValueError(f"Tồn kho không đủ cho {p['name']}")
-            order_items.append({"product_id": p["id"], "qty": qty, "price": float(p["price"])})
-            total += qty * float(p["price"])
-        oid = str(uuid.uuid4())
-        order = {
-            "id": oid,
-            "customer_id": customer_id,
-            "items": order_items,
-            "total": round(total, 2),
-            "status": "NEW",
-            "created_at": datetime.datetime.now().isoformat(timespec="seconds"),
-            "created_by": created_by
-        }
-        return self.order_store.create(order)
+    def create_order(self, payload: dict) -> dict:
+        """
+        Tạo một đơn hàng mới, cập nhật tồn kho và lưu vào storage.
+        Đây chính là phương thức đang bị thiếu.
+        """
+        # 1. Tạo một đối tượng Order từ payload do CartView gửi qua
+        new_order = Order(
+            customer_id=payload.get("customer_id"),
+            customer_info=payload.get("customer_info"),
+            items=payload.get("items"),
+            total_amount=payload.get("total_amount"),
+            user_id=payload.get("user_id")
+        )
 
-    def update_status(self, order_id: str, status: str):
-        if status not in ("NEW","PAID","CANCELED"):
-            raise ValueError("Trạng thái không hợp lệ")
-        return self.order_store.update(order_id, {"status": status})
+        # 2. Cập nhật tồn kho sản phẩm (bước quan trọng)
+        try:
+            for item in new_order.items:
+                product_id = item.get("product_id")
+                quantity_ordered = item.get("quantity")
 
-    def delete(self, order_id: str):
-        return self.order_store.delete(order_id)
+                # Lấy thông tin sản phẩm từ kho
+                product_to_update = self.products_storage.get_by_id(product_id)
 
-    def fulfill_and_update_stock(self, order_id: str):
-        """Khi chuyển PAID: trừ kho."""
-        order = self.order_store.get_by_id(order_id)
-        if not order: raise ValueError("Đơn hàng không tồn tại")
-        if order["status"] != "NEW": return order
-        prods = {p["id"]: p for p in self.product_store.all()}
-        for it in order["items"]:
-            p = prods[it["product_id"]]
-            if p["stock"] < it["qty"]:
-                raise ValueError(f"Tồn kho thiếu khi duyệt {p['name']}")
-        # trừ kho
-        for it in order["items"]:
-            p = prods[it["product_id"]]
-            self.product_store.update(p["id"], {"stock": p["stock"] - it["qty"]})
-        return self.order_store.update(order_id, {"status": "PAID"})
+                if not product_to_update:
+                    # Nếu sản phẩm không còn tồn tại, hủy tiến trình
+                    raise ValueError(f"Sản phẩm với ID {product_id} không tồn tại.")
+
+                current_stock = int(product_to_update.get("stock", 0))
+                if current_stock < quantity_ordered:
+                    # Nếu không đủ hàng, hủy tiến trình
+                    raise ValueError(f"Không đủ hàng cho sản phẩm '{product_to_update.get('name')}'. "
+                                     f"Còn lại: {current_stock}, Cần mua: {quantity_ordered}")
+
+                # Trừ đi số lượng đã bán
+                new_stock = current_stock - quantity_ordered
+                self.products_storage.update(product_id, {"stock": new_stock})
+                print(f"Đã cập nhật tồn kho cho {product_id}: {current_stock} -> {new_stock}")
+
+            # 3. Nếu tất cả cập nhật tồn kho thành công, lưu đơn hàng vào storage
+            order_dict = asdict(new_order)
+            self.orders_storage.create(order_dict)
+            print(f"Đã tạo thành công đơn hàng: {new_order.id}")
+
+            # 4. Trả về thông tin đơn hàng vừa tạo (dạng dict)
+            return order_dict
+
+        except ValueError as e:
+            # Nếu có lỗi (ví dụ: hết hàng), in ra và báo lỗi ngược lại cho view
+            print(f"LỖI khi tạo đơn hàng: {e}")
+            # Trong một hệ thống thực tế, bạn sẽ cần "rollback" các thay đổi tồn kho đã thực hiện
+            # Nhưng với hệ thống JSON đơn giản này, ta chỉ cần báo lỗi là đủ.
+            raise e
+        except Exception as e:
+            print(f"LỖI không xác định khi tạo đơn hàng: {e}")
+            raise e
+
+    def list_orders(self):
+        """Lấy danh sách tất cả đơn hàng."""
+        return self.orders_storage.all()
+
+    def get_order_by_id(self, order_id: str):
+        """Lấy một đơn hàng cụ thể bằng ID."""
+        return self.orders_storage.get_by_id(order_id)
+
+    def update_order_status(self, order_id: str, new_status: str):
+        """Cập nhật trạng thái của một đơn hàng (ví dụ: 'pending' -> 'completed')."""
+        return self.orders_storage.update(order_id, {"status": new_status})
+

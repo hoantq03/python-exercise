@@ -3,9 +3,9 @@ import uuid
 from datetime import datetime
 from dataclasses import asdict
 from typing import List, Dict, Any
-import sys  # Cần import sys để flush output
-import threading  # MỚI: Thêm thư viện cho luồng
-import time       # MỚI: Thêm thư viện cho độ trễ
+import sys
+import threading
+import time
 from bs4 import BeautifulSoup
 
 from app.scrapers.base_scraper import BaseScraper
@@ -58,7 +58,7 @@ class PhoneListScraper(BaseScraper):
                         dynamic: {}
                     },
                     page: 1,
-                    size: 3000,
+                    size: 2000,
                     sort: [{view: desc}]
                 )
                 {

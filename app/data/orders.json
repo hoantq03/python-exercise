@@ -1,1 +1,105 @@
-[]
+[
+  {
+    "customer_info": {
+      "name": "11",
+      "phone": "1",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
+        "price": 10990000.0,
+        "quantity": 11,
+        "name": " Xiaomi 11T",
+        "item_id": "8ffd0caa-f70c-47d3-bff3-55ec83e9d5db"
+      },
+      {
+        "product_id": "5d4c9c46-411b-4ac0-9fa5-1190216be3ae",
+        "price": 48990000.0,
+        "quantity": 11,
+        "name": "Samsung Galaxy Z Fold7 12GB 512GB",
+        "item_id": "d9796ab8-4ebc-4151-ac3a-3c4718851a48"
+      },
+      {
+        "product_id": "a17a0fc1-9eae-44df-8bb7-f24b14e73c95",
+        "price": 45490000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy Z Fold6 12GB 1TB",
+        "item_id": "f3b91eef-0b6d-42de-8e3d-cc282c224eb5"
+      },
+      {
+        "product_id": "1c64c2a5-c3e8-4008-9fa9-04abd0b38b96",
+        "price": 44990000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
+        "item_id": "c25a7767-350d-4f71-8bd4-57eb71dc1a9c"
+      },
+      {
+        "product_id": "5f01f51d-e34c-4051-a2e6-ba6f65e3437b",
+        "price": 44180000.0,
+        "quantity": 1,
+        "name": "OPPO FIND N5",
+        "item_id": "a2db07d8-d2ac-4f1a-a89c-6b350d9e876d"
+      }
+    ],
+    "total_amount": 794440000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "pending",
+    "order_date": "2025-08-10T14:17:13",
+    "id": "2102c60f-aaf7-4800-ba6e-377e1718a1db"
+  },
+  {
+    "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
+    "customer_info": {
+      "name": "Trần Quốc Hoàn",
+      "phone": "0367685425",
+      "email": "admin@gmail.com",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
+        "price": 10990000.0,
+        "quantity": 1,
+        "name": " Xiaomi 11T",
+        "item_id": "f3ca3e98-e7f4-4302-9dd6-845b93230100"
+      },
+      {
+        "product_id": "4ee7df00-8158-4678-a939-290fa6ef8a87",
+        "price": 33590000.0,
+        "quantity": 1,
+        "name": " Xiaomi 15 Ultra 5G 16GB 1TB ",
+        "item_id": "ac3613a5-53e0-4ff9-8a2c-6544e5bd4001"
+      }
+    ],
+    "total_amount": 44580000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-08-10T14:47:17",
+    "id": "eba142e0-1974-4594-a9be-d2b0c8f06d0f"
+  },
+  {
+    "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
+    "customer_info": {
+      "name": "Trần Quốc Hoàn",
+      "phone": "0367685425",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
+        "price": 10990000.0,
+        "quantity": 1,
+        "name": " Xiaomi 11T",
+        "item_id": "0949e0f6-3aa9-4bad-971d-6539275b1c1d"
+      }
+    ],
+    "total_amount": 10990000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-08-10T14:52:17",
+    "id": "0ca907bb-bb72-4096-a40e-2ec3dec75f2c"
+  }
+]
