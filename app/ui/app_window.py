@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-# --- THAY ĐỔI QUAN TRỌNG ---
-# AppWindow nên kế thừa từ tk.Toplevel để trở thành một cửa sổ phụ.
-# Cửa sổ gốc tk.Tk() duy nhất sẽ được quản lý trong file main.py.
-# Cách làm này giúp quản lý vòng đời ứng dụng đúng chuẩn hơn.
 class AppWindow(tk.Toplevel):
     def __init__(self, session_user: dict, **kwargs):
         super().__init__(**kwargs)

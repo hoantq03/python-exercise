@@ -1,19 +1,5 @@
 [
   {
-    "id": "f97da116-4683-4238-994a-40208fa8dafb",
-    "username": "admin",
-    "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-    "role": "admin",
-    "name": "Tran Quoc Hoan",
-    "dob": "2025-08-10",
-    "phone": "0367685425",
-    "email": "admin@gmail.com",
-    "address": "helloworld",
-    "gender": "Nam",
-    "avatar": "https://scontent.fsgn5-1.fna.fbcdn.net/v/t39.30808-1/448263801_997362395447991_874413333210380739_n.jpg?stp=dst-jpg_p160x160_tt6&_nc_cat=102&ccb=1-7&_nc_sid=fe59b0&_nc_ohc=7JTmqZ4koCcQ7kNvwHGdB_w&_nc_oc=AdmdRDGYCechHjiVR6boPWZg-F9i9yP8gSVpgk1JIqv97Po8SJL9HSMpb9k2k0PVBZxat6qQlnUpkYJRuCXFDb0X&_nc_zt=24&_nc_ht=scontent.fsgn5-1.fna&_nc_gid=f3Xb6jQsu8Oau33ZniR5Ig&oh=00_AfWtI_0j_AmIMSD0CdjfYPshRIgSxHPIQEl-Z0cehn8ZjA&oe=689E07ED",
-    "updated_at": "2025-08-10T14:45:31"
-  },
-  {
     "id": "065d9b72-6c84-4116-b089-9931e5e1e099",
     "username": "123123",
     "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
@@ -28,5 +14,27 @@
     "created_at": "2025-08-09T08:41:57",
     "updated_at": "2025-08-09T08:41:57",
     "last_login": ""
+  },
+  {
+    "id": "d956bc7f-6fe0-4c60-a427-1f671a7b2e91",
+    "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "created_at": "2025-08-10T15:17:00",
+    "updated_at": "2025-08-10T15:17:00",
+    "last_login": "",
+    "username": "Tran Quoc Hoan",
+    "name": "Tran Quoc Hoan",
+    "dob": "2025-08-10",
+    "phone": "0123456789",
+    "email": "hoant03@gmail.com",
+    "address": "",
+    "gender": "Nam",
+    "role": "staff",
+    "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/p/h/photo_2025-04-16_11-46-04.jpg"
+  },
+  {
+    "id": "53ec115a-8bb7-4799-8bd6-e88b329bca54",
+    "username": "0123456789",
+    "password_hash": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646",
+    "role": "admin"
   }
 ]

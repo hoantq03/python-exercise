@@ -23,10 +23,7 @@ class ScraperScheduler:
             print("\n--- [Scheduler] Bắt đầu một phiên làm việc mới ---")
             for scraper_instance in self.scrapers:
                 try:
-                    # Gọi phương thức scrape của từng scraper
                     scraped_data = scraper_instance.scrape()
-                    # Tại đây, bạn có thể xử lý dữ liệu (lưu vào DB, file, ...)
-                    # Ví dụ: print(scraped_data[:2])
                 except Exception as e:
                     print(f"Lỗi khi chạy scraper {scraper_instance.__class__.__name__}: {e}")
 
@@ -42,6 +39,5 @@ class ScraperScheduler:
             print("[Scheduler] Đã được khởi động và đang chạy trong nền.")
 
     def stop(self):
-        """Dừng scheduler (nếu cần)."""
         self.is_running = False
         print("[Scheduler] Đã nhận tín hiệu dừng.")

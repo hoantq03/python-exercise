@@ -25,7 +25,8 @@ class UsersView(ttk.Frame):
         super().__init__(master)
         self.storage = storage
         self.current_user = current_user
-        # --- CẬP NHẬT: Khởi tạo đối tượng quản lý quyền ---
+
+        # --- Khởi tạo đối tượng quản lý quyền ---
         self.permissions = UserPermissions(self.current_user)
 
         self.selected_user_id = None
@@ -40,7 +41,8 @@ class UsersView(ttk.Frame):
 
         self.add_btn = ttk.Button(toolbar, text="➕ Thêm tài khoản", command=self.add_user)
         self.add_btn.pack(side=tk.LEFT)
-        # --- CẬP NHẬT: Sử dụng lớp permissions để kiểm tra ---
+
+        # --- Sử dụng lớp permissions để kiểm tra ---
         if not self.permissions.can_add_user():
             self.add_btn.config(state=tk.DISABLED)
 
@@ -116,7 +118,7 @@ class UsersView(ttk.Frame):
         user_data = next((u for u in self.storage.all() if u['id'] == self.selected_user_id), None)
         if user_data:
             self._display_user_details(user_data)
-            # --- CẬP NHẬT: Sử dụng lớp permissions để kiểm tra ---
+            # --- Sử dụng lớp permissions để kiểm tra ---
             self.edit_btn.config(state=tk.NORMAL)
             self.delete_btn.config(state=tk.NORMAL if self.permissions.can_delete_user(user_data) else tk.DISABLED)
 
@@ -313,7 +315,7 @@ class UserDialog(tk.Toplevel):
             else:
                 value = var.get().strip()
 
-            # --- CẬP NHẬT: Logic validation ---
+            # --- Logic validation ---
             if key == 'email' and value and not re.match(r"[^@]+@[^@]+\.[^@]+", value):
                 messagebox.showerror("Lỗi", "Định dạng email không hợp lệ.", parent=self)
                 return

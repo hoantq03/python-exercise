@@ -61,10 +61,7 @@ class OrderService:
             return order_dict
 
         except ValueError as e:
-            # Nếu có lỗi (ví dụ: hết hàng), in ra và báo lỗi ngược lại cho view
             print(f"LỖI khi tạo đơn hàng: {e}")
-            # Trong một hệ thống thực tế, bạn sẽ cần "rollback" các thay đổi tồn kho đã thực hiện
-            # Nhưng với hệ thống JSON đơn giản này, ta chỉ cần báo lỗi là đủ.
             raise e
         except Exception as e:
             print(f"LỖI không xác định khi tạo đơn hàng: {e}")

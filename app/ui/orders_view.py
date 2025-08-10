@@ -1,13 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from datetime import datetime
-from functools import partial
-
-# --- THÊM IMPORT MỚI ---
 from tkcalendar import DateEntry
 
 
-# --- LỚP ORDERSVIEW ĐÃ CẬP NHẬT ---
 class OrdersView(ttk.Frame):
     """Giao diện nâng cao để xem và quản lý lịch sử đơn hàng."""
 
@@ -22,10 +17,8 @@ class OrdersView(ttk.Frame):
 
         # Biến cho các bộ lọc
         self.search_kw = tk.StringVar()
-        # Không cần StringVar cho date nữa vì DateEntry tự quản lý
         self.sort_var = tk.StringVar(value="Ngày tạo (mới nhất)")
 
-        # Timer để tối ưu hóa việc tìm kiếm (debouncing)
         self._search_timer = None
 
         self._create_widgets()
@@ -47,14 +40,13 @@ class OrdersView(ttk.Frame):
         ttk.Label(toolbar, text="Tìm tên KH:").pack(side=tk.LEFT, padx=(0, 2))
         ttk.Entry(toolbar, textvariable=self.search_kw, width=20).pack(side=tk.LEFT, padx=(0, 10))
 
-        # --- THAY ĐỔI: SỬ DỤNG DateEntry ---
+        # ---SỬ DỤNG DateEntry ---
         ttk.Label(toolbar, text="Từ ngày:").pack(side=tk.LEFT, padx=(5, 2))
         self.from_date_entry = DateEntry(
             toolbar, width=12, background='darkblue', foreground='white',
             borderwidth=2, date_pattern='y-mm-dd', locale='en_US'
         )
         self.from_date_entry.pack(side=tk.LEFT)
-        # Xóa ngày ban đầu để không lọc mặc định
         self.from_date_entry.delete(0, "end")
         ttk.Button(toolbar, text="X", width=2, command=lambda: self.from_date_entry.delete(0, "end")).pack(side=tk.LEFT)
 
@@ -64,7 +56,6 @@ class OrdersView(ttk.Frame):
             borderwidth=2, date_pattern='y-mm-dd', locale='en_US'
         )
         self.to_date_entry.pack(side=tk.LEFT)
-        # Xóa ngày ban đầu để không lọc mặc định
         self.to_date_entry.delete(0, "end")
         ttk.Button(toolbar, text="X", width=2, command=lambda: self.to_date_entry.delete(0, "end")).pack(side=tk.LEFT,
                                                                                                          padx=(0, 10))
@@ -85,7 +76,7 @@ class OrdersView(ttk.Frame):
         ttk.Button(toolbar, text="🔄 Làm mới", command=self.refresh).pack(side=tk.LEFT)
         ttk.Button(toolbar, text="👁️ Xem chi tiết", command=self._show_selected_detail).pack(side=tk.LEFT, padx=5)
 
-        # Treeview (giữ nguyên)
+        # Treeview
         tree_frame = ttk.Frame(self)
         tree_frame.pack(expand=True, fill=tk.BOTH, pady=5)
         columns = ("customer_name", "total_amount", "status", "order_date", "user_id")
@@ -102,7 +93,6 @@ class OrdersView(ttk.Frame):
         self.sort_var.trace_add('write', lambda *_: self.refresh())
         self.search_kw.trace_add('write', lambda *_: self._debounced_refresh())
 
-        # --- THAY ĐỔI: Gán sự kiện cho DateEntry ---
         self.from_date_entry.bind("<<DateEntrySelected>>", lambda *_: self.refresh())
         self.to_date_entry.bind("<<DateEntrySelected>>", lambda *_: self.refresh())
 
@@ -119,18 +109,17 @@ class OrdersView(ttk.Frame):
         if self.initial_customer_id:
             all_orders = [o for o in all_orders if o.get("customer_id") == self.initial_customer_id]
 
-        # --- THAY ĐỔI: Lấy ngày từ DateEntry ---
         try:
             from_date_str = self.from_date_entry.get_date().strftime('%Y-%m-%d')
         except (AttributeError, ValueError):
-            from_date_str = None  # Nếu ô trống hoặc không hợp lệ
+            from_date_str = None
 
         try:
             to_date_str = self.to_date_entry.get_date().strftime('%Y-%m-%d')
         except (AttributeError, ValueError):
-            to_date_str = None  # Nếu ô trống hoặc không hợp lệ
+            to_date_str = None
 
-        # Lọc dữ liệu (logic giữ nguyên nhưng an toàn hơn)
+        # Lọc dữ liệu
         filtered_orders = []
         for order in all_orders:
             customer_name = order.get("customer_info", {}).get("name", "").lower()
@@ -178,9 +167,8 @@ class OrdersView(ttk.Frame):
             messagebox.showerror("Lỗi", f"Không tìm thấy dữ liệu cho đơn hàng ID: {order_id}", parent=self)
 
 
-# --- Lớp OrderDetailView giữ nguyên, không cần thay đổi ---
 class OrderDetailView(tk.Toplevel):
-    # ... (Giữ nguyên toàn bộ code của OrderDetailView)
+
     def __init__(self, master, order_data: dict):
         super().__init__(master)
         self.order_data = order_data

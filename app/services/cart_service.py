@@ -33,24 +33,15 @@ class CartService:
         self.storage.update(self.cart_id, asdict(cart))
 
     def get_cart(self) -> Cart:
-        """
-        ## THAY ĐỔI: Lấy thông tin giỏ hàng và chuyển đổi nó thành đối tượng Cart.
-        Trả về một đối tượng Cart thay vì một dictionary.
-        """
         cart_data = self.storage.get_by_id(self.cart_id)
         if not cart_data:
-            # Xử lý trường hợp không tìm thấy giỏ hàng (an toàn hơn)
             return Cart(id=self.cart_id, items=[])
 
-        # Chuyển đổi danh sách các item (dạng dict) thành danh sách các đối tượng CartItem
         items_list = [CartItem(**item_data) for item_data in cart_data.get("items", [])]
 
         return Cart(id=cart_data["id"], items=items_list)
 
     def add_item(self, product: Dict, quantity: int = 1):
-        """
-        ## THAY ĐỔI: Thêm một sản phẩm vào giỏ hàng, làm việc với các đối tượng.
-        """
         cart = self.get_cart()
 
         # Tìm xem sản phẩm đã có trong giỏ hàng chưa
@@ -77,7 +68,6 @@ class CartService:
         self._save_cart(cart)
 
     def update_item_quantity(self, item_id: str, new_quantity: int):
-        """## MỚI: Phương thức chuyên dụng để cập nhật số lượng."""
         cart = self.get_cart()
         item_to_update = next((item for item in cart.items if item.item_id == item_id), None)
 
@@ -86,30 +76,18 @@ class CartService:
                 item_to_update.quantity = new_quantity
                 self._save_cart(cart)
             else:
-                # Nếu số lượng mới <= 0, hãy xóa sản phẩm
                 self.remove_item(item_id)
 
     def remove_item(self, item_id: str):
-        """
-        ## THAY ĐỔI: Xóa một sản phẩm khỏi giỏ hàng.
-        """
         cart = self.get_cart()
-        # Lọc danh sách items, giữ lại những item không trùng item_id
         cart.items = [item for item in cart.items if item.item_id != item_id]
         self._save_cart(cart)
 
     def clear_cart(self):
-        """
-        ## THAY ĐỔI: Xóa tất cả sản phẩm trong giỏ hàng.
-        """
         cart = self.get_cart()
-        cart.items = []  # Đơn giản chỉ cần xóa sạch danh sách items
+        cart.items = []
         self._save_cart(cart)
 
     def get_total(self) -> float:
-        """
-        ## THAY ĐỔI: Tính tổng giá trị giỏ hàng bằng phương thức của model.
-        """
         cart = self.get_cart()
-        return cart.get_total()  # Ủy quyền việc tính toán cho đối tượng Cart
-
+        return cart.get_total()

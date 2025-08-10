@@ -16,10 +16,12 @@ class AuthService:
         self.storage = storage
 
     def ensure_admin_seed(self):
-        users = self.storage.all()
-        if not users:
-            admin_username = os.getenv("ADMIN_USERNAME", "admin")
-            admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+        # Lấy tất cả người dùng, sau đó lọc ra những ai có role là 'staff'
+        all_users = self.storage.all()
+        admin_users = [user for user in all_users if user.get("role") == "admin"]
+        if not admin_users:
+            admin_username =  os.getenv("ADMIN_USERNAME", "admin").lower()
+            admin_password = os.getenv("ADMIN_PASSWORD", "admin123").lower()
             self.storage.create({
                 "id": str(uuid.uuid4()),
                 "username": admin_username,

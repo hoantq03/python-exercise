@@ -12,10 +12,10 @@ class LoginView(tk.Toplevel):
         self.on_success = on_success
 
         # --- Title
-        ttk.Label(self, text="Đăng nhập SMEMBER", font=("Arial", 18, "bold"), foreground="#D60000").pack(pady=(18,8))
+        ttk.Label(self, text="Đăng nhập", font=("Arial", 18, "bold"), foreground="#D60000").pack(pady=(18,8))
 
         # --- Phone input
-        ttk.Label(self, text="Số điện thoại:", font=("Arial", 10)).pack(anchor="w", padx=22)
+        ttk.Label(self, text="Tên đăng nhập:", font=("Arial", 10)).pack(anchor="w", padx=22)
         self.e_user = ttk.Entry(self, font=("Arial", 12))
         self.e_user.pack(fill="x", padx=22, pady=(0,12))
 
@@ -49,7 +49,6 @@ class LoginView(tk.Toplevel):
         ttk.Button(social_frame, text="Zalo", width=12, state=tk.DISABLED).pack(side=tk.LEFT, padx=(12,22))
 
     def toggle_pw(self):
-        # Ẩn/hiện mật khẩu
         self.showing_pw = not self.showing_pw
         self.e_pass.config(show="" if self.showing_pw else "*")
 
@@ -59,10 +58,7 @@ class LoginView(tk.Toplevel):
         if not user or not pw:
             messagebox.showerror("Lỗi", "Vui lòng nhập đầy đủ thông tin.")
             return
-        # Chỉ kiểm tra số điện thoại: regex tối giản
-        # if not re.match(r"^(0|\+84)[0-9]{8,}$", user):
-        #     messagebox.showerror("Lỗi", "Số điện thoại không hợp lệ.")
-        #     return
+
         u = self.auth.login(user, pw)
         if u:
             messagebox.showinfo("Thành công", "Đăng nhập thành công")

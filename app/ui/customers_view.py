@@ -74,7 +74,6 @@ class CustomerPurchaseHistoryView(tk.Toplevel):
 class CustomersView(ttk.Frame):
     """View quản lý khách hàng, đã cập nhật tính năng xem lịch sử."""
 
-    # --- Sửa __init__ để nhận order_service ---
     def __init__(self, master, customer_service, order_service, can_edit: bool):
         super().__init__(master)
         self.customer_service = customer_service
@@ -150,5 +149,4 @@ class CustomersView(ttk.Frame):
             "address": item_values[3],
         }
 
-        # Gọi cửa sổ xem lịch sử
         CustomerPurchaseHistoryView(self, self.order_service, customer_data)

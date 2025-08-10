@@ -7,8 +7,7 @@ from typing import Dict, List, Any
 
 @dataclass
 class Order:
-    # --- THÊM DÒNG NÀY ---
-    customer_id: str  # ID của khách hàng đặt đơn
+    customer_id: str
 
     customer_info: Dict[str, str]
     items: List[Dict[str, Any]]

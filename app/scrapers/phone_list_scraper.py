@@ -22,7 +22,6 @@ class PhoneListScraper(BaseScraper):
     def __init__(self):
         super().__init__("https://api.cellphones.com.vn/v2/graphql/query")
         self.product_storage = JsonStorage("data/products.json")
-        # MỚI: Khởi tạo các biến trạng thái để quản lý tiến trình
         self._progress_current = 0
         self._progress_total = 0
         self._progress_created = 0
@@ -39,10 +38,9 @@ class PhoneListScraper(BaseScraper):
         self._print_progress()
 
 
-    # ... (Phương thức _fetch_api_data và _transform_to_product_model giữ nguyên) ...
     def _fetch_api_data(self) -> List[Dict[str, Any]]:
         """
-        Bước 1: EXTRACT - Lấy dữ liệu thô từ API.
+        EXTRACT - Lấy dữ liệu thô từ API.
         """
         graphql_query = """
             query GetProductsByCateId{
@@ -78,7 +76,6 @@ class PhoneListScraper(BaseScraper):
             return []
 
     def _transform_to_product_model(self, api_item: Dict[str, Any]) -> Dict[str, Any]:
-        # (Không thay đổi)
         general = api_item.get("general", {})
         filterable = api_item.get("filterable", {})
         attributes = general.get("attributes", {})
@@ -130,13 +127,12 @@ class PhoneListScraper(BaseScraper):
 
     def _load_products(self, standardized_products: List[Dict[str, Any]]):
         """
-        Bước 3: LOAD - Lưu sản phẩm trong khi một luồng khác hiển thị tiến trình.
+        LOAD - Lưu sản phẩm trong khi một luồng khác hiển thị tiến trình.
         """
         print("   Bắt đầu quá trình lưu trữ dữ liệu...")
         existing_products = self.product_storage.all()
         existing_products_lookup = {p['name']: p for p in existing_products}
 
-        # Thiết lập lại trạng thái tiến trình cho lần chạy mới
         self._progress_total = len(standardized_products)
         self._progress_current = 0
         self._progress_created = 0
@@ -166,19 +162,15 @@ class PhoneListScraper(BaseScraper):
                 self.product_storage.create(asdict(new_product))
                 self._progress_created += 1
 
-            # Chỉ cập nhật biến đếm, không in ra console
             self._progress_current += 1
 
-        # Báo hiệu luồng tiến trình dừng lại và đợi nó kết thúc
         self._loading_in_progress = False
         progress_thread.join()
 
-        # In một dòng mới và thông báo kết quả cuối cùng
         print()
         print(f"   Lưu trữ hoàn tất. Tổng cộng: {self._progress_created} mới, {self._progress_updated} cập nhật.")
 
     def scrape(self):
-        # (Không thay đổi)
         print("-> Bắt đầu quy trình cào dữ liệu cho điện thoại...")
         raw_api_data = self._fetch_api_data()
         if not raw_api_data:

@@ -63,9 +63,9 @@ class ProductsView(ttk.Frame):
             "img_bg_loading": "#e0e0e0",
             "img_bg_done": "#ffffff",
             "card_wrap": 150,
-            "name_font": ("Arial", 9, "bold"),
-            "price_font": ("Arial", 8, "bold"),
-            "meta_font": ("Arial", 7),
+            "name_font": ("Arial", 12, "bold"),
+            "price_font": ("Arial", 12, "bold"),
+            "meta_font": ("Arial", 12),
             "price_color": "#d60000",
             "card_padx": 6,
             "card_pady": 8,
@@ -74,15 +74,15 @@ class ProductsView(ttk.Frame):
             "img_size": (360, 300),
             "title_wrap": 450,
             "title_font": ("Arial", 16, "bold"),
-            "label_font": ("Arial", 11),
-            "label_bold": ("Arial", 11, "bold"),
+            "label_font": ("Arial", 12),
+            "label_bold": ("Arial", 12, "bold"),
         },
     }
 
     def __init__(self, master, product_service, cart_service, can_edit: bool):
         super().__init__(master)
-        self.product_service = product_service  # Đổi tên để rõ ràng hơn
-        self.cart_service = cart_service      # NEW: Lưu lại cart_service
+        self.product_service = product_service
+        self.cart_service = cart_service
         self.can_edit = can_edit
 
         # **Performance optimization variables**
@@ -92,7 +92,7 @@ class ProductsView(ttk.Frame):
         self._last_items_per_page = 8
         self._resize_timer = None
         self._search_timer = None
-        self._sort_timer = None  # **Separate timer for sort**
+        self._sort_timer = None
         self._last_window_size = None
 
         # Pagination state
@@ -126,7 +126,7 @@ class ProductsView(ttk.Frame):
         self.e_max_price = ttk.Entry(toolbar, width=8)
         self.e_max_price.pack(side=tk.LEFT, padx=2)
 
-        # **FIXED: Sort control với StringVar trace**
+        # **Sort control với StringVar trace**
         ttk.Label(toolbar, text="Sắp xếp:").pack(side=tk.LEFT, padx=4)
         self.sort_var = tk.StringVar(value="name_az")
 
@@ -706,10 +706,6 @@ class ProductsView(ttk.Frame):
             self.refresh()
 
 
-# Giữ nguyên ProductDialog và ProductDetailView từ code trước...
-
-
-# Giữ nguyên ProductDialog và ProductDetailView classes từ code cũ...
 class ProductDialog(tk.Toplevel):
     """Optimized product dialog"""
 

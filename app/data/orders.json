@@ -101,5 +101,58 @@
     "status": "completed",
     "order_date": "2025-08-10T14:52:17",
     "id": "0ca907bb-bb72-4096-a40e-2ec3dec75f2c"
+  },
+  {
+    "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
+    "customer_info": {
+      "name": "Trần QUốc ",
+      "phone": "0367685425",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
+        "price": 10990000.0,
+        "quantity": 16,
+        "name": " Xiaomi 11T",
+        "item_id": "d8726fd2-6d17-4da4-8900-5ac7fcdf3e1c"
+      }
+    ],
+    "total_amount": 175840000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-08-10T14:59:39",
+    "id": "322b72a4-1b3a-4087-a24e-31edbc6fe08e"
+  },
+  {
+    "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
+    "customer_info": {
+      "name": "Tran QUoc Hoan",
+      "phone": "0367685425",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "983b4fce-3bf4-4d5c-80f7-fad26437d3e2",
+        "price": 7990000.0,
+        "quantity": 14,
+        "name": "iPhone 12 64GB | Chính hãng VN/A ",
+        "item_id": "127cee3b-58eb-4a4f-8292-0053c60e3c45"
+      },
+      {
+        "product_id": "cb007659-d5a2-4534-9cd7-44ed36bb89af",
+        "price": 11090000.0,
+        "quantity": 4,
+        "name": "iPhone 13 128GB | Chính hãng VN/A",
+        "item_id": "f4450198-5e2a-4cd1-a192-f9555cb2984e"
+      }
+    ],
+    "total_amount": 156220000.0,
+    "user_id": "53ec115a-8bb7-4799-8bd6-e88b329bca54",
+    "status": "completed",
+    "order_date": "2025-08-10T15:36:11",
+    "id": "8d4d6914-b381-4174-8abe-f138a119bce0"
   }
 ]

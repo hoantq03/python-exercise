@@ -12,7 +12,6 @@ class Product:
     description: str = ""
     avatar: str = ""  # link hoặc path ảnh sản phẩm
 
-    # --- THÊM MỚI ---
     # Danh sách các URL ảnh bổ sung
     images: List[str] = field(default_factory=list)
     # -----------------
