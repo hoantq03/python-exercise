@@ -55,7 +55,7 @@ class ScrollableFrame(ttk.Frame):
 class ProductsView(ttk.Frame):
     UI_CFG = {
         "grid": {
-            "base_cols": 8,
+            "base_cols": 7,
             "min_cols": 2,
             "img_size": (160, 120),
             "card_width": 180,
@@ -90,7 +90,8 @@ class ProductsView(ttk.Frame):
         self._refreshing = False
         self._last_items_per_page = 8
         self._resize_timer = None
-        self._search_timer = None  # **Separate timer for search**
+        self._search_timer = None
+        self._sort_timer = None  # **Separate timer for sort**
         self._last_window_size = None
 
         # Pagination state
@@ -109,7 +110,7 @@ class ProductsView(ttk.Frame):
         # **Toolbar với fixed height**
         toolbar = ttk.Frame(self, height=40)
         toolbar.pack(fill=tk.X, pady=6)
-        toolbar.pack_propagate(False)  # Ngăn auto-resize
+        toolbar.pack_propagate(False)
 
         # Search controls
         ttk.Label(toolbar, text="Tìm tên:").pack(side=tk.LEFT, padx=4)
@@ -124,9 +125,13 @@ class ProductsView(ttk.Frame):
         self.e_max_price = ttk.Entry(toolbar, width=8)
         self.e_max_price.pack(side=tk.LEFT, padx=2)
 
-        # Sort control
+        # **FIXED: Sort control với StringVar trace**
         ttk.Label(toolbar, text="Sắp xếp:").pack(side=tk.LEFT, padx=4)
         self.sort_var = tk.StringVar(value="name_az")
+
+        # **Add trace để monitor StringVar changes**
+        self.sort_var.trace_add('write', self._on_sort_var_change)
+
         self.c_sort = ttk.Combobox(
             toolbar, textvariable=self.sort_var, width=16, state="readonly",
             values=["name_az - Tên A-Z", "name_za - Tên Z-A", "price_asc - Giá tăng", "price_desc - Giá giảm"]
@@ -173,38 +178,38 @@ class ProductsView(ttk.Frame):
         self.btn_next.pack(side=tk.LEFT, padx=5)
 
     def _bind_events(self):
-        """Bind events với performance optimization - FIX SORT BUG"""
-        # **Items per page binding với multiple methods**
+        """FIXED: Bind events với performance optimization và sort fix"""
+        # **Items per page binding**
         self.c_items_per_page.bind("<<ComboboxSelected>>", self._on_items_per_page_change)
         self.c_items_per_page.bind("<Button-1>", self._on_combo_click)
         self.c_items_per_page.bind("<Return>", self._on_items_per_page_change)
 
-        # **FIXED: Sort change - không duplicate binding**
-        self.c_sort.bind("<<ComboboxSelected>>", self._on_sort_change)
-
-        # **Search với separate timers**
+        # **Search events**
         self.e_kw.bind("<KeyRelease>", self._on_search_change)
         self.e_min_price.bind("<KeyRelease>", self._on_price_change)
         self.e_max_price.bind("<KeyRelease>", self._on_price_change)
 
-        # **Window resize với intelligent checking**
+        # **Window resize**
         self.bind("<Configure>", self._on_window_resize)
 
         # IntVar trace
         self.items_per_page.trace_add('write', self._on_intvar_change)
 
-    def _on_sort_change(self, event=None):
-        """FIXED: Handle sort change immediately"""
-        try:
-            sort_value = self.sort_var.get()
-            print(f"🔀 Sort changed to: {sort_value}")
+    def _on_sort_var_change(self, *args):
+        """
+        Handles sort option changes via the StringVar trace with debouncing.
+        This is the ONLY handler needed for sorting.
+        """
+        print(f"🎯 Sort value changed to: {self.sort_var.get()}. Scheduling refresh.")
 
-            # **Immediate refresh for sort change**
-            self.current_page = 1  # Reset to first page when sorting
-            self.refresh()
+        # Hủy bất kỳ lịch refresh nào đang chờ để tránh gọi nhiều lần
+        if self._sort_timer:
+            self.after_cancel(self._sort_timer)
 
-        except Exception as e:
-            print(f"❌ Sort change error: {e}")
+        # Lên lịch refresh sau một khoảng trễ ngắn (debouncing)
+        # Chúng ta tái sử dụng _search_refresh_callback vì nó làm chính xác những gì chúng ta cần:
+        # reset trang về 1 và gọi refresh().
+        self._sort_timer = self.after(300, self._search_refresh_callback)
 
     def _on_combo_click(self, event=None):
         """Handle combo click để force check value"""
@@ -278,20 +283,20 @@ class ProductsView(ttk.Frame):
         self._debounced_resize_refresh(500)
 
     def _debounced_search_refresh(self, delay=800):
-        """FIXED: Separate debounced refresh for search"""
+        """Separate debounced refresh for search"""
         if self._search_timer:
             self.after_cancel(self._search_timer)
         self._search_timer = self.after(delay, self._search_refresh_callback)
 
     def _debounced_resize_refresh(self, delay=500):
-        """FIXED: Separate debounced refresh for resize"""
+        """Separate debounced refresh for resize"""
         if self._resize_timer:
             self.after_cancel(self._resize_timer)
         self._resize_timer = self.after(delay, self._resize_refresh_callback)
 
     def _search_refresh_callback(self):
         """Callback for search refresh"""
-        self.current_page = 1  # Reset to first page when searching
+        self.current_page = 1
         self.refresh()
 
     def _resize_refresh_callback(self):
@@ -329,7 +334,7 @@ class ProductsView(ttk.Frame):
         if items_per_page_val <= 4:
             return max(min_cols, min(items_per_page_val, 4))
         elif items_per_page_val <= 8:
-            return min(6, base_cols)  # Max 6 cho readability
+            return min(6, base_cols)
         elif items_per_page_val <= 12:
             return base_cols
         else:
@@ -392,7 +397,7 @@ class ProductsView(ttk.Frame):
         self._img_labels.clear()
 
     def _get_filtered_products(self, kw, min_price, max_price, sort_by):
-        """FIXED: Get và filter products với proper sorting"""
+        """Get và filter products với proper sorting"""
         products_all = self.service.list()
 
         # Apply filters
@@ -403,27 +408,36 @@ class ProductsView(ttk.Frame):
         if max_price is not None:
             products_all = [p for p in products_all if float(p.get("price", 0)) <= max_price]
 
-        # **FIXED: Apply sorting với proper error handling**
+        # **ENHANCED: Apply sorting với comprehensive error handling**
         try:
+            original_count = len(products_all)
+
             if sort_by == "name_az":
                 products_all.sort(key=lambda x: str(x.get("name", "")).lower())
-                print(f"🔤 Sorted by name A-Z: {len(products_all)} items")
+                print(f"🔤 Sorted {original_count} items by name A-Z")
+
             elif sort_by == "name_za":
                 products_all.sort(key=lambda x: str(x.get("name", "")).lower(), reverse=True)
-                print(f"🔤 Sorted by name Z-A: {len(products_all)} items")
+                print(f"🔤 Sorted {original_count} items by name Z-A")
+
             elif sort_by == "price_asc":
                 products_all.sort(key=lambda x: float(x.get("price", 0)))
-                print(f"💰 Sorted by price ascending: {len(products_all)} items")
+                print(f"💰 Sorted {original_count} items by price ascending")
+
             elif sort_by == "price_desc":
                 products_all.sort(key=lambda x: float(x.get("price", 0)), reverse=True)
-                print(f"💰 Sorted by price descending: {len(products_all)} items")
+                print(f"💰 Sorted {original_count} items by price descending")
+
             else:
-                print(f"⚠️ Unknown sort option: {sort_by}")
+                print(f"⚠️ Unknown sort option: '{sort_by}', using default order")
+
         except Exception as e:
             print(f"❌ Sorting error: {e}")
+            print(f"📋 Sort by value: '{sort_by}'")
 
         return products_all
 
+    # **Giữ nguyên tất cả methods khác từ code trước...**
     def _display_products(self, products, items_per_page_val):
         """Display products trong scrollable grid"""
         gcfg = self.UI_CFG["grid"]
@@ -566,7 +580,7 @@ class ProductsView(ttk.Frame):
         if filtered_total > 0:
             start_item = (self.current_page - 1) * items_per_page_val + 1
             end_item = min(self.current_page * items_per_page_val, filtered_total)
-            status_text = f"Trang {self.current_page}/{self.total_pages} • {start_item}-{end_item}/{filtered_total}"
+            status_text = f"Trang {self.current_page}/{self.total_pages} • {start_item}-{end_item}/{filtered_total} • {sort_by.replace('_', ' ').title()}"
         else:
             status_text = f"Trang {self.current_page}/{self.total_pages} • 0/0"
 
@@ -594,7 +608,7 @@ class ProductsView(ttk.Frame):
 
             # Process image
             img = img.convert("RGB")
-            img.thumbnail(size, Image.Resampling.LANCZOS)  # Use thumbnail for better performance
+            img.thumbnail(size, Image.Resampling.LANCZOS)
             photo = ImageTk.PhotoImage(img, master=self)
 
             # Cache image
@@ -622,7 +636,7 @@ class ProductsView(ttk.Frame):
                 label.config(text="❌", bg="#ffe6e6", image="", font=("Arial", 16))
                 label.image = None
 
-    # CRUD Operations (giữ nguyên nhưng tối ưu)
+    # CRUD Operations - giữ nguyên từ code trước
     def show_detail(self, product):
         """Show product detail"""
         ProductDetailView(self, product)
@@ -660,6 +674,9 @@ class ProductsView(ttk.Frame):
         if messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa sản phẩm này?"):
             self.service.delete(product_id)
             self.refresh()
+
+
+# Giữ nguyên ProductDialog và ProductDetailView từ code trước...
 
 
 # Giữ nguyên ProductDialog và ProductDetailView classes từ code cũ...

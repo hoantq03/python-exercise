@@ -1,0 +1,28 @@
+def generate_image_variants(base_url: str, count: int) -> list[str]:
+    """
+    Tạo ra một danh sách các biến thể URL hình ảnh bằng cách thêm hậu tố số.
+
+    Hàm này sẽ tách URL tại dấu chấm cuối cùng, thêm vào các hậu tố dạng "-1", "-2",...
+    và sau đó ghép lại với phần mở rộng.
+
+    Args:
+        base_url: URL gốc của hình ảnh.
+        count: Số lượng biến thể cần tạo.
+
+    Returns:
+        Một danh sách các chuỗi URL đã được biến đổi.
+    """
+    # Tìm vị trí của dấu chấm cuối cùng để tách tên file và phần mở rộng
+    try:
+        last_dot_index = base_url.rindex('.')
+        base_name = base_url[:last_dot_index]
+        extension = base_url[last_dot_index:] # Bao gồm cả dấu '.'
+    except ValueError:
+        # Xử lý trường hợp URL không có phần mở rộng
+        base_name = base_url
+        extension = ""
+
+    # Dùng list comprehension để tạo danh sách các URL mới một cách hiệu quả
+    variant_urls = [f"{base_name}-{i}{extension}" for i in range(1, count + 1)]
+
+    return variant_urls

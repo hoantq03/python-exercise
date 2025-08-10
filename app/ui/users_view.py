@@ -1,284 +1,330 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
 from datetime import datetime
+import tkinter as tk
 import uuid
+from tkinter import ttk, messagebox
+import threading
+from io import BytesIO
+import requests
+from PIL import Image, ImageTk
+from tkcalendar import DateEntry
+import re
 
+from app.auth.user_permission import UserPermissions
 from app.services.auth import hash_password
 
 ROLES = ("admin", "staff", "viewer")
 GENDERS = ("Nam", "Nữ", "Khác")
 
+
 class UsersView(ttk.Frame):
+    """
+    Giao diện quản lý người dùng với bố cục hai khung (chi tiết và danh sách).
+    """
+
     def __init__(self, master, storage, current_user):
         super().__init__(master)
         self.storage = storage
         self.current_user = current_user
+        # --- CẬP NHẬT: Khởi tạo đối tượng quản lý quyền ---
+        self.permissions = UserPermissions(self.current_user)
 
-        # Toolbar
-        toolbar = ttk.Frame(self)
-        toolbar.pack(fill=tk.X, pady=4)
-        ttk.Button(toolbar, text="➕ Thêm tài khoản", command=self.add_user).pack(side=tk.LEFT, padx=6)
-        ttk.Button(toolbar, text="✏️ Sửa thông tin", command=self.edit_user).pack(side=tk.LEFT, padx=6)
-        ttk.Button(toolbar, text="🗑️ Xóa", command=self.delete_user).pack(side=tk.LEFT, padx=6)
-
-        # Treeview bảng người dùng
-        self.tree = ttk.Treeview(self, columns=(
-            "username", "role", "name", "dob", "phone", "email", "address", "gender", "avatar"
-        ), show="headings", height=15)
-
-        self.tree.heading("username", text="Tên đăng nhập")
-        self.tree.heading("role", text="Quyền")
-        self.tree.heading("name", text="Tên đầy đủ")
-        self.tree.heading("dob", text="Ngày sinh")
-        self.tree.heading("phone", text="SĐT")
-        self.tree.heading("email", text="Email")
-        self.tree.heading("address", text="Địa chỉ")
-        self.tree.heading("gender", text="Giới tính")
-        self.tree.heading("avatar", text="Ảnh đại diện")
-
-        # Định dạng width cột, căn giữa cho 1 số cột
-        self.tree.column("username", width=120)
-        self.tree.column("role", width=80, anchor="center")
-        self.tree.column("name", width=150)
-        self.tree.column("dob", width=90, anchor="center")
-        self.tree.column("phone", width=100)
-        self.tree.column("email", width=140)
-        self.tree.column("address", width=200)
-        self.tree.column("gender", width=80, anchor="center")
-        self.tree.column("avatar", width=150)
-
-        self.tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
-
+        self.selected_user_id = None
+        self._image_cache = {}
+        self._create_widgets()
         self.refresh()
 
+    def _create_widgets(self):
+        """Tạo các widget chính cho giao diện."""
+        toolbar = ttk.Frame(self)
+        toolbar.pack(side=tk.TOP, fill=tk.X, pady=10, padx=10)
+
+        self.add_btn = ttk.Button(toolbar, text="➕ Thêm tài khoản", command=self.add_user)
+        self.add_btn.pack(side=tk.LEFT)
+        # --- CẬP NHẬT: Sử dụng lớp permissions để kiểm tra ---
+        if not self.permissions.can_add_user():
+            self.add_btn.config(state=tk.DISABLED)
+
+        self.edit_btn = ttk.Button(toolbar, text="✏️ Sửa thông tin", command=self.edit_user, state=tk.DISABLED)
+        self.edit_btn.pack(side=tk.LEFT, padx=5)
+        self.delete_btn = ttk.Button(toolbar, text="🗑️ Xóa", command=self.delete_user, state=tk.DISABLED)
+        self.delete_btn.pack(side=tk.LEFT)
+
+        main_pane = ttk.PanedWindow(self, orient=tk.HORIZONTAL)
+        main_pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.detail_frame = ttk.LabelFrame(main_pane, text="Thông tin chi tiết", padding=15)
+        main_pane.add(self.detail_frame, weight=1)
+        self._create_detail_view()
+        list_container = ttk.Frame(main_pane)
+        main_pane.add(list_container, weight=2)
+        self._create_list_view(list_container)
+
+    def _create_detail_view(self):
+        """Tạo các widget trong khung chi tiết (bên trái)."""
+        avatar_container = ttk.Frame(self.detail_frame, width=200, height=200)
+        avatar_container.pack(pady=10)
+        avatar_container.pack_propagate(False)
+        self.avatar_label = tk.Label(avatar_container, text="👤", font=("Arial", 100), bg="#e0e0e0", relief="sunken")
+        self.avatar_label.pack(fill=tk.BOTH, expand=True)
+
+        self.info_labels = {}
+        info_fields = {"name": "Họ và tên:", "username": "Tên đăng nhập:", "role": "Quyền:", "email": "Email:",
+                       "phone": "SĐT:", "dob": "Ngày sinh:", "gender": "Giới tính:", "address": "Địa chỉ:"}
+        for key, text in info_fields.items():
+            row = ttk.Frame(self.detail_frame)
+            row.pack(fill="x", pady=2, padx=5)
+            ttk.Label(row, text=text, font=("Arial", 10, "bold")).pack(side="left")
+            self.info_labels[key] = ttk.Label(row, text="N/A", font=("Arial", 10), wraplength=250, justify=tk.LEFT)
+            self.info_labels[key].pack(side="left", padx=5)
+        self._show_default_detail_view()
+
+    def _create_list_view(self, parent):
+        """Tạo Treeview danh sách người dùng (bên phải)."""
+        columns = ("id", "username", "role")
+        self.tree = ttk.Treeview(parent, columns=columns, show="headings")
+        self.tree.heading("id", text="ID")
+        self.tree.column("id", width=250, stretch=tk.NO)
+        self.tree.heading("username", text="Tên đăng nhập")
+        self.tree.column("username", width=150)
+        self.tree.heading("role", text="Quyền")
+        self.tree.column("role", width=100, anchor="center")
+        scrollbar = ttk.Scrollbar(parent, orient=tk.VERTICAL, command=self.tree.yview)
+        self.tree.configure(yscrollcommand=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.tree.bind("<<TreeviewSelect>>", self._on_user_select)
+
     def refresh(self):
-        for i in self.tree.get_children():
-            self.tree.delete(i)
-        for u in self.storage.all():
-            self.tree.insert("", tk.END, iid=u["id"], values=(
-                u.get("username",""),
-                u.get("role",""),
-                u.get("name",""),
-                u.get("dob",""),
-                u.get("phone",""),
-                u.get("email",""),
-                u.get("address",""),
-                u.get("gender",""),
-                u.get("avatar",""),
-            ))
+        """Làm mới danh sách người dùng, giữ nguyên lựa chọn hiện tại."""
+        selected_iid = self.tree.selection()[0] if self.tree.selection() else None
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        for user in self.storage.all():
+            self.tree.insert("", tk.END, values=(user.get('id'), user.get('username'), user.get('role')),
+                             iid=user.get('id'))
+        if selected_iid and self.tree.exists(selected_iid):
+            self.tree.selection_set(selected_iid)
+        else:
+            self._on_selection_clear()
+
+    def _on_user_select(self, event=None):
+        """Xử lý sự kiện khi một người dùng được chọn trong danh sách."""
+        selected_items = self.tree.selection()
+        if not selected_items:
+            self._on_selection_clear()
+            return
+        self.selected_user_id = selected_items[0]
+        user_data = next((u for u in self.storage.all() if u['id'] == self.selected_user_id), None)
+        if user_data:
+            self._display_user_details(user_data)
+            # --- CẬP NHẬT: Sử dụng lớp permissions để kiểm tra ---
+            self.edit_btn.config(state=tk.NORMAL)
+            self.delete_btn.config(state=tk.NORMAL if self.permissions.can_delete_user(user_data) else tk.DISABLED)
+
+    def _on_selection_clear(self):
+        """Reset giao diện khi không có user nào được chọn."""
+        self.selected_user_id = None
+        self.edit_btn.config(state=tk.DISABLED)
+        self.delete_btn.config(state=tk.DISABLED)
+        self._show_default_detail_view()
+        if self.tree.selection():
+            self.tree.selection_remove(self.tree.selection())
+
+    def _show_default_detail_view(self):
+        """Hiển thị trạng thái mặc định cho khung chi tiết."""
+        self.avatar_label.config(text="👤", image='')
+        self.avatar_label.image = None
+        for key, label in self.info_labels.items():
+            label.config(text="N/A" if key != "name" else "Vui lòng chọn người dùng")
+
+    def _display_user_details(self, user):
+        """Hiển thị thông tin chi tiết của một người dùng."""
+        for key, label in self.info_labels.items():
+            label.config(text=user.get(key, "N/A"))
+        self._load_avatar(user.get("avatar"), user.get("id"))
+
+    def _load_avatar(self, url, user_id):
+        """Tải ảnh đại diện trong luồng nền."""
+        if user_id in self._image_cache:
+            self.avatar_label.config(image=self._image_cache[user_id])
+            return
+        self.avatar_label.config(text="...", image='')
+        threading.Thread(target=self._fetch_avatar_async, args=(url, user_id), daemon=True).start()
+
+    def _fetch_avatar_async(self, url, user_id):
+        try:
+            if url and str(url).startswith("http"):
+                resp = requests.get(url, timeout=5)
+                resp.raise_for_status()
+                img_data = BytesIO(resp.content)
+            elif url:
+                img_data = url
+            else:
+                raise ValueError("No URL or path")
+            with Image.open(img_data) as img:
+                img = img.convert("RGB")
+                img.thumbnail((200, 200), Image.Resampling.LANCZOS)
+                photo = ImageTk.PhotoImage(img)
+                self._image_cache[user_id] = photo
+                self.after(0, self.avatar_label.config, {"image": photo})
+        except Exception:
+            self.after(0, self.avatar_label.config, {"text": "🚫", "image": ''})
 
     def add_user(self):
-        UserDialog(self, "Tạo tài khoản", on_submit=self._add_user_submit)
+        """Mở dialog để thêm người dùng mới, với danh sách role phù hợp."""
+        creatable_roles = self.permissions.get_creatable_roles()
+        if not creatable_roles:
+            messagebox.showinfo("Thông báo", "Bạn không có quyền tạo người dùng mới.", parent=self)
+            return
+        UserDialog(self, "Tạo tài khoản mới", on_submit=self._add_user_submit, creatable_roles=creatable_roles)
 
     def _add_user_submit(self, user_data, pw):
+        """Xử lý logic khi form thêm người dùng được gửi đi."""
         if any(u["username"] == user_data["username"] for u in self.storage.all()):
-            messagebox.showerror("Lỗi", "Tên đăng nhập đã tồn tại")
+            messagebox.showerror("Lỗi", "Tên đăng nhập đã tồn tại.", parent=self)
             return
         now_iso = datetime.now().isoformat(timespec="seconds")
-        self.storage.create({
-            "id": str(uuid.uuid4()),
-            "username": user_data["username"],
-            "password_hash": hash_password(pw),
-            "role": user_data["role"],
-            "name": user_data["name"],
-            "dob": user_data["dob"],
-            "phone": user_data["phone"],
-            "email": user_data["email"],
-            "address": user_data["address"],
-            "gender": user_data["gender"],
-            "avatar": user_data["avatar"],
-            "created_at": now_iso,
-            "updated_at": now_iso,
-            "last_login": "",
-        })
+        new_user = {"id": str(uuid.uuid4()), "password_hash": hash_password(pw), "created_at": now_iso,
+                    "updated_at": now_iso, "last_login": "", **user_data}
+        self.storage.create(new_user)
         self.refresh()
 
     def edit_user(self):
-        sel = self.tree.selection()
-        if not sel:
-            messagebox.showerror("Lỗi", "Chưa chọn người dùng để sửa")
+        """Mở dialog để sửa thông tin người dùng đã chọn."""
+        if not self.selected_user_id:
+            messagebox.showerror("Lỗi", "Vui lòng chọn một người dùng để sửa.", parent=self)
             return
-        _id = sel[0]
-        user = self.storage.get_by_id(_id)
-        UserDialog(
-            self,
-            title="Sửa thông tin người dùng",
-            username_default=user.get("username",""),
-            role_default=user.get("role","staff"),
-            name_default=user.get("name",""),
-            dob_default=user.get("dob", None),
-            phone_default=user.get("phone",""),
-            email_default=user.get("email",""),
-            address_default=user.get("address",""),
-            gender_default=user.get("gender","Nam"),
-            avatar_default=user.get("avatar",""),
-            disable_username=True,
-            ask_password=False,
-            on_submit=lambda user_data, pw: self._edit_user_submit(_id, user_data)
-        )
+        user = next((u for u in self.storage.all() if u['id'] == self.selected_user_id), None)
+        if not user:
+            messagebox.showerror("Lỗi", "Không tìm thấy thông tin người dùng.", parent=self)
+            return
+
+        UserDialog(self, title="Sửa thông tin người dùng",
+                   on_submit=lambda data, pw: self._edit_user_submit(self.selected_user_id, data),
+                   disable_username=True, ask_password=False,
+                   disable_role=not self.permissions.can_change_role(),
+                   username_default=user.get("username", ""), role_default=user.get("role", "staff"),
+                   name_default=user.get("name", ""), dob_default=user.get("dob"),
+                   phone_default=user.get("phone", ""), email_default=user.get("email", ""),
+                   address_default=user.get("address", ""), gender_default=user.get("gender", "Nam"),
+                   avatar_default=user.get("avatar", ""))
 
     def _edit_user_submit(self, _id, user_data):
-        patch = {
-            "role": user_data["role"],
-            "name": user_data["name"],
-            "dob": user_data["dob"],
-            "phone": user_data["phone"],
-            "email": user_data["email"],
-            "address": user_data["address"],
-            "gender": user_data["gender"],
-            "avatar": user_data["avatar"],
-            "updated_at": datetime.now().isoformat(timespec="seconds"),
-        }
+        """Xử lý logic khi form sửa người dùng được gửi đi."""
+        user_data.pop("username", None)
+        user_data.pop("role", None)
+        patch = {**user_data, "updated_at": datetime.now().isoformat(timespec="seconds")}
         self.storage.update(_id, patch)
         self.refresh()
 
     def delete_user(self):
-        sel = self.tree.selection()
-        if not sel:
-            messagebox.showerror("Lỗi", "Chưa chọn người dùng để xóa")
+        """Xóa người dùng đã chọn."""
+        if not self.selected_user_id:
+            messagebox.showerror("Lỗi", "Vui lòng chọn một người dùng để xóa.", parent=self)
             return
-        _id = sel[0]
-        if _id == self.current_user["id"]:
-            messagebox.showerror("Lỗi", "Không thể xóa chính bạn")
+
+        user = next((u for u in self.storage.all() if u['id'] == self.selected_user_id), None)
+        if not self.permissions.can_delete_user(user):
+            messagebox.showerror("Lỗi", "Bạn không thể tự xóa chính mình.", parent=self)
             return
-        if messagebox.askyesno("Xác nhận", "Xóa người dùng này?"):
-            self.storage.delete(_id)
+
+        username = user.get('username', 'N/A') if user else 'N/A'
+        if messagebox.askyesno("Xác nhận xóa", f"Bạn có chắc muốn xóa người dùng '{username}' không?"):
+            self.storage.delete(self.selected_user_id)
+            self._on_selection_clear()
             self.refresh()
 
 
-
 class UserDialog(tk.Toplevel):
-    def __init__(
-        self, master, title, on_submit,
-        username_default="", role_default="staff",
-        name_default="", dob_default=None,
-        phone_default="", email_default="", address_default="",
-        gender_default="Nam", avatar_default="",
-        disable_username=False, ask_password=True
-    ):
+    """Dialog được tối ưu hóa để thêm/sửa người dùng."""
+
+    def __init__(self, master, title, on_submit, **kwargs):
         super().__init__(master)
         self.title(title)
         self.grab_set()
         self.resizable(False, False)
+        self.transient(master)
         self.on_submit = on_submit
+        self.kwargs = kwargs
+        self.entries = {}
+        self._create_form()
 
-        padx = 18
-        pady = 6
+    def _create_form(self):
+        main_frame = ttk.Frame(self, padding="15")
+        main_frame.pack(fill="both", expand=True)
+        creatable_roles = self.kwargs.get("creatable_roles", ROLES)
 
-        # Username
-        ttk.Label(self, text="Tên đăng nhập:", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.e_user = ttk.Entry(self, font=("Arial", 11))
-        self.e_user.insert(0, username_default)
-        self.e_user.configure(state=tk.DISABLED if disable_username else tk.NORMAL)
-        self.e_user.pack(padx=padx, fill="x")
+        fields = [("Tên đăng nhập:", "username", "entry",
+                   {"state": tk.DISABLED if self.kwargs.get("disable_username") else tk.NORMAL}),
+                  ("Tên đầy đủ:", "name", "entry"), ("Ngày sinh:", "dob", "date"), ("Số điện thoại:", "phone", "entry"),
+                  ("Email:", "email", "entry"), ("Địa chỉ:", "address", "entry"), ("Giới tính:", "gender", "radio"),
+                  ("Phân quyền:", "role", "combo",
+                   {"state": tk.DISABLED if self.kwargs.get("disable_role") else "readonly",
+                    "values": creatable_roles}),
+                  ("Ảnh đại diện (URL):", "avatar", "entry")]
+        if self.kwargs.get("ask_password", True):
+            fields.append(("Mật khẩu:", "password", "entry", {"show": "*"}))
 
-        # Name (max 50 char)
-        ttk.Label(self, text="Tên (max 50 ký tự):", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.e_name = ttk.Entry(self, font=("Arial", 11))
-        self.e_name.insert(0, name_default)
-        self.e_name.pack(padx=padx, fill="x")
+        for i, (label_text, key, widget_type, *options) in enumerate(fields):
+            ttk.Label(main_frame, text=label_text).grid(row=i, column=0, sticky="w", pady=4)
+            opts = options[0] if options else {}
+            if widget_type == "entry":
+                var = tk.StringVar(value=self.kwargs.get(f"{key}_default", ""))
+                entry = ttk.Entry(main_frame, textvariable=var, **opts)
+                entry.grid(row=i, column=1, sticky="ew", pady=4, padx=5)
+                self.entries[key] = var
+            elif widget_type == "date":
+                entry = DateEntry(main_frame, date_pattern="yyyy-mm-dd", **opts)
+                if self.kwargs.get("dob_default"):
+                    try:
+                        entry.set_date(self.kwargs.get("dob_default"))
+                    except Exception as e:
+                        print(f"Không thể đặt ngày: {e}")
+                entry.grid(row=i, column=1, sticky="ew", pady=4, padx=5)
+                self.entries[key] = entry
+            elif widget_type == "combo":
+                default_role = self.kwargs.get("role_default", creatable_roles[0] if creatable_roles else "viewer")
+                var = tk.StringVar(value=default_role)
+                entry = ttk.Combobox(main_frame, textvariable=var, **opts)
+                entry.grid(row=i, column=1, sticky="ew", pady=4, padx=5)
+                self.entries[key] = var
+            elif widget_type == "radio":
+                radio_frame = ttk.Frame(main_frame)
+                var = tk.StringVar(value=self.kwargs.get("gender_default", "Nam"))
+                for g in GENDERS:
+                    ttk.Radiobutton(radio_frame, text=g, value=g, variable=var).pack(side=tk.LEFT, padx=2)
+                radio_frame.grid(row=i, column=1, sticky="w", pady=4, padx=5)
+                self.entries[key] = var
 
-        # DOB calendar
-        from tkcalendar import DateEntry
-        ttk.Label(self, text="Ngày sinh:", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.e_dob = DateEntry(self, date_pattern="yyyy-mm-dd")
-        if dob_default:
-            try:
-                self.e_dob.set_date(dob_default)
-            except Exception:
-                pass
-        self.e_dob.pack(padx=padx, fill="x")
-
-        # Phone
-        ttk.Label(self, text="Số điện thoại:", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.e_phone = ttk.Entry(self, font=("Arial", 11))
-        self.e_phone.insert(0, phone_default)
-        self.e_phone.pack(padx=padx, fill="x")
-
-        # Email
-        ttk.Label(self, text="Email:", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.e_email = ttk.Entry(self, font=("Arial", 11))
-        self.e_email.insert(0, email_default)
-        self.e_email.pack(padx=padx, fill="x")
-
-        # Address (max 255 char)
-        ttk.Label(self, text="Địa chỉ (max 255 ký tự):", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.e_address = ttk.Entry(self, font=("Arial", 11))
-        self.e_address.insert(0, address_default)
-        self.e_address.pack(padx=padx, fill="x")
-
-        # Gender (radio)
-        ttk.Label(self, text="Giới tính:", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,0))
-        self.gender_var = tk.StringVar(value=gender_default)
-        gender_frame = ttk.Frame(self)
-        gender_frame.pack(anchor="w", padx=padx, pady=(0,pady))
-        for g in GENDERS:
-            ttk.Radiobutton(gender_frame, text=g, value=g, variable=self.gender_var).pack(side=tk.LEFT, padx=4)
-
-        # Role combobox
-        ttk.Label(self, text="Phân quyền:", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.c_role = ttk.Combobox(self, values=ROLES, state="readonly", font=("Arial", 11))
-        self.c_role.set(role_default)
-        self.c_role.pack(padx=padx, fill="x")
-
-        # Avatar (string path)
-        ttk.Label(self, text="Ảnh đại diện (đường dẫn):", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-        self.e_avatar = ttk.Entry(self, font=("Arial", 11))
-        self.e_avatar.insert(0, avatar_default)
-        self.e_avatar.pack(padx=padx, fill="x")
-
-        # Password
-        self.pw_value = tk.StringVar()
-        if ask_password:
-            ttk.Label(self, text="Mật khẩu:", font=("Arial", 10)).pack(anchor="w", padx=padx, pady=(pady,2))
-            self.e_pass = ttk.Entry(self, font=("Arial", 11), textvariable=self.pw_value, show="*")
-            self.e_pass.pack(padx=padx, fill="x")
-        else:
-            self.e_pass = None
-
-        ttk.Button(self, text="Lưu", command=self._submit).pack(pady=12)
+        main_frame.grid_columnconfigure(1, weight=1)
+        btn_frame = ttk.Frame(self)
+        btn_frame.pack(fill="x", padx=15, pady=(5, 15))
+        ttk.Button(btn_frame, text="Lưu", command=self._submit).pack(side="right")
+        ttk.Button(btn_frame, text="Hủy", command=self.destroy).pack(side="right", padx=5)
 
     def _submit(self):
-        username = self.e_user.get().strip()
-        name = self.e_name.get().strip()
-        dob = self.e_dob.get_date()
-        phone = self.e_phone.get().strip()
-        email = self.e_email.get().strip()
-        address = self.e_address.get().strip()
-        gender = self.gender_var.get()
-        role = self.c_role.get()
-        avatar = self.e_avatar.get().strip()
-        pw = self.e_pass.get() if self.e_pass else None
+        user_data = {}
+        pw = None
+        for key, var in self.entries.items():
+            if key == 'dob':
+                value = var.get_date().isoformat()
+            elif key == 'password':
+                pw = var.get()
+                continue
+            else:
+                value = var.get().strip()
 
-        print(f"DEBUG: pw = '{pw}'")  # Thêm dòng này để kiểm tra
+            # --- CẬP NHẬT: Logic validation ---
+            if key == 'email' and value and not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+                messagebox.showerror("Lỗi", "Định dạng email không hợp lệ.", parent=self)
+                return
+            if key == 'phone' and value and not re.match(r"^0\d{9}$", value):
+                messagebox.showerror("Lỗi", "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số.", parent=self)
+                return
 
-        # Validate length
-        if len(name) > 50:
-            messagebox.showerror("Lỗi", "Tên không được vượt quá 50 ký tự")
-            return
-        if len(address) > 255:
-            messagebox.showerror("Lỗi", "Địa chỉ không được vượt quá 255 ký tự")
-            return
-        if not username:
-            messagebox.showerror("Lỗi", "Tên đăng nhập không được để trống")
-            return
-        if not role:
-            messagebox.showerror("Lỗi", "Chọn phân quyền (Role)")
-            return
-        if self.e_pass and not pw:
-            messagebox.showerror("Lỗi", "Nhập mật khẩu!")
-            return
-
-        user_data = {
-            "username": username,
-            "name": name,
-            "dob": dob.isoformat(),
-            "phone": phone,
-            "email": email,
-            "address": address,
-            "gender": gender,
-            "role": role,
-            "avatar": avatar,
-        }
+            is_password_required = self.kwargs.get("ask_password", True)
+            if not value and (key in ["username", "role"] or (key == 'password' and is_password_required)):
+                messagebox.showerror("Lỗi", f"Trường '{key}' không được để trống.", parent=self)
+                return
+            user_data[key] = value
         self.on_submit(user_data, pw)
         self.destroy()

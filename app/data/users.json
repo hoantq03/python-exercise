@@ -3,7 +3,15 @@
     "id": "f97da116-4683-4238-994a-40208fa8dafb",
     "username": "admin",
     "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-    "role": "admin"
+    "role": "admin",
+    "name": "Tran Quoc Hoan",
+    "dob": "2025-08-10",
+    "phone": "1234567890",
+    "email": "admin@gmail.com",
+    "address": "helloworld",
+    "gender": "Nam",
+    "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/p/h/photo_2025-04-16_11-46-04.jpg",
+    "updated_at": "2025-08-10T09:27:00"
   },
   {
     "id": "065d9b72-6c84-4116-b089-9931e5e1e099",
