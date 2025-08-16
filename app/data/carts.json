@@ -1,15 +1,6 @@
 [
   {
-    "items": [
-      {
-        "product_id": "1a650a27-afa4-4f70-970c-125d9b027336",
-        "price": 32500000.0,
-        "quantity": 12,
-        "name": " Xiaomi 15 Ultra 5G 16GB 1TB ",
-        "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/p/h/photo_2025-04-16_11-45-37.jpg",
-        "item_id": "0d0574c7-2c48-4cf5-aad8-20f49b766e84"
-      }
-    ],
+    "items": [],
     "id": "b38db6ed-3511-410b-a185-d6527b0ba102"
   }
 ]

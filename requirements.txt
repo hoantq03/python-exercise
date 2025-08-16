@@ -1,5 +1,6 @@
-requests~=2.32.4
+﻿requests~=2.32.4
 pillow~=11.3.0
 tkcalendar~=1.6.1
+matplotlib~=3.10.5
 beautifulsoup4~=4.13.4
 python-dotenv~=1.0.1

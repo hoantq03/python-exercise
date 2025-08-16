@@ -136,6 +136,7 @@ class PhoneListScraper(BaseScraper):
         return {
             "name": general.get("name"), "sku": general.get("sku"),
             "price": float(filterable.get("special_price", 0)),
+            "bought_price": float(filterable.get("special_price", 0)) - 1_000_000,
             "avatar": avatar_url, "images": image_urls, "description": description_text,
             "categories": categories_data,
             "screen_size": attributes.get("display_size"), "screen_tech": attributes.get("mobile_type_of_display"),

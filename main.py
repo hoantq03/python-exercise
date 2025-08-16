@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# Hoặc
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import tkinter as tk
 import os
 from dotenv import load_dotenv
@@ -62,6 +67,7 @@ def run():
     order_srv = OrderService(orders_store, products_store)
     cart_srv = CartService(carts_store)
     categories_srv = CategoryService(categories_store)
+    user_srv = UserService(users_store)
 
     # --- Cấu hình Scraper và Task --- (phần còn lại giữ nguyên)
     SCRAPER_CONFIG = {
@@ -150,7 +156,7 @@ def run():
         win.add_nav_button("🛒 Giỏ hàng", CartView, cart_srv, order_srv, cust_srv, u)
         win.add_nav_button("Khách hàng", CustomersView, cust_srv, order_srv, can_edit_data)
         win.add_nav_button("Đơn hàng", OrdersView, order_srv, cust_srv, prod_srv, u, can_edit_data)
-        win.add_nav_button("Báo cáo", ReportFrame, order_srv, prod_srv, cust_srv)
+        win.add_nav_button("Báo cáo", ReportFrame, order_srv, prod_srv, cust_srv, user_srv)
 
         def logout():
             win.destroy()

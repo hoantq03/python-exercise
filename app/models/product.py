@@ -8,6 +8,7 @@ class Product:
     name: str
     sku: str
     price: float
+    bought_price: float
     stock: int
     description: str = ""
     avatar: str = ""  # link hoặc path ảnh sản phẩm

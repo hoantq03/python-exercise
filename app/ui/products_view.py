@@ -721,14 +721,26 @@ class ProductsView(ttk.Frame):
         now_iso = datetime.now().isoformat(timespec="seconds")
         payload['created_at'] = now_iso
         payload['updated_at'] = now_iso
-        # NEW: Ensure categories field is a list of dicts, not just uris
+
+        # Kiểm tra và chuyển đổi định dạng cho trường 'categories'
         if 'categories' in payload and isinstance(payload['categories'], list):
-            # Convert list of category URIs back to list of full category dicts
-            payload['categories'] = [
-                cat_data for cat_uri in payload['categories']
-                for cat_data in self.category_service.list_all_categories()
-                if cat_data['categoryUri'] == cat_uri
-            ]
+            # Lấy tất cả danh mục một lần và tạo một map để tra cứu hiệu quả
+            all_categories_map = {
+                cat['categoryUri']: cat for cat in self.category_service.list_all_categories()
+            }
+
+            processed_categories = []
+            for cat_uri in payload['categories']:  # payload['categories'] hiện là list các categoryUri
+                cat_data = all_categories_map.get(cat_uri)
+                if cat_data:
+                    # Chuyển đổi định dạng mong muốn: categoryId, name, uri
+                    processed_categories.append({
+                        "categoryId": cat_data.get('categoryId'),
+                        "name": cat_data.get('categoryName'),  # Đổi tên từ categoryName thành name
+                        "uri": cat_data.get('categoryUri')
+                    })
+            payload['categories'] = processed_categories  # Gán lại danh sách đã xử lý
+
         self.product_service.create(payload)
         self.refresh(reset_page=True)
 
@@ -746,14 +758,26 @@ class ProductsView(ttk.Frame):
     def _edit_submit(self, product_id, patch):
         """Handle edit submit"""
         patch['updated_at'] = datetime.now().isoformat(timespec="seconds")
-        # NEW: Ensure categories field is a list of dicts, not just uris
+
+        # Kiểm tra và chuyển đổi định dạng cho trường 'categories'
         if 'categories' in patch and isinstance(patch['categories'], list):
-            # Convert list of category URIs back to list of full category dicts
-            patch['categories'] = [
-                cat_data for cat_uri in patch['categories']
-                for cat_data in self.category_service.list_all_categories()
-                if cat_data['categoryUri'] == cat_uri
-            ]
+            # Lấy tất cả danh mục một lần và tạo một map để tra cứu hiệu quả
+            all_categories_map = {
+                cat['categoryUri']: cat for cat in self.category_service.list_all_categories()
+            }
+
+            processed_categories = []
+            for cat_uri in patch['categories']:  # patch['categories'] hiện là list các categoryUri
+                cat_data = all_categories_map.get(cat_uri)
+                if cat_data:
+                    # Chuyển đổi định dạng mong muốn: categoryId, name, uri
+                    processed_categories.append({
+                        "categoryId": cat_data.get('categoryId'),
+                        "name": cat_data.get('categoryName'),  # Đổi tên từ categoryName thành name
+                        "uri": cat_data.get('categoryUri')
+                    })
+            patch['categories'] = processed_categories  # Gán lại danh sách đã xử lý
+
         self.product_service.update(product_id, patch)
         self.refresh()
 
@@ -816,6 +840,7 @@ class ProductDialog(tk.Toplevel):
             ("Tên sản phẩm*", "name", "entry"),
             ("SKU*", "sku", "entry"),
             ("Giá (VNĐ)", "price", "entry"),
+            ("Giá Nhập (VNĐ)", "bought_price", "entry"),
             ("Tồn kho", "stock", "entry"),
             ("Link ảnh", "avatar", "entry"),
             ("Mô tả", "description", "text")
@@ -842,7 +867,6 @@ class ProductDialog(tk.Toplevel):
         for label, key in specs:
             self._create_field(parent, label, key, "entry")
 
-    # NEW: Category field creation
     def _create_category_fields(self, parent):
         """Create category selection fields using checkbuttons in a scrollable frame."""
         if not self.all_categories:
@@ -860,9 +884,9 @@ class ProductDialog(tk.Toplevel):
         for category in self.all_categories:
             category_uri = category['categoryUri']
             category_name = category['categoryName']
-
             # Create an IntVar for each checkbox, default to 1 if already selected for this product
             var = tk.IntVar(value=1 if category_uri in existing_product_category_uris else 0)
+
             self.category_vars[category_uri] = var
 
             cb = ttk.Checkbutton(scroll_frame.scrollable_frame, text=category_name, variable=var)
@@ -897,9 +921,9 @@ class ProductDialog(tk.Toplevel):
                 val = entry.get().strip()
 
             # Type conversion
-            if key in ["price", "stock"]:
+            if key in ["price", "bought_price", "stock"]:
                 try:
-                    val = float(val) if key == "price" else int(val)
+                    val = float(val) if key == "price" or "bought_price" else int(val)
                 except (ValueError, TypeError):
                     val = 0
 
@@ -1000,6 +1024,7 @@ class ProductDetailView(tk.Toplevel):
         sections = {
             "Thông tin cơ bản": [
                 ("Giá bán", "price", "price"),
+                ("Giá nhập", "bought_product", "price"),
                 ("Tồn kho", "stock", "number"),
                 ("SKU", "sku", "text")
             ],
@@ -1109,30 +1134,32 @@ class CategoryFilterDialog(tk.Toplevel):
         self.on_apply_callback = on_apply_callback
         self.checkbox_vars: Dict[str, tk.IntVar] = {}  # Stores tk.IntVar for each category
 
+        # Biến lưu keyword search
+        self.search_var = tk.StringVar()
+        self.current_selected_uris = current_selected_uris  # lưu lại selected để không mất khi search
+
         self._create_widgets(current_selected_uris)
 
     def _create_widgets(self, current_selected_uris: Set[str]):
-        """Create checkboxes for categories."""
+        """Create search box and checkboxes for categories."""
         main_frame = ttk.Frame(self, padding="10")
         main_frame.pack(fill="both", expand=True)
 
-        scroll_frame = ScrollableFrame(main_frame)
-        scroll_frame.pack(fill="both", expand=True, pady=(0, 10))
+        # Ô tìm kiếm
+        search_frame = ttk.Frame(main_frame)
+        search_frame.pack(fill="x", pady=(0, 8))
+        ttk.Label(search_frame, text="Tìm kiếm:").pack(side="left", padx=(0, 5))
+        search_entry = ttk.Entry(search_frame, textvariable=self.search_var)
+        search_entry.pack(side="left", fill="x", expand=True)
+        search_entry.bind("<KeyRelease>", lambda e: self._filter_categories())
 
-        if not self.all_categories:
-            ttk.Label(scroll_frame.scrollable_frame, text="Không có danh mục nào.").pack(pady=20)
-            return
+        # Khung cuộn chứa checkbox
+        self.scroll_frame = ScrollableFrame(main_frame)
+        self.scroll_frame.pack(fill="both", expand=True, pady=(0, 10))
 
-        for category in self.all_categories:
-            category_uri = category['categoryUri']
-            category_name = category['categoryName']
+        self._render_categories(current_selected_uris)
 
-            var = tk.IntVar(value=1 if category_uri in current_selected_uris else 0)
-            self.checkbox_vars[category_uri] = var
-
-            cb = ttk.Checkbutton(scroll_frame.scrollable_frame, text=category_name, variable=var)
-            cb.pack(anchor="w", padx=5, pady=2)
-
+        # Buttons
         btn_frame = ttk.Frame(main_frame)
         btn_frame.pack(fill="x", side="bottom")
 
@@ -1140,6 +1167,39 @@ class CategoryFilterDialog(tk.Toplevel):
         ttk.Button(btn_frame, text="Hủy", command=self.destroy).pack(side="right")
         ttk.Button(btn_frame, text="Chọn tất cả", command=self._select_all).pack(side="left")
         ttk.Button(btn_frame, text="Bỏ chọn tất cả", command=self._deselect_all).pack(side="left", padx=5)
+
+    def _render_categories(self, selected_uris: Set[str]):
+        """Render checkboxes for categories (filtered if needed)."""
+
+        # Clear frame trước khi render lại
+        for widget in self.scroll_frame.scrollable_frame.winfo_children():
+            widget.destroy()
+
+        keyword = self.search_var.get().strip().lower()
+        categories_to_show = [
+            c for c in self.all_categories
+            if keyword in c['categoryName'].lower()
+        ] if keyword else self.all_categories
+
+        if not categories_to_show:
+            ttk.Label(self.scroll_frame.scrollable_frame, text="Không tìm thấy danh mục nào.").pack(pady=20)
+            return
+
+        for category in categories_to_show:
+            category_uri = category['categoryUri']
+            category_name = category['categoryName']
+
+            if category_uri not in self.checkbox_vars:
+                self.checkbox_vars[category_uri] = tk.IntVar(value=1 if category_uri in selected_uris else 0)
+
+            var = self.checkbox_vars[category_uri]
+
+            cb = ttk.Checkbutton(self.scroll_frame.scrollable_frame, text=category_name, variable=var)
+            cb.pack(anchor="w", padx=5, pady=2)
+
+    def _filter_categories(self):
+        """Filter categories when typing in search box."""
+        self._render_categories(self.current_selected_uris)
 
     def _apply_selection(self):
         """Collect selected categories and pass to callback."""
