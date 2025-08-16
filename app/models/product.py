@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Dict, Any
 
 
 @dataclass
@@ -36,3 +36,4 @@ class Product:
     created_at: str = ""
     updated_at: str = ""
 
+    categories: List[Dict[str, Any]] = field(default_factory=list)

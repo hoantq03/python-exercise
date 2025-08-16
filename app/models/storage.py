@@ -53,3 +53,6 @@ class JsonStorage:
         new_data = [x for x in data if x["id"] != _id]
         self._write(new_data)
         return len(new_data) != len(data)
+
+    def save_all(self, data: list):
+        self._write(data)

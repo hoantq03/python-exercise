@@ -1,3 +1,5 @@
+import os
+
 import requests
 import uuid
 from datetime import datetime
@@ -42,28 +44,64 @@ class PhoneListScraper(BaseScraper):
         """
         EXTRACT - Lấy dữ liệu thô từ API.
         """
-        graphql_query = """
-            query GetProductsByCateId{
-                products(
-                    filter: {
-                        static: {
-                            categories: ["3"],
-                            province_id: 30,
-                            stock: { from: 0 },
-                            stock_available_id: [46, 56, 152, 4920],
-                            filter_price: {from:0, to:100000000}
-                        },
-                        dynamic: {}
-                    },
-                    page: 1,
-                    size: 2000,
-                    sort: [{view: desc}]
-                )
-                {
-                    general{ product_id name attributes sku url_path },
-                    filterable{ price special_price thumbnail }
-                }
-            }
+        number_scraper_phones = int(os.getenv("NUMBER_SCRAPER_PHONES", "100"))
+        graphql_query = f"""
+        query GetProductsByCateId {{
+          products(
+            filter: {{
+              static: {{
+                categories: ["3"],
+                province_id: 30,
+                stock: {{ from: 0 }},
+                stock_available_id: [46, 56, 152, 4920],
+                filter_price: {{ from: 0, to: 54990000 }}
+              }},
+              dynamic: {{}}
+            }},
+            page: 1,
+            size: {number_scraper_phones}, # <<< Dòng này sẽ hoạt động đúng >>>
+            sort: [{{ view: desc }}]
+          ) {{
+            general {{
+              product_id
+              name
+              attributes
+              sku
+              doc_quyen
+              manufacturer
+              url_key
+              url_path
+              categories {{
+                categoryId
+                name
+                uri
+              }}
+              review {{
+                total_count
+                average_rating
+              }}
+            }},
+            filterable {{
+              is_installment
+              stock_available_id
+              company_stock_id
+              filter {{
+                id
+                Label
+              }}
+              is_parent
+              price
+              prices
+              special_price
+              promotion_information
+              thumbnail
+              promotion_pack
+              sticker
+              flash_sale_types
+              is_new_arrival
+            }}
+          }}
+        }}
         """
         payload = {"query": graphql_query, "variables": {}}
         try:
@@ -93,10 +131,13 @@ class PhoneListScraper(BaseScraper):
                 full_image_url = f"{base_image_url_cdn}{value}"
                 if full_image_url not in image_urls:
                     image_urls.append(full_image_url)
+        categories_data = general.get("categories", [])
+
         return {
             "name": general.get("name"), "sku": general.get("sku"),
             "price": float(filterable.get("special_price", 0)),
             "avatar": avatar_url, "images": image_urls, "description": description_text,
+            "categories": categories_data,
             "screen_size": attributes.get("display_size"), "screen_tech": attributes.get("mobile_type_of_display"),
             "camera_sau": attributes.get("camera_primary"), "camera_truoc": attributes.get("camera_secondary"),
             "chipset": attributes.get("chipset"), "nfc": attributes.get("mobile_nfc"),

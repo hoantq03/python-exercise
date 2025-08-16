@@ -1,0 +1,552 @@
+[
+  {
+    "categoryId": 1016,
+    "categoryName": "A Series",
+    "categoryUri": "a-series"
+  },
+  {
+    "categoryId": 314,
+    "categoryName": "ASUS",
+    "categoryUri": "asus"
+  },
+  {
+    "categoryId": 147,
+    "categoryName": "ASUS",
+    "categoryUri": "asus"
+  },
+  {
+    "categoryId": 132,
+    "categoryName": "Apple",
+    "categoryUri": "apple"
+  },
+  {
+    "categoryId": 436,
+    "categoryName": "BKAV Bphone",
+    "categoryUri": "bkav-bphone"
+  },
+  {
+    "categoryId": 2080,
+    "categoryName": "Benco",
+    "categoryUri": "benco"
+  },
+  {
+    "categoryId": 1732,
+    "categoryName": "Blackview",
+    "categoryUri": "blackview"
+  },
+  {
+    "categoryId": 1021,
+    "categoryName": "C Series",
+    "categoryUri": "c-series"
+  },
+  {
+    "categoryId": 2240,
+    "categoryName": "Chuẩn NFC",
+    "categoryUri": "nfc"
+  },
+  {
+    "categoryId": 1110,
+    "categoryName": "Find Series",
+    "categoryUri": "find-x-series"
+  },
+  {
+    "categoryId": 478,
+    "categoryName": "Galaxy A",
+    "categoryUri": "galaxy-a"
+  },
+  {
+    "categoryId": 479,
+    "categoryName": "Galaxy J",
+    "categoryUri": "galaxy-j"
+  },
+  {
+    "categoryId": 882,
+    "categoryName": "Galaxy M",
+    "categoryUri": "galaxy-m"
+  },
+  {
+    "categoryId": 474,
+    "categoryName": "Galaxy Note",
+    "categoryUri": "galaxy-note"
+  },
+  {
+    "categoryId": 475,
+    "categoryName": "Galaxy S",
+    "categoryUri": "galaxy-s"
+  },
+  {
+    "categoryId": 1129,
+    "categoryName": "Galaxy S21 Series",
+    "categoryUri": "s21-series"
+  },
+  {
+    "categoryId": 1130,
+    "categoryName": "Galaxy S22 Series",
+    "categoryUri": "s22-series"
+  },
+  {
+    "categoryId": 1541,
+    "categoryName": "Galaxy S23 Series",
+    "categoryUri": "s23-series"
+  },
+  {
+    "categoryId": 1833,
+    "categoryName": "Galaxy S24 Series",
+    "categoryUri": "s24-series"
+  },
+  {
+    "categoryId": 2420,
+    "categoryName": "Galaxy S25 Series",
+    "categoryUri": "s25-series"
+  },
+  {
+    "categoryId": 971,
+    "categoryName": "Galaxy Z",
+    "categoryUri": "galaxy-z"
+  },
+  {
+    "categoryId": 2624,
+    "categoryName": "Galaxy Z7 Series",
+    "categoryUri": "z7-series"
+  },
+  {
+    "categoryId": 2483,
+    "categoryName": "Google Pixel",
+    "categoryUri": "google-pixel"
+  },
+  {
+    "categoryId": 41,
+    "categoryName": "HTC",
+    "categoryUri": "htc"
+  },
+  {
+    "categoryId": 416,
+    "categoryName": "Honor",
+    "categoryUri": "honor"
+  },
+  {
+    "categoryId": 403,
+    "categoryName": "Huawei",
+    "categoryUri": "huawei"
+  },
+  {
+    "categoryId": 372,
+    "categoryName": "Huawei",
+    "categoryUri": "huawei"
+  },
+  {
+    "categoryId": 29,
+    "categoryName": "Hàng cũ",
+    "categoryUri": "hang-cu"
+  },
+  {
+    "categoryId": 452,
+    "categoryName": "Hãng khác",
+    "categoryUri": "hang-khac"
+  },
+  {
+    "categoryId": 1912,
+    "categoryName": "INOI",
+    "categoryUri": "inoi"
+  },
+  {
+    "categoryId": 1675,
+    "categoryName": "Infinix",
+    "categoryUri": "infinix"
+  },
+  {
+    "categoryId": 1709,
+    "categoryName": "Itel",
+    "categoryUri": "itel"
+  },
+  {
+    "categoryId": 167,
+    "categoryName": "Lenovo",
+    "categoryUri": "lenovo"
+  },
+  {
+    "categoryId": 1720,
+    "categoryName": "Masstel",
+    "categoryUri": "masstel"
+  },
+  {
+    "categoryId": 455,
+    "categoryName": "Masstel",
+    "categoryUri": "masstel"
+  },
+  {
+    "categoryId": 2320,
+    "categoryName": "Mobell",
+    "categoryUri": "mobell"
+  },
+  {
+    "categoryId": 4,
+    "categoryName": "Máy tính bảng",
+    "categoryUri": "tablet"
+  },
+  {
+    "categoryId": 1288,
+    "categoryName": "Máy tính bảng mới",
+    "categoryUri": "may-tinh-bang"
+  },
+  {
+    "categoryId": 98,
+    "categoryName": "Nokia",
+    "categoryUri": "nokia"
+  },
+  {
+    "categoryId": 145,
+    "categoryName": "Nokia",
+    "categoryUri": "nokia"
+  },
+  {
+    "categoryId": 1385,
+    "categoryName": "Note 10 Series",
+    "categoryUri": "note-10-series"
+  },
+  {
+    "categoryId": 1386,
+    "categoryName": "Note 11 Series",
+    "categoryUri": "note-11-series"
+  },
+  {
+    "categoryId": 1596,
+    "categoryName": "Note 12 Series",
+    "categoryUri": "note-12-series"
+  },
+  {
+    "categoryId": 1868,
+    "categoryName": "Note 13 series",
+    "categoryUri": "note-13-series"
+  },
+  {
+    "categoryId": 2434,
+    "categoryName": "Note 14 series",
+    "categoryUri": "note-14-series"
+  },
+  {
+    "categoryId": 1642,
+    "categoryName": "Nothing Phone",
+    "categoryUri": "nothing-phone"
+  },
+  {
+    "categoryId": 925,
+    "categoryName": "Nubia",
+    "categoryUri": "nubia"
+  },
+  {
+    "categoryId": 1881,
+    "categoryName": "Nubia Redmagic",
+    "categoryUri": "redmagic"
+  },
+  {
+    "categoryId": 133,
+    "categoryName": "OPPO",
+    "categoryUri": "oppo"
+  },
+  {
+    "categoryId": 148,
+    "categoryName": "OPPO",
+    "categoryUri": "oppo"
+  },
+  {
+    "categoryId": 906,
+    "categoryName": "OnePlus",
+    "categoryUri": "oneplus"
+  },
+  {
+    "categoryId": 587,
+    "categoryName": "POCO",
+    "categoryUri": "pocophone"
+  },
+  {
+    "categoryId": 855,
+    "categoryName": "Realme",
+    "categoryUri": "realme"
+  },
+  {
+    "categoryId": 1017,
+    "categoryName": "Redmi",
+    "categoryUri": "redmi"
+  },
+  {
+    "categoryId": 1111,
+    "categoryName": "Reno Series",
+    "categoryUri": "reno-series"
+  },
+  {
+    "categoryId": 2,
+    "categoryName": "Root",
+    "categoryUri": "default-category"
+  },
+  {
+    "categoryId": 35,
+    "categoryName": "Samsung",
+    "categoryUri": "samsung"
+  },
+  {
+    "categoryId": 142,
+    "categoryName": "Samsung",
+    "categoryUri": "samsung"
+  },
+  {
+    "categoryId": 138,
+    "categoryName": "Samsung",
+    "categoryUri": "samsung"
+  },
+  {
+    "categoryId": 605,
+    "categoryName": "Sharp",
+    "categoryUri": "sharp"
+  },
+  {
+    "categoryId": 36,
+    "categoryName": "Sony",
+    "categoryUri": "sony"
+  },
+  {
+    "categoryId": 143,
+    "categoryName": "Sony",
+    "categoryUri": "sony"
+  },
+  {
+    "categoryId": 937,
+    "categoryName": "Sản phẩm mới",
+    "categoryUri": "san-pham-moi"
+  },
+  {
+    "categoryId": 1319,
+    "categoryName": "TCL",
+    "categoryUri": "tcl"
+  },
+  {
+    "categoryId": 1121,
+    "categoryName": "Tecno",
+    "categoryUri": "tecno"
+  },
+  {
+    "categoryId": 1879,
+    "categoryName": "Tecno Camon",
+    "categoryUri": "camon"
+  },
+  {
+    "categoryId": 1877,
+    "categoryName": "Tecno Pova",
+    "categoryUri": "pova"
+  },
+  {
+    "categoryId": 1878,
+    "categoryName": "Tecno Spark",
+    "categoryUri": "spark"
+  },
+  {
+    "categoryId": 2641,
+    "categoryName": "Tecno cũ",
+    "categoryUri": "tecno"
+  },
+  {
+    "categoryId": 21,
+    "categoryName": "Tin đồn - Mới ra",
+    "categoryUri": "hang-sap-ve"
+  },
+  {
+    "categoryId": 1019,
+    "categoryName": "V Series",
+    "categoryUri": "v-series"
+  },
+  {
+    "categoryId": 916,
+    "categoryName": "Vivo",
+    "categoryUri": "vivo"
+  },
+  {
+    "categoryId": 1734,
+    "categoryName": "Vivo",
+    "categoryUri": "vivo"
+  },
+  {
+    "categoryId": 641,
+    "categoryName": "Vsmart",
+    "categoryUri": "vsmart"
+  },
+  {
+    "categoryId": 1020,
+    "categoryName": "X Series",
+    "categoryUri": "x-series"
+  },
+  {
+    "categoryId": 340,
+    "categoryName": "Xiaomi",
+    "categoryUri": "xiaomi"
+  },
+  {
+    "categoryId": 349,
+    "categoryName": "Xiaomi",
+    "categoryUri": "xiaomi"
+  },
+  {
+    "categoryId": 1387,
+    "categoryName": "Xiaomi 11 Series",
+    "categoryUri": "11-series"
+  },
+  {
+    "categoryId": 1388,
+    "categoryName": "Xiaomi 12 Series",
+    "categoryUri": "12-series"
+  },
+  {
+    "categoryId": 1563,
+    "categoryName": "Xiaomi 13 Series",
+    "categoryUri": "13-series"
+  },
+  {
+    "categoryId": 1882,
+    "categoryName": "Xiaomi 14 Series",
+    "categoryUri": "14-series"
+  },
+  {
+    "categoryId": 2499,
+    "categoryName": "Xiaomi 15 Series",
+    "categoryUri": "15-series"
+  },
+  {
+    "categoryId": 1018,
+    "categoryName": "Y Series",
+    "categoryUri": "y-series"
+  },
+  {
+    "categoryId": 1907,
+    "categoryName": "Z5 Series",
+    "categoryUri": "z5-series"
+  },
+  {
+    "categoryId": 2204,
+    "categoryName": "Z6 Series",
+    "categoryUri": "z6-series"
+  },
+  {
+    "categoryId": 1797,
+    "categoryName": "ZTE",
+    "categoryUri": "zte"
+  },
+  {
+    "categoryId": 758,
+    "categoryName": "iPhone 11 Series",
+    "categoryUri": "iphone-11-series"
+  },
+  {
+    "categoryId": 861,
+    "categoryName": "iPhone 12 Series",
+    "categoryUri": "iphone-12-vna"
+  },
+  {
+    "categoryId": 927,
+    "categoryName": "iPhone 13 Series",
+    "categoryUri": "iphone-13"
+  },
+  {
+    "categoryId": 981,
+    "categoryName": "iPhone 14 Series",
+    "categoryUri": "iphone-14"
+  },
+  {
+    "categoryId": 1392,
+    "categoryName": "iPhone 15 Series",
+    "categoryUri": "iphone-15"
+  },
+  {
+    "categoryId": 2305,
+    "categoryName": "iPhone 16 Series",
+    "categoryUri": "iphone-16"
+  },
+  {
+    "categoryId": 606,
+    "categoryName": "realme",
+    "categoryUri": "realme"
+  },
+  {
+    "categoryId": 215,
+    "categoryName": "vivo",
+    "categoryUri": "vivo"
+  },
+  {
+    "categoryId": 3,
+    "categoryName": "Điện thoại",
+    "categoryUri": "mobile"
+  },
+  {
+    "categoryId": 2221,
+    "categoryName": "Điện thoại AI",
+    "categoryUri": "ai"
+  },
+  {
+    "categoryId": 1484,
+    "categoryName": "Điện thoại Google Pixel",
+    "categoryUri": "google-pixel"
+  },
+  {
+    "categoryId": 1490,
+    "categoryName": "Điện thoại Infinix",
+    "categoryUri": "infinix"
+  },
+  {
+    "categoryId": 1864,
+    "categoryName": "Điện thoại Meizu",
+    "categoryUri": "meizu"
+  },
+  {
+    "categoryId": 1489,
+    "categoryName": "Điện thoại Motorola",
+    "categoryUri": "motorola"
+  },
+  {
+    "categoryId": 1851,
+    "categoryName": "Điện thoại Tecno",
+    "categoryUri": "tecno"
+  },
+  {
+    "categoryId": 1605,
+    "categoryName": "Điện thoại chụp ảnh/quay phim đẹp",
+    "categoryUri": "dien-thoai-chup-anh-quay-phim"
+  },
+  {
+    "categoryId": 940,
+    "categoryName": "Điện thoại cũ",
+    "categoryUri": "dien-thoai"
+  },
+  {
+    "categoryId": 1603,
+    "categoryName": "Điện thoại cấu hình cao",
+    "categoryUri": "dien-thoai-cau-hinh-cao"
+  },
+  {
+    "categoryId": 1602,
+    "categoryName": "Điện thoại dung lượng lớn",
+    "categoryUri": "dien-thoai-dung-luong-lon"
+  },
+  {
+    "categoryId": 1131,
+    "categoryName": "Điện thoại gaming",
+    "categoryUri": "dien-thoai-gaming"
+  },
+  {
+    "categoryId": 1478,
+    "categoryName": "Điện thoại masstel",
+    "categoryUri": "masstel"
+  },
+  {
+    "categoryId": 1604,
+    "categoryName": "Điện thoại mỏng nhẹ",
+    "categoryUri": "dien-thoai-mong-nhe"
+  },
+  {
+    "categoryId": 696,
+    "categoryName": "Điện thoại phổ thông",
+    "categoryUri": "dien-thoai-pho-thong"
+  },
+  {
+    "categoryId": 1601,
+    "categoryName": "Điện thoại pin trâu",
+    "categoryUri": "dien-thoai-pin-trau"
+  }
+]

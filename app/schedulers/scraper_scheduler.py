@@ -1,5 +1,3 @@
-# file: scheduler.py
-
 import threading
 import time
 from typing import List
