@@ -52,7 +52,7 @@ class ScrollableFrame(ttk.Frame):
 class ProductsView(ttk.Frame):
     UI_CFG = {
         "grid": {
-            "base_cols": 7,
+            "base_cols": 6,
             "min_cols": 2,
             "img_size": (160, 120),
             "card_width": 180,
@@ -95,7 +95,7 @@ class ProductsView(ttk.Frame):
 
         # Pagination state
         self.current_page = 1
-        self.items_per_page = tk.IntVar(value=14)
+        self.items_per_page = tk.IntVar(value=12)
         self.total_pages = 1
 
         # NEW: Category filter state
@@ -180,7 +180,7 @@ class ProductsView(ttk.Frame):
 
         self.c_items_per_page = ttk.Combobox(
             pagination_frame, textvariable=self.items_per_page,
-            values=[4, 8, 12, 16, 20, 24], width=5, state="readonly"
+            values=[12, 18, 24], width=5, state="readonly"
         )
         self.c_items_per_page.pack(side=tk.LEFT, padx=2)
 

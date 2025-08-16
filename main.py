@@ -1,4 +1,3 @@
-# File: main.py
 import tkinter as tk
 import os
 from dotenv import load_dotenv
@@ -140,23 +139,30 @@ def run():
         can_manage_users = auth.authorize(u, ("admin",))
         can_edit_data = auth.authorize(u, ("admin", "staff"))
 
+        # Add navigation buttons using the updated add_nav_button
         if can_manage_users:
-            # Truyền user_srv vào UsersView nếu nó cần để quản lý người dùng
-            win.add_nav_button("Người dùng", lambda: win.show_view(UsersView, users_store, u))
+            win.add_nav_button("Người dùng", UsersView, users_store, u)
 
-        win.add_nav_button("Sản phẩm", lambda: win.show_view(ProductsView, prod_srv, cart_srv, categories_srv, can_edit_data))
-        win.add_nav_button("🛒 Giỏ hàng", lambda: win.show_view(CartView, cart_srv, order_srv, cust_srv, u))
-        win.add_nav_button("Khách hàng", lambda: win.show_view(CustomersView, cust_srv, order_srv, can_edit_data))
-        win.add_nav_button("Đơn hàng", lambda: win.show_view(OrdersView, order_srv, cust_srv, prod_srv, u, can_edit_data))
-        win.add_nav_button("Báo cáo", lambda: win.show_view(ReportFrame, order_srv, prod_srv, cust_srv))
+        # Store a reference to the initial view's button for explicit selection
+        initial_view_button = win.add_nav_button("Sản phẩm", ProductsView, prod_srv, cart_srv, categories_srv,
+                                                 can_edit_data)
+
+        win.add_nav_button("🛒 Giỏ hàng", CartView, cart_srv, order_srv, cust_srv, u)
+        win.add_nav_button("Khách hàng", CustomersView, cust_srv, order_srv, can_edit_data)
+        win.add_nav_button("Đơn hàng", OrdersView, order_srv, cust_srv, prod_srv, u, can_edit_data)
+        win.add_nav_button("Báo cáo", ReportFrame, order_srv, prod_srv, cust_srv)
 
         def logout():
             win.destroy()
             LoginView(root, auth, on_login_success)
 
-        win.add_nav_button("Đăng xuất", logout)
+        win.add_nav_button("Đăng xuất", command=logout)  # For direct commands, pass via kwargs
 
+        # Show initial view
         win.show_view(ProductsView, prod_srv, cart_srv, categories_srv, can_edit_data)
+        # Manually select the button for the initial view
+        if initial_view_button:
+            win._select_button_style(initial_view_button)
 
     LoginView(root, auth, on_login_success)
     root.mainloop()

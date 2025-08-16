@@ -2,20 +2,12 @@
   {
     "items": [
       {
-        "product_id": "373480b1-286d-4967-a6d8-c38d0c2bd8e4",
+        "product_id": "1a650a27-afa4-4f70-970c-125d9b027336",
         "price": 32500000.0,
-        "quantity": 2,
+        "quantity": 12,
         "name": " Xiaomi 15 Ultra 5G 16GB 1TB ",
         "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/p/h/photo_2025-04-16_11-45-37.jpg",
-        "item_id": "eef09f52-4b02-4fe0-b4cd-2708b2ae3c98"
-      },
-      {
-        "product_id": "43c52405-2a07-4817-b0e6-eded0d5ee23f",
-        "price": 4790000.0,
-        "quantity": 2,
-        "name": "Infinix Hot 50 Pro Plus 8GB 256GB",
-        "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/m/image_1262702446.png",
-        "item_id": "ee3348b2-1709-4942-9d71-8889199f6cd0"
+        "item_id": "0d0574c7-2c48-4cf5-aad8-20f49b766e84"
       }
     ],
     "id": "b38db6ed-3511-410b-a185-d6527b0ba102"

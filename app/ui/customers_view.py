@@ -43,7 +43,7 @@ class CustomerPurchaseHistoryView(tk.Toplevel):
     def refresh(self):
         """Lấy tất cả đơn hàng, lọc theo SĐT của khách hàng và hiển thị."""
         all_orders = self.order_service.list_orders()
-        customer_phone = self.customer_data.get("phone")
+        customer_phone = self.customer_data.get("phone")[1]
 
         if not customer_phone:
             messagebox.showerror("Lỗi dữ liệu", "Khách hàng không có số điện thoại.", parent=self)

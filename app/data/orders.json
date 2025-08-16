@@ -899,5 +899,44 @@
     "status": "completed",
     "order_date": "2025-07-30T07:01:39",
     "id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6f"
+  },
+  {
+    "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
+    "customer_info": {
+      "phone": "0367685425",
+      "name": "Trần Quốc Hoàn",
+      "address": "An Sương"
+    },
+    "items": [
+      {
+        "product_id": "1a650a27-afa4-4f70-970c-125d9b027336",
+        "price": 32500000.0,
+        "quantity": 20,
+        "name": " Xiaomi 15 Ultra 5G 16GB 1TB ",
+        "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/p/h/photo_2025-04-16_11-45-37.jpg",
+        "item_id": "c8a020e1-6d99-4b27-97a7-a64bb198bc3c"
+      },
+      {
+        "product_id": "232fa28f-4764-4ae1-91e3-d60b64faf80f",
+        "price": 4790000.0,
+        "quantity": 1,
+        "name": "Infinix Hot 50 Pro Plus 8GB 256GB",
+        "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/m/image_1262702446.png",
+        "item_id": "06b67f71-c38c-414b-bf15-24012d918685"
+      },
+      {
+        "product_id": "400ed282-bead-419a-ad09-11bff7900f04",
+        "price": 11490000.0,
+        "quantity": 1,
+        "name": "iPhone 13 128GB | Chính hãng VN/A",
+        "avatar": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-13_2_2.jpg",
+        "item_id": "bd34887e-b8c4-4dd0-8f5a-8136e145888f"
+      }
+    ],
+    "total_amount": 666280000.0,
+    "user_id": "53ec115a-8bb7-4799-8bd6-e88b329bca54",
+    "status": "completed",
+    "order_date": "2025-08-16T15:22:17",
+    "id": "f4b86386-d368-4fd9-9cd4-601a1e348a86"
   }
 ]

@@ -6,7 +6,6 @@ from datetime import datetime
 from collections import defaultdict
 import calendar
 
-
 class ReportFrame(ttk.Frame):
     def __init__(self, master, order_service, product_service, customer_service):
         super().__init__(master)
@@ -37,7 +36,7 @@ class ReportFrame(ttk.Frame):
         self._apply_filters()
         # Thiết lập báo cáo mặc định và hiển thị
         self.report_combo.set("Doanh thu theo thời gian")
-        self._on_report_selected(None)
+        # No need to call _on_report_selected(None) here, as _apply_filters does it.
 
     def _create_widgets(self):
         filter_frame = ttk.Frame(self)
@@ -285,6 +284,8 @@ class ReportFrame(ttk.Frame):
         """
         for widget in self.canvas_frame.winfo_children():
             widget.destroy()
+        plt.close('all')
+
 
         report_name = self.report_var.get()
         if not report_name:
@@ -312,7 +313,6 @@ class ReportFrame(ttk.Frame):
             self.month_label.grid_forget()
             self.month_combo.grid_forget()
             self.quarter_label.grid_forget()
-            self.quarter_combo.grid_forget()
             self.year_label.grid_forget()
             self.year_entry.grid_forget()
         else:  # Other reports can select Tháng, Quý, Năm
@@ -354,31 +354,31 @@ class ReportFrame(ttk.Frame):
 
         if group == "Năm":
             # Hiển thị toàn bộ 12 tháng của năm đã chọn
-            all_months = [f"{year_to_report}-{str(m).zfill(2)}" for m in range(1, 13)]
-            labels = all_months
+            all_month_keys = [datetime(year_to_report, m, 1).strftime("%Y-%m") for m in range(1, 13)]
+            labels = [datetime.strptime(mk, "%Y-%m").strftime("%m/%Y") for mk in all_month_keys] # Format for display
 
             # Lấy doanh thu từng tháng từ dữ liệu đã lọc
             monthly_revenue = defaultdict(float)
             for o in filtered_orders:
                 try:
                     dt = datetime.strptime(o['order_date'], "%Y-%m-%dT%H:%M:%S")
-                    if dt.year == year_to_report:  # Đảm bảo chỉ lấy dữ liệu của năm được chọn
-                        month_key = dt.strftime("%Y-%m")
-                        monthly_revenue[month_key] += o.get('total_amount', 0)
+                    month_key = dt.strftime("%Y-%m")
+                    monthly_revenue[month_key] += o.get('total_amount', 0)
                 except (KeyError, ValueError):
                     pass
 
-            values_m = [monthly_revenue.get(month_key, 0) / 1_000_000 for month_key in all_months]
+            values_m = [monthly_revenue.get(month_key, 0) / 1_000_000 for month_key in all_month_keys]
 
         elif group == "Quý":
             quarter_to_report = int(self.quarter_var.get())
-            start_month = (quarter_to_report - 1) * 3 + 1
-            end_month = start_month + 2
+            start_month_int = (quarter_to_report - 1) * 3 + 1
+            end_month_int = start_month_int + 2
 
-            all_months_in_quarter = [f"{year_to_report}-{str(m).zfill(2)}" for m in range(start_month, end_month + 1)]
-            labels = all_months_in_quarter
+            # Generate month keys for the selected quarter
+            all_month_keys_in_quarter = [datetime(year_to_report, m, 1).strftime("%Y-%m") for m in range(start_month_int, end_month_int + 1)]
+            labels = [datetime.strptime(mk, "%Y-%m").strftime("%m/%Y") for mk in all_month_keys_in_quarter] # Format for display
 
-            # Lấy doanh thu từng tháng trong quý
+            # Aggregate revenue by month within the quarter
             monthly_revenue_in_quarter = defaultdict(float)
             for o in filtered_orders:
                 try:
@@ -388,7 +388,7 @@ class ReportFrame(ttk.Frame):
                 except (KeyError, ValueError):
                     pass
 
-            values_m = [monthly_revenue_in_quarter.get(month_key, 0) / 1_000_000 for month_key in all_months_in_quarter]
+            values_m = [monthly_revenue_in_quarter.get(month_key, 0) / 1_000_000 for month_key in all_month_keys_in_quarter]
 
         if not values_m or all(v == 0 for v in values_m):  # Kiểm tra nếu tất cả giá trị đều là 0
             ttk.Label(self.canvas_frame,
@@ -428,6 +428,8 @@ class ReportFrame(ttk.Frame):
         names = [t[0] for t in top_products]  # Extract only the name
         sales = [v / 1_000_000 for _, v in top_products]
 
+        # Explicitly close any existing plot before creating a new one
+        plt.close('all')
         fig, ax = plt.subplots(figsize=(10, 6))
         bars = ax.barh(range(len(names)), sales, color='skyblue')
         ax.set_yticks([])
@@ -458,6 +460,8 @@ class ReportFrame(ttk.Frame):
         names = [str(p.get('name', 'N/A')) for p in top_stock_products]
         stocks = [p.get('stock', 0) for p in top_stock_products]
 
+        # Explicitly close any existing plot before creating a new one
+        plt.close('all')
         fig, ax = plt.subplots(figsize=(10, 6))
         bars = ax.barh(range(len(names)), stocks, color='mediumseagreen')
         ax.set_yticks([])
@@ -492,22 +496,30 @@ class ReportFrame(ttk.Frame):
             return
 
         top_customers = sorted(customer_purchase_value.items(), key=lambda x: x[1], reverse=True)[:10]
-        names = [t for t in top_customers]
-        values = [v / 1_000_000 for _, v in top_customers]
+        names = [t[0] for t in top_customers]  # Correctly extract only customer names for y-axis
+        values = [v / 1_000_000 for _, v in top_customers]  # Convert to triệu đồng
 
+        # Explicitly close any existing plot before creating a new one
+        plt.close('all')
         fig, ax = plt.subplots(figsize=(10, 6))
         bars = ax.barh(range(len(names)), values, color='gold')
-        ax.set_yticks([])
-        ax.invert_yaxis()
+
+        # Set y-axis ticks and labels to display customer names
+        ax.set_yticks(range(len(names)))
+        ax.set_yticklabels(names)  # Use the 'names' list directly for labels
+
+        ax.invert_yaxis()  # Keep the highest value at the top
         ax.set_xlabel("Tổng chi tiêu (triệu VNĐ)")
         ax.set_title("Top 10 khách hàng chi tiêu nhiều nhất")
         ax.grid(True, axis='x')
 
         for i, bar in enumerate(bars):
-            text_x = bar.get_width() / 2
+            # Position the text slightly to the right of the bar
+            text_x = bar.get_width() + (ax.get_xlim()[1] * 0.01)  # Small offset
             text_y = bar.get_y() + bar.get_height() / 2
-            ax.text(text_x, text_y, f'{names[i]}\n{values[i]:.1f}M', va='center', ha='center', fontsize=8,
-                    color='black')
+
+            # Display only the formatted monetary value on the bar
+            ax.text(text_x, text_y, f'{values[i]:.1f}Triệu Đồng', va='center', ha='left', fontsize=8, color='black')
 
         plt.tight_layout()
 
