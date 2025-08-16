@@ -1,6 +1,8 @@
 from functools import partial
 from datetime import datetime
 import uuid, math, threading
+from typing import Set, List, Dict
+
 from PIL import Image, ImageTk
 import requests
 from io import BytesIO
@@ -9,31 +11,26 @@ from tkinter import ttk, messagebox
 
 
 class ScrollableFrame(ttk.Frame):
-    """Custom scrollable frame với mouse wheel support"""
+    """Custom scrollable frame with mouse wheel support"""
 
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
 
-        # Create canvas và scrollbar
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.scrollable_frame = ttk.Frame(self.canvas)
 
-        # Configure scrolling
         self.scrollable_frame.bind(
             "<Configure>",
             lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         )
 
-        # Create window in canvas
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
-        # Pack elements
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
-        # Bind mouse wheel
         self.bind_mousewheel()
 
     def bind_mousewheel(self):
@@ -79,13 +76,15 @@ class ProductsView(ttk.Frame):
         },
     }
 
-    def __init__(self, master, product_service, cart_service, can_edit: bool):
+    # MODIFIED: Thêm category_service vào hàm khởi tạo
+    def __init__(self, master, product_service, cart_service, category_service, can_edit: bool):
         super().__init__(master)
         self.product_service = product_service
         self.cart_service = cart_service
+        self.category_service = category_service  # NEW: category_service
         self.can_edit = can_edit
 
-        # **Performance optimization variables**
+        # Performance optimization variables
         self._img_cache = {}
         self._img_labels = {}
         self._refreshing = False
@@ -100,15 +99,18 @@ class ProductsView(ttk.Frame):
         self.items_per_page = tk.IntVar(value=8)
         self.total_pages = 1
 
+        # NEW: Category filter state
+        self.selected_categories: Set[str] = set()  # Stores categoryUris of selected categories
+
         self._create_widgets()
         self._bind_events()
 
-        # **Delayed initial load để tránh lag**
+        # Delayed initial load to avoid lag
         self.after(200, lambda: self.refresh(reset_page=True))
 
     def _create_widgets(self):
-        """Tạo tất cả widgets với layout tối ưu"""
-        # **Toolbar với fixed height**
+        """Creates all widgets with optimized layout"""
+        # Toolbar with fixed height
         toolbar = ttk.Frame(self, height=40)
         toolbar.pack(fill=tk.X, pady=6)
         toolbar.pack_propagate(False)
@@ -126,11 +128,14 @@ class ProductsView(ttk.Frame):
         self.e_max_price = ttk.Entry(toolbar, width=8)
         self.e_max_price.pack(side=tk.LEFT, padx=2)
 
-        # **Sort control với StringVar trace**
+        # NEW: Category filter button
+        ttk.Button(toolbar, text="Danh mục...", command=self._open_category_filter_dialog).pack(side=tk.LEFT, padx=8)
+
+        # Sort control with StringVar trace
         ttk.Label(toolbar, text="Sắp xếp:").pack(side=tk.LEFT, padx=4)
         self.sort_var = tk.StringVar(value="name_az")
 
-        # **Add trace để monitor StringVar changes**
+        # Add trace to monitor StringVar changes
         self.sort_var.trace_add('write', self._on_sort_var_change)
 
         self.c_sort = ttk.Combobox(
@@ -147,11 +152,11 @@ class ProductsView(ttk.Frame):
             ttk.Button(toolbar, text="➕ Thêm sản phẩm",
                        command=self.add).pack(side=tk.LEFT, padx=8)
 
-        # **Scrollable grid frame**
+        # Scrollable grid frame
         self.scroll_frame = ScrollableFrame(self)
         self.scroll_frame.pack(expand=True, fill=tk.BOTH, padx=12, pady=10)
 
-        # **Pagination với fixed height**
+        # Pagination with fixed height
         pagination_frame = ttk.Frame(self, height=50)
         pagination_frame.pack(fill=tk.X, pady=(0, 10))
         pagination_frame.pack_propagate(False)
@@ -179,18 +184,18 @@ class ProductsView(ttk.Frame):
         self.btn_next.pack(side=tk.LEFT, padx=5)
 
     def _bind_events(self):
-        """FIXED: Bind events với performance optimization và sort fix"""
-        # **Items per page binding**
+        """FIXED: Bind events with performance optimization and sort fix"""
+        # Items per page binding
         self.c_items_per_page.bind("<<ComboboxSelected>>", self._on_items_per_page_change)
         self.c_items_per_page.bind("<Button-1>", self._on_combo_click)
         self.c_items_per_page.bind("<Return>", self._on_items_per_page_change)
 
-        # **Search events**
+        # Search events
         self.e_kw.bind("<KeyRelease>", self._on_search_change)
         self.e_min_price.bind("<KeyRelease>", self._on_price_change)
         self.e_max_price.bind("<KeyRelease>", self._on_price_change)
 
-        # **Window resize**
+        # Window resize
         self.bind("<Configure>", self._on_window_resize)
 
         # IntVar trace
@@ -203,21 +208,21 @@ class ProductsView(ttk.Frame):
         """
         print(f"🎯 Sort value changed to: {self.sort_var.get()}. Scheduling refresh.")
 
-        # Hủy bất kỳ lịch refresh nào đang chờ để tránh gọi nhiều lần
+        # Cancel any pending refresh to avoid multiple calls
         if self._sort_timer:
             self.after_cancel(self._sort_timer)
 
-        # Lên lịch refresh sau một khoảng trễ ngắn (debouncing)
-        # Chúng ta tái sử dụng _search_refresh_callback vì nó làm chính xác những gì chúng ta cần:
-        # reset trang về 1 và gọi refresh().
+        # Schedule refresh after a short delay (debouncing)
+        # We reuse _search_refresh_callback because it does exactly what we need:
+        # reset the page to 1 and call refresh().
         self._sort_timer = self.after(300, self._search_refresh_callback)
 
     def _on_combo_click(self, event=None):
-        """Handle combo click để force check value"""
+        """Handle combo click to force check value"""
         self.after(150, self._check_combo_value)
 
     def _check_combo_value(self):
-        """Check và sync combo value với IntVar"""
+        """Check and sync combo value with IntVar"""
         try:
             combo_text = self.c_items_per_page.get()
             intvar_val = self.items_per_page.get()
@@ -232,14 +237,14 @@ class ProductsView(ttk.Frame):
             print(f"⚠️ Combo sync error: {e}")
 
     def _on_intvar_change(self, *args):
-        """Callback khi IntVar thay đổi"""
+        """Callback when IntVar changes"""
         new_value = self.items_per_page.get()
         if hasattr(self, '_last_items_per_page') and new_value != self._last_items_per_page:
             print(f"📊 Items per page: {self._last_items_per_page} → {new_value}")
             self._last_items_per_page = new_value
 
     def _on_items_per_page_change(self, event=None):
-        """Handle items per page change với validation"""
+        """Handle items per page change with validation"""
         try:
             new_value = self.items_per_page.get()
 
@@ -250,7 +255,7 @@ class ProductsView(ttk.Frame):
 
             print(f"✅ Items per page changed to: {new_value}")
 
-            # Reset page và refresh
+            # Reset page and refresh
             self.current_page = 1
             self.refresh()
 
@@ -258,30 +263,31 @@ class ProductsView(ttk.Frame):
             print(f"❌ Error changing items per page: {e}")
 
     def _on_search_change(self, event=None):
-        """Handle search change với debouncing"""
+        """Handle search change with debouncing"""
         self._debounced_search_refresh(800)
 
     def _on_price_change(self, event=None):
-        """Handle price filter change với debouncing"""
+        """Handle price filter change with debouncing"""
         self._debounced_search_refresh(1000)
 
     def _on_window_resize(self, event=None):
-        """Handle window resize với intelligent checking"""
+        """Handle window resize with intelligent checking"""
         if not event or event.widget != self:
             return
 
-        # **Chỉ resize khi thay đổi đáng kể**
+        # Only resize when significantly changed
         current_size = (event.width, event.height)
         if self._last_window_size:
-            width_diff = abs(current_size[0] - self._last_window_size[0])
-            height_diff = abs(current_size[1] - self._last_window_size[1])
+            width_diff = abs(current_size - self._last_window_size)
+            height_diff = abs(current_size - self._last_window_size)
 
-            # Chỉ refresh nếu thay đổi > 50px
+            # Only refresh if change > 50px
             if width_diff < 50 and height_diff < 50:
                 return
 
         self._last_window_size = current_size
         self._debounced_resize_refresh(500)
+
 
     def _debounced_search_refresh(self, delay=800):
         """Separate debounced refresh for search"""
@@ -310,7 +316,7 @@ class ProductsView(ttk.Frame):
         self.refresh(reset_page=True)
 
     def get_filters(self):
-        """Get tất cả filters"""
+        """Get all filters"""
         kw = self.e_kw.get().strip().lower()
 
         try:
@@ -323,8 +329,19 @@ class ProductsView(ttk.Frame):
         except ValueError:
             max_price = None
 
-        sort_by = self.sort_var.get().split(" ")[0]
-        return kw, min_price, max_price, sort_by
+        # FIXED: Ensure sort_by is a string
+        sort_by_raw = self.sort_var.get()
+        if isinstance(sort_by_raw, str):
+            if " - " in sort_by_raw:
+                sort_by = sort_by_raw.split(" - ")[0]
+            else:
+                sort_by = sort_by_raw  # It's already the key
+        else:
+            print(f"Error: sort_by_raw is not a string: {sort_by_raw}. Defaulting to 'name_az'")
+            sort_by = "name_az"  # Fallback to default in case of unexpected type
+
+        # MODIFIED: Return selected_categories as well
+        return kw, min_price, max_price, sort_by, self.selected_categories
 
     def calculate_columns(self, items_per_page_val):
         """Calculate optimal columns"""
@@ -342,7 +359,7 @@ class ProductsView(ttk.Frame):
             return base_cols
 
     def refresh(self, reset_page: bool = False):
-        """Main refresh với performance optimization"""
+        """Main refresh with performance optimization"""
         if self._refreshing:
             print("🔄 Refresh already in progress, skipping...")
             return
@@ -353,12 +370,14 @@ class ProductsView(ttk.Frame):
             if reset_page:
                 self.current_page = 1
 
-            # **Clear existing widgets efficiently**
+            # Clear existing widgets efficiently
             self._clear_grid()
 
-            # Get và process data
-            kw, min_price, max_price, sort_by = self.get_filters()
-            products_all = self._get_filtered_products(kw, min_price, max_price, sort_by)
+            # Get and process data
+            # MODIFIED: Get selected_categories from get_filters()
+            kw, min_price, max_price, sort_by, selected_categories = self.get_filters()
+            # MODIFIED: Pass selected_categories to _get_filtered_products()
+            products_all = self._get_filtered_products(kw, min_price, max_price, sort_by, selected_categories)
 
             # Calculate pagination
             items_per_page_val = self.items_per_page.get()
@@ -373,7 +392,9 @@ class ProductsView(ttk.Frame):
             end_idx = start_idx + items_per_page_val
             products_to_display = products_all[start_idx:end_idx]
 
-            print(f"📄 Page {self.current_page}/{self.total_pages}: {len(products_to_display)} items, sort: {sort_by}")
+            # MODIFIED: Include categories in print statement
+            print(
+                f"📄 Page {self.current_page}/{self.total_pages}: {len(products_to_display)} items, sort: {sort_by}, categories: {self.selected_categories}")
 
             # Display products
             if products_to_display:
@@ -397,66 +418,61 @@ class ProductsView(ttk.Frame):
             widget.destroy()
         self._img_labels.clear()
 
-    def _get_filtered_products(self, kw, min_price, max_price, sort_by):
-        """Get và filter products với proper sorting"""
+    # MODIFIED: Accept selected_categories parameter
+    def _get_filtered_products(self, kw, min_price, max_price, sort_by, selected_categories: Set[str]):
+        """Get and filter products with proper sorting and category filter"""
         products_all = self.product_service.list()
 
-        # Apply filters
+        # Apply keyword filter
         if kw:
             products_all = [p for p in products_all if kw in p["name"].lower()]
+
+        # Apply price filters
         if min_price is not None:
             products_all = [p for p in products_all if float(p.get("price", 0)) >= min_price]
         if max_price is not None:
             products_all = [p for p in products_all if float(p.get("price", 0)) <= max_price]
 
-        # **ENHANCED: Apply sorting với comprehensive error handling**
-        try:
-            original_count = len(products_all)
+        # NEW: Apply category filter
+        if selected_categories:
+            # A product is included if it has at least one category that is in selected_categories
+            products_all = [
+                p for p in products_all
+                if any(cat.get('uri') in selected_categories for cat in p.get('categories', []))
+            ]
 
+        # ENHANCED: Apply sorting with comprehensive error handling
+        try:
             if sort_by == "name_az":
                 products_all.sort(key=lambda x: str(x.get("name", "")).lower())
-                print(f"🔤 Sorted {original_count} items by name A-Z")
-
             elif sort_by == "name_za":
                 products_all.sort(key=lambda x: str(x.get("name", "")).lower(), reverse=True)
-                print(f"🔤 Sorted {original_count} items by name Z-A")
-
             elif sort_by == "price_asc":
                 products_all.sort(key=lambda x: float(x.get("price", 0)))
-                print(f"💰 Sorted {original_count} items by price ascending")
-
             elif sort_by == "price_desc":
                 products_all.sort(key=lambda x: float(x.get("price", 0)), reverse=True)
-                print(f"💰 Sorted {original_count} items by price descending")
-
             else:
                 print(f"⚠️ Unknown sort option: '{sort_by}', using default order")
-
         except Exception as e:
             print(f"❌ Sorting error: {e}")
-            print(f"📋 Sort by value: '{sort_by}'")
 
         return products_all
 
-    # **Giữ nguyên tất cả methods khác từ code trước...**
     def _display_products(self, products, items_per_page_val):
-        """Display products trong scrollable grid"""
+        """Display products in scrollable grid"""
         gcfg = self.UI_CFG["grid"]
         cols = self.calculate_columns(items_per_page_val)
 
-        # Configure grid columns
         for i in range(cols):
             self.scroll_frame.scrollable_frame.grid_columnconfigure(i, weight=1, uniform="col")
 
-        # Create product cards
         for idx, product in enumerate(products):
             self._create_product_card(product, idx, cols, gcfg)
 
     def _create_product_card(self, product, idx, cols, gcfg):
-        """Create single product card với lazy loading"""
+        """Create single product card with lazy loading"""
         pid = product.get("id") or f"row{idx}"
 
-        # Card frame
         frame = ttk.Frame(self.scroll_frame.scrollable_frame, relief=tk.RAISED, borderwidth=1)
         row = idx // cols
         col = idx % cols
@@ -465,59 +481,50 @@ class ProductsView(ttk.Frame):
                    padx=gcfg["card_padx"], pady=gcfg["card_pady"],
                    sticky="nsew", ipadx=5, ipady=5)
 
-        # **Fixed size để consistency**
         frame.grid_propagate(False)
         frame.configure(width=gcfg["card_width"], height=gcfg["card_height"])
 
-        # Image container
         img_container = tk.Frame(frame, width=gcfg["img_size"][0],
                                  height=gcfg["img_size"][1], bg=gcfg["img_bg_loading"])
         img_container.pack(pady=(8, 6))
         img_container.pack_propagate(False)
 
-        # Image label với placeholder
         img_label = tk.Label(img_container, text="📷",
                              bg=gcfg["img_bg_loading"], anchor="center",
                              font=("Arial", 24))
         img_label.pack(fill=tk.BOTH, expand=True)
         self._img_labels[pid] = img_label
 
-        # **Lazy load image**
         avatar = product.get("avatar")
         if avatar:
-            # Delay image loading để tránh lag
             self.after(idx * 50, lambda p=pid, a=avatar: self._load_image(p, a, gcfg["img_size"]))
         else:
             img_label.config(text="🚫", font=("Arial", 20))
 
-        # Product info
         self._create_product_info(frame, product, gcfg)
 
     def _load_image(self, pid, avatar, size):
-        """Load image trong background thread"""
+        """Load image in background thread"""
         threading.Thread(target=self._fetch_image_async,
                          args=(pid, avatar, size), daemon=True).start()
 
     def _create_product_info(self, parent_frame, product, gcfg):
-        """Create product info với compact layout"""
+        """Create product info with compact layout"""
         info_frame = tk.Frame(parent_frame)
         info_frame.pack(fill=tk.X, padx=4)
 
-        # Product name
         name = product.get("name", "")[:50] + ("..." if len(product.get("name", "")) > 50 else "")
         name_label = tk.Label(info_frame, text=name,
                               font=gcfg["name_font"], wraplength=gcfg["card_wrap"],
                               justify="center", height=2)
         name_label.pack(pady=(0, 3))
 
-        # Price
         price = product.get('price', 0)
         price_text = f"{price:,.0f}₫" if price < 1000000 else f"{price / 1000000:.1f}M₫"
         price_label = tk.Label(info_frame, text=price_text,
                                foreground=gcfg["price_color"], font=gcfg["price_font"])
         price_label.pack()
 
-        # Compact meta info
         sku = product.get('sku', '')
         meta_text = f"SKU: {sku[:6]}{'...' if len(sku) > 6 else ''}"
         tk.Label(info_frame, text=meta_text, font=gcfg["meta_font"]).pack()
@@ -527,7 +534,6 @@ class ProductsView(ttk.Frame):
         tk.Label(info_frame, text=f"Kho: {stock}",
                  font=gcfg["meta_font"], fg=stock_color).pack()
 
-        # Action buttons
         self._create_action_buttons(parent_frame, product)
 
     def _create_action_buttons(self, parent_frame, product):
@@ -535,13 +541,11 @@ class ProductsView(ttk.Frame):
         btn_frame = tk.Frame(parent_frame)
         btn_frame.pack(side=tk.BOTTOM, pady=(4, 6))
 
-        # NEW: Thêm nút "Thêm vào giỏ"
         stock = product.get('stock', 0)
         add_to_cart_btn = ttk.Button(
             btn_frame,
             text="🛒 Thêm vào giỏ",
             command=partial(self._add_to_cart, product),
-            # Vô hiệu hóa nút nếu hết hàng
             state=tk.NORMAL if stock > 0 else tk.DISABLED
         )
         add_to_cart_btn.pack(pady=2)
@@ -559,12 +563,9 @@ class ProductsView(ttk.Frame):
                        command=partial(self.delete, product["id"])).pack(side=tk.LEFT, padx=1)
 
     def _add_to_cart(self, product):
-        """Thêm 1 sản phẩm vào giỏ hàng và hiển thị thông báo."""
+        """Add 1 product to cart and show notification."""
         try:
-            # Gọi service để thêm 1 sản phẩm
             self.cart_service.add_item(product, 1)
-
-            # Hiển thị thông báo thành công
             messagebox.showinfo(
                 "Thành công",
                 f"Đã thêm '{product['name']}' vào giỏ hàng.",
@@ -575,6 +576,19 @@ class ProductsView(ttk.Frame):
             messagebox.showerror("Lỗi", f"Không thể thêm vào giỏ hàng: {e}", parent=self)
             print(f"❌ Error adding to cart: {e}")
 
+    # NEW: Category filter methods
+    def _open_category_filter_dialog(self):
+        """Opens a dialog to select categories."""
+        all_categories = self.category_service.list_all_categories()
+        # Open dialog, pass category list and current selected categories
+        CategoryFilterDialog(self, all_categories, self.selected_categories, self._on_categories_selected)
+
+    def _on_categories_selected(self, selected_uris: Set[str]):
+        """Callback when category selection dialog closes."""
+        if self.selected_categories != selected_uris:  # Only refresh if there are changes
+            self.selected_categories = selected_uris
+            print(f"✅ Categories selected: {self.selected_categories}")
+            self.refresh(reset_page=True)  # Reset page and refresh grid
 
     def _show_empty_message(self):
         """Show empty state"""
@@ -584,14 +598,14 @@ class ProductsView(ttk.Frame):
         empty_label.pack(pady=50)
 
     def next_page(self):
-        """Next page với validation"""
+        """Next page with validation"""
         if self.current_page < self.total_pages:
             self.current_page += 1
             print(f"➡️ Page: {self.current_page}")
             self.refresh()
 
     def prev_page(self):
-        """Previous page với validation"""
+        """Previous page with validation"""
         if self.current_page > 1:
             self.current_page -= 1
             print(f"⬅️ Page: {self.current_page}")
@@ -602,15 +616,19 @@ class ProductsView(ttk.Frame):
         items_per_page_val = self.items_per_page.get()
 
         # Calculate filtered total
-        kw, min_price, max_price, sort_by = self.get_filters()
-        products_all = self._get_filtered_products(kw, min_price, max_price, sort_by)
+        # MODIFIED: Get selected_categories from get_filters()
+        kw, min_price, max_price, sort_by, selected_categories = self.get_filters()
+        # MODIFIED: Pass selected_categories to _get_filtered_products()
+        products_all = self._get_filtered_products(kw, min_price, max_price, sort_by, selected_categories)
         filtered_total = len(products_all)
 
         # Update status
         if filtered_total > 0:
             start_item = (self.current_page - 1) * items_per_page_val + 1
             end_item = min(self.current_page * items_per_page_val, filtered_total)
-            status_text = f"Trang {self.current_page}/{self.total_pages} • {start_item}-{end_item}/{filtered_total} • {sort_by.replace('_', ' ').title()}"
+            # FIXED: sort_by is already a string here
+            sort_display_text = sort_by.replace('_', ' ').title()
+            status_text = f"Trang {self.current_page}/{self.total_pages} • {start_item}-{end_item}/{filtered_total} • {sort_display_text}"
         else:
             status_text = f"Trang {self.current_page}/{self.total_pages} • 0/0"
 
@@ -621,7 +639,7 @@ class ProductsView(ttk.Frame):
         self.btn_next.config(state=tk.DISABLED if self.current_page >= self.total_pages else tk.NORMAL)
 
     def _fetch_image_async(self, pid, url_or_path, size):
-        """Async image loading với caching"""
+        """Async image loading with caching"""
         try:
             # Check cache first
             if pid in self._img_cache:
@@ -666,14 +684,16 @@ class ProductsView(ttk.Frame):
                 label.config(text="❌", bg="#ffe6e6", image="", font=("Arial", 16))
                 label.image = None
 
-    # CRUD Operations - giữ nguyên từ code trước
+    # CRUD Operations - keep from previous code
     def show_detail(self, product):
-        """Show product detail, truyền cả cart_service vào"""
-        ProductDetailView(self, self.cart_service, product) # MODIFIED
+        """Show product detail, pass cart_service as well"""
+        ProductDetailView(self, self.cart_service, product)
 
     def add(self):
         """Add new product"""
-        ProductDialog(self, "Thêm sản phẩm", on_submit=self._add_submit)
+        # MODIFIED: Pass all_categories to ProductDialog
+        ProductDialog(self, "Thêm sản phẩm", on_submit=self._add_submit,
+                      all_categories=self.category_service.list_all_categories())
 
     def _add_submit(self, payload):
         """Handle add submit"""
@@ -681,35 +701,54 @@ class ProductsView(ttk.Frame):
         now_iso = datetime.now().isoformat(timespec="seconds")
         payload['created_at'] = now_iso
         payload['updated_at'] = now_iso
-        self.product_service.create(payload)  # MODIFIED
+        # NEW: Ensure categories field is a list of dicts, not just uris
+        if 'categories' in payload and isinstance(payload['categories'], list):
+            # Convert list of category URIs back to list of full category dicts
+            payload['categories'] = [
+                cat_data for cat_uri in payload['categories']
+                for cat_data in self.category_service.list_all_categories()
+                if cat_data['categoryUri'] == cat_uri
+            ]
+        self.product_service.create(payload)
         self.refresh(reset_page=True)
 
     def edit(self, product_id):
         """Edit product"""
         try:
-            product = next(x for x in self.product_service.list() if x["id"] == product_id) # MODIFIED
+            product = next(x for x in self.product_service.list() if x["id"] == product_id)
+            # MODIFIED: Pass all_categories to ProductDialog
             ProductDialog(self, "Sửa sản phẩm", product=product,
-                          on_submit=partial(self._edit_submit, product_id))
+                          on_submit=partial(self._edit_submit, product_id),
+                          all_categories=self.category_service.list_all_categories())
         except StopIteration:
             messagebox.showerror("Lỗi", "Không tìm thấy sản phẩm để sửa.")
 
     def _edit_submit(self, product_id, patch):
         """Handle edit submit"""
         patch['updated_at'] = datetime.now().isoformat(timespec="seconds")
-        self.product_service.update(product_id, patch) # MODIFIED
+        # NEW: Ensure categories field is a list of dicts, not just uris
+        if 'categories' in patch and isinstance(patch['categories'], list):
+            # Convert list of category URIs back to list of full category dicts
+            patch['categories'] = [
+                cat_data for cat_uri in patch['categories']
+                for cat_data in self.category_service.list_all_categories()
+                if cat_data['categoryUri'] == cat_uri
+            ]
+        self.product_service.update(product_id, patch)
         self.refresh()
 
     def delete(self, product_id):
         """Delete product"""
         if messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa sản phẩm này?"):
-            self.product_service.delete(product_id) # MODIFIED
+            self.product_service.delete(product_id)
             self.refresh()
 
 
 class ProductDialog(tk.Toplevel):
     """Optimized product dialog"""
 
-    def __init__(self, master, title, on_submit, product=None):
+    # MODIFIED: Add all_categories parameter
+    def __init__(self, master, title, on_submit, product=None, all_categories=None):
         super().__init__(master)
         self.title(title)
         self.grab_set()
@@ -717,33 +756,34 @@ class ProductDialog(tk.Toplevel):
         self.geometry("600x700")
         self.on_submit = on_submit
         self.product = product or {}
+        self.all_categories = all_categories or []  # NEW
 
         self.entries = {}
+        self.category_vars = {}  # NEW: To store StringVar for Checkbuttons
         self._create_form()
 
     def _create_form(self):
         """Create optimized form"""
-        # Main container với scrollbar
         main_frame = ttk.Frame(self)
         main_frame.pack(fill="both", expand=True, padx=20, pady=15)
 
-        # Notebook for tabs
         notebook = ttk.Notebook(main_frame)
         notebook.pack(fill="both", expand=True)
 
-        # Basic info tab
         basic_tab = ttk.Frame(notebook)
         notebook.add(basic_tab, text="Thông tin cơ bản")
 
-        # Specs tab
         specs_tab = ttk.Frame(notebook)
         notebook.add(specs_tab, text="Thông số kỹ thuật")
 
-        # Create fields
+        # NEW: Categories tab
+        categories_tab = ttk.Frame(notebook)
+        notebook.add(categories_tab, text="Danh mục")
+
         self._create_basic_fields(basic_tab)
         self._create_spec_fields(specs_tab)
+        self._create_category_fields(categories_tab)  # NEW
 
-        # Save button
         btn_frame = ttk.Frame(main_frame)
         btn_frame.pack(fill="x", pady=(10, 0))
 
@@ -782,6 +822,32 @@ class ProductDialog(tk.Toplevel):
         for label, key in specs:
             self._create_field(parent, label, key, "entry")
 
+    # NEW: Category field creation
+    def _create_category_fields(self, parent):
+        """Create category selection fields using checkbuttons in a scrollable frame."""
+        if not self.all_categories:
+            ttk.Label(parent, text="Không có danh mục nào để chọn.").pack(pady=20)
+            return
+
+        scroll_frame = ScrollableFrame(parent)
+        scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Get existing product categories (as uris)
+        existing_product_category_uris = {
+            cat.get('uri') for cat in self.product.get('categories', []) if cat.get('uri')
+        }
+
+        for category in self.all_categories:
+            category_uri = category['categoryUri']
+            category_name = category['categoryName']
+
+            # Create an IntVar for each checkbox, default to 1 if already selected for this product
+            var = tk.IntVar(value=1 if category_uri in existing_product_category_uris else 0)
+            self.category_vars[category_uri] = var
+
+            cb = ttk.Checkbutton(scroll_frame.scrollable_frame, text=category_name, variable=var)
+            cb.pack(anchor="w", padx=5, pady=2)
+
     def _create_field(self, parent, label, key, widget_type):
         """Create individual field"""
         frame = ttk.Frame(parent)
@@ -819,6 +885,13 @@ class ProductDialog(tk.Toplevel):
 
             payload[key] = val
 
+        # NEW: Add selected categories to payload
+        selected_category_uris = []
+        for uri, var in self.category_vars.items():
+            if var.get() == 1:
+                selected_category_uris.append(uri)
+        payload['categories'] = selected_category_uris
+
         # Validation
         if not payload.get("name") or not payload.get("sku"):
             messagebox.showerror("Lỗi", "Tên sản phẩm và SKU không được để trống!", parent=self)
@@ -838,32 +911,27 @@ class ProductDetailView(tk.Toplevel):
         self.resizable(True, True)
         self.grab_set()
         self.product = product
-        self.cart_service = cart_service  # NEW: Lưu lại cart_service
+        self.cart_service = cart_service
 
         self._create_detail_view()
 
     def _create_detail_view(self):
-        """Create detail view với scroll support"""
-        # Create scrollable frame
+        """Create detail view with scroll support"""
         scroll_frame = ScrollableFrame(self)
         scroll_frame.pack(fill="both", expand=True, padx=20, pady=15)
 
         content = scroll_frame.scrollable_frame
 
-        # Product image
         self._create_image_section(content)
 
-        # Product title
         title_frame = ttk.Frame(content)
         title_frame.pack(fill="x", pady=(10, 20))
 
         ttk.Label(title_frame, text=self.product.get("name", ""),
                   font=("Arial", 18, "bold"), foreground="#2c3e50").pack()
 
-        # Product details in organized sections
         self._create_detail_sections(content)
 
-        # Close button
         btn_frame = ttk.Frame(content)
         btn_frame.pack(fill="x", pady=(20, 0))
 
@@ -877,7 +945,6 @@ class ProductDetailView(tk.Toplevel):
         add_to_cart_btn.pack(side=tk.LEFT, padx=(0, 10), expand=True, fill=tk.X)
 
         ttk.Button(btn_frame, text="🚪 Đóng", command=self.destroy).pack(side=tk.RIGHT, expand=True, fill=tk.X)
-
 
     def _create_image_section(self, parent):
         """Create image section"""
@@ -930,30 +997,45 @@ class ProductDetailView(tk.Toplevel):
                 ("Pin", "battery", "text"),
                 ("Hệ điều hành", "os", "text"),
                 ("NFC", "nfc", "text")
+            ],
+            # NEW: Add Categories section
+            "Danh mục": [
+                ("Danh mục", "categories", "categories_list")
             ]
         }
 
         for section_title, fields in sections.items():
-            # Check if section has any data
-            has_data = any(self.product.get(key) for _, key, _ in fields if key != "description")
+            has_data = False
+            for _, key, data_type in fields:
+                if data_type == "categories_list":  # Special handling for categories
+                    if self.product.get(key):
+                        has_data = True
+                        break
+                elif key == "description":
+                    if self.product.get(key) and str(self.product.get(key)).strip():
+                        has_data = True
+                        break
+                else:
+                    if self.product.get(key) is not None and str(self.product.get(key)).strip():
+                        has_data = True
+                        break
+
             if not has_data and section_title != "Thông tin cơ bản":
                 continue
 
-            # Create section
             section_frame = ttk.LabelFrame(parent, text=section_title, padding=15)
             section_frame.pack(fill="x", pady=(0, 15))
 
             for title, key, data_type in fields:
                 value = self.product.get(key)
-                if value is not None and str(value).strip():
+                if value is not None and str(value).strip() or data_type == "categories_list":
                     self._add_detail_row(section_frame, title, value, data_type)
 
     def _add_detail_row(self, parent, title, value, data_type):
-        """Add detail row với formatting"""
+        """Add detail row with formatting"""
         row_frame = ttk.Frame(parent)
         row_frame.pack(fill="x", pady=3)
 
-        # Format value based on type
         if data_type == "price":
             formatted_value = f"{value:,.0f}₫"
             color = "#28a745"
@@ -963,16 +1045,94 @@ class ProductDetailView(tk.Toplevel):
         elif data_type == "long_text":
             formatted_value = str(value)[:200] + ("..." if len(str(value)) > 200 else "")
             color = "#495057"
+        elif data_type == "categories_list":  # NEW: Handle categories list
+            if isinstance(value, list) and value:
+                formatted_value = ", ".join([cat.get('name', '') for cat in value if cat.get('name')])
+            else:
+                formatted_value = "N/A"
+            color = "#495057"
         else:
             formatted_value = str(value)
             color = "#495057"
 
-        # Title label
         ttk.Label(row_frame, text=f"{title}:",
                   font=("Arial", 10, "bold")).pack(anchor="w")
 
-        # Value label
         value_label = tk.Label(row_frame, text=formatted_value,
                                font=("Arial", 10), fg=color,
                                wraplength=500, justify="left")
         value_label.pack(anchor="w", padx=(20, 0))
+
+    def _add_to_cart(self):
+        """Add 1 product to cart from ProductDetailView."""
+        try:
+            self.cart_service.add_item(self.product, 1)
+            messagebox.showinfo(
+                "Thành công",
+                f"Đã thêm '{self.product['name']}' vào giỏ hàng.",
+                parent=self
+            )
+            print(f"🛒 Added {self.product['name']} to cart from detail view.")
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Không thể thêm vào giỏ hàng: {e}", parent=self)
+            print(f"❌ Error adding to cart from detail view: {e}")
+
+class CategoryFilterDialog(tk.Toplevel):
+    def __init__(self, master, all_categories: List[Dict], current_selected_uris: Set[str], on_apply_callback):
+        super().__init__(master)
+        self.title("Chọn Danh mục")
+        self.grab_set()  # Make it modal
+        self.resizable(False, False)
+        self.geometry("400x500")
+
+        self.all_categories = all_categories
+        self.on_apply_callback = on_apply_callback
+        self.checkbox_vars: Dict[str, tk.IntVar] = {}  # Stores tk.IntVar for each category
+
+        self._create_widgets(current_selected_uris)
+
+    def _create_widgets(self, current_selected_uris: Set[str]):
+        """Create checkboxes for categories."""
+        main_frame = ttk.Frame(self, padding="10")
+        main_frame.pack(fill="both", expand=True)
+
+        scroll_frame = ScrollableFrame(main_frame)
+        scroll_frame.pack(fill="both", expand=True, pady=(0, 10))
+
+        if not self.all_categories:
+            ttk.Label(scroll_frame.scrollable_frame, text="Không có danh mục nào.").pack(pady=20)
+            return
+
+        for category in self.all_categories:
+            category_uri = category['categoryUri']
+            category_name = category['categoryName']
+
+            var = tk.IntVar(value=1 if category_uri in current_selected_uris else 0)
+            self.checkbox_vars[category_uri] = var
+
+            cb = ttk.Checkbutton(scroll_frame.scrollable_frame, text=category_name, variable=var)
+            cb.pack(anchor="w", padx=5, pady=2)
+
+        btn_frame = ttk.Frame(main_frame)
+        btn_frame.pack(fill="x", side="bottom")
+
+        ttk.Button(btn_frame, text="Áp dụng", command=self._apply_selection).pack(side="right", padx=5)
+        ttk.Button(btn_frame, text="Hủy", command=self.destroy).pack(side="right")
+        ttk.Button(btn_frame, text="Chọn tất cả", command=self._select_all).pack(side="left")
+        ttk.Button(btn_frame, text="Bỏ chọn tất cả", command=self._deselect_all).pack(side="left", padx=5)
+
+    def _apply_selection(self):
+        """Collect selected categories and pass to callback."""
+        selected_uris = {uri for uri, var in self.checkbox_vars.items() if var.get() == 1}
+        self.on_apply_callback(selected_uris)
+        self.destroy()
+
+    def _select_all(self):
+        """Select all checkboxes."""
+        for var in self.checkbox_vars.values():
+            var.set(1)
+
+    def _deselect_all(self):
+        """Deselect all checkboxes."""
+        for var in self.checkbox_vars.values():
+            var.set(0)

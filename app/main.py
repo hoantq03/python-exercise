@@ -10,6 +10,7 @@ from app.schedulers.update_categories_scheduler import UpdateCategoryCronTask
 # Services
 from app.services.auth import AuthService
 from app.services.cart_service import CartService
+from app.services.category_service import CategoryService
 from app.services.customer_service import CustomerService
 from app.services.product_service import ProductService
 from app.services.order_service import OrderService
@@ -57,6 +58,7 @@ def run():
     prod_srv = ProductService(products_store)
     order_srv = OrderService(orders_store, products_store)
     cart_srv = CartService(carts_store)
+    categories_srv = CategoryService(categories_store)
 
     # --- Cấu hình Scraper và Task ---
     SCRAPER_CONFIG = {
@@ -79,7 +81,7 @@ def run():
                 category_interval = int(os.getenv('CATEGORY_UPDATE_INTERVAL_SECONDS', 600))
                 task_instance = task_class(
                     product_service=prod_srv,
-                    categories_storage=categories_store,
+                    category_service=categories_srv,
                     interval_seconds=category_interval
                 )
             elif hasattr(task_class, '__init__') and 'storage' in task_class.__init__.__code__.co_varnames:
@@ -137,7 +139,7 @@ def run():
         if can_manage_users:
             win.add_nav_button("Người dùng", lambda: win.show_view(UsersView, users_store, u))
 
-        win.add_nav_button("Sản phẩm", lambda: win.show_view(ProductsView, prod_srv, cart_srv, can_edit_data))
+        win.add_nav_button("Sản phẩm", lambda: win.show_view(ProductsView, prod_srv, cart_srv, categories_srv, can_edit_data))
         win.add_nav_button("🛒 Giỏ hàng", lambda: win.show_view(CartView, cart_srv, order_srv, cust_srv, u))
         win.add_nav_button("Khách hàng", lambda: win.show_view(CustomersView, cust_srv, order_srv, can_edit_data))
         win.add_nav_button("Đơn hàng",
@@ -149,7 +151,7 @@ def run():
 
         win.add_nav_button("Đăng xuất", logout)
 
-        win.show_view(ProductsView, prod_srv, cart_srv, can_edit_data)
+        win.show_view(ProductsView, prod_srv, cart_srv, categories_srv, can_edit_data)
 
     LoginView(root, auth, on_login_success)
     root.mainloop()
