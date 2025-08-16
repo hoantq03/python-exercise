@@ -32,7 +32,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi hiệu suất",
     "created_at": "2025-08-16T07:46:36.261836",
-    "updated_at": "2025-08-16T09:06:37.294652",
+    "updated_at": "2025-08-16T10:06:45.819449",
     "categories": [
       {
         "categoryId": 2,
@@ -118,7 +118,7 @@
     "color_depth": "",
     "cpu_type": "1 x Cortex-X4, tối đa 3,4GHz; 3 x Cortex-X4,  lên đến 2,85GHz; 4 x Cortex-A720, lên đến 2.0GHz",
     "created_at": "2025-08-16T07:46:36.281563",
-    "updated_at": "2025-08-16T09:06:37.390761",
+    "updated_at": "2025-08-16T10:06:45.902963",
     "categories": [
       {
         "categoryId": 2,
@@ -204,7 +204,7 @@
     "color_depth": "",
     "cpu_type": "TBU after Unpack",
     "created_at": "2025-08-16T07:46:36.297562",
-    "updated_at": "2025-08-16T09:06:37.486173",
+    "updated_at": "2025-08-16T10:06:45.986068",
     "categories": [
       {
         "categoryId": 2,
@@ -260,7 +260,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:36.310108",
-    "updated_at": "2025-08-16T09:06:37.611713",
+    "updated_at": "2025-08-16T10:06:46.076767",
     "categories": [
       {
         "categoryId": 3,
@@ -336,7 +336,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:36.325235",
-    "updated_at": "2025-08-16T09:06:37.722653",
+    "updated_at": "2025-08-16T10:06:46.162344",
     "categories": [
       {
         "categoryId": 3,
@@ -407,7 +407,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân, 4.47GHz, 3.5GHz",
     "created_at": "2025-08-16T07:46:36.338806",
-    "updated_at": "2025-08-16T09:06:37.846892",
+    "updated_at": "2025-08-16T10:06:46.242804",
     "categories": [
       {
         "categoryId": 2,
@@ -463,7 +463,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân, tối đa 2.2GHz",
     "created_at": "2025-08-16T07:46:36.352226",
-    "updated_at": "2025-08-16T09:06:37.980422",
+    "updated_at": "2025-08-16T10:06:46.325528",
     "categories": [
       {
         "categoryId": 2,
@@ -520,7 +520,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:36.371217",
-    "updated_at": "2025-08-16T09:06:38.109205",
+    "updated_at": "2025-08-16T10:06:46.406472",
     "categories": [
       {
         "categoryId": 2,
@@ -596,7 +596,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân 3.39 GHz, 3.1GHz, 2.9GHz, 2.2GHz",
     "created_at": "2025-08-16T07:46:36.389407",
-    "updated_at": "2025-08-16T09:06:38.226856",
+    "updated_at": "2025-08-16T10:06:46.490842",
     "categories": [
       {
         "categoryId": 3,
@@ -677,7 +677,7 @@
     "color_depth": "",
     "cpu_type": "10 nhân 3.1GHz, 2.9GHz, 2.6GHz, 1.95GHz",
     "created_at": "2025-08-16T07:46:36.403939",
-    "updated_at": "2025-08-16T09:06:38.324252",
+    "updated_at": "2025-08-16T10:06:46.583350",
     "categories": [
       {
         "categoryId": 2,
@@ -758,7 +758,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân, lên đến 2.2GHz",
     "created_at": "2025-08-16T07:46:36.421167",
-    "updated_at": "2025-08-16T09:06:38.449962",
+    "updated_at": "2025-08-16T10:06:46.688837",
     "categories": [
       {
         "categoryId": 2,
@@ -839,7 +839,7 @@
     "color_depth": "",
     "cpu_type": "Qualcomm® Oryon™ CPU@4.32GHz",
     "created_at": "2025-08-16T07:46:36.434545",
-    "updated_at": "2025-08-16T09:06:38.574852",
+    "updated_at": "2025-08-16T10:06:46.782352",
     "categories": [
       {
         "categoryId": 2,
@@ -890,7 +890,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân, xung nhịp 2.5Ghz",
     "created_at": "2025-08-16T07:46:36.447592",
-    "updated_at": "2025-08-16T09:06:38.686004",
+    "updated_at": "2025-08-16T10:06:46.880742",
     "categories": [
       {
         "categoryId": 2,
@@ -976,7 +976,7 @@
     "color_depth": "",
     "cpu_type": "Tốc độ CPU 4.47GHz, 3.5GHz <br> 8 nhân",
     "created_at": "2025-08-16T07:46:36.461907",
-    "updated_at": "2025-08-16T09:06:38.775026",
+    "updated_at": "2025-08-16T10:06:47.081878",
     "categories": [
       {
         "categoryId": 2,
@@ -1032,7 +1032,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân 2.9GHz, 2.6GHz, 1.9GHz",
     "created_at": "2025-08-16T07:46:36.477191",
-    "updated_at": "2025-08-16T09:06:38.879606",
+    "updated_at": "2025-08-16T10:06:47.193791",
     "categories": [
       {
         "categoryId": 2,
@@ -1083,7 +1083,7 @@
     "color_depth": "",
     "cpu_type": "3.22 GHz",
     "created_at": "2025-08-16T07:46:36.491259",
-    "updated_at": "2025-08-16T09:06:39.025973",
+    "updated_at": "2025-08-16T10:06:47.294573",
     "categories": [
       {
         "categoryId": 3,
@@ -1154,7 +1154,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:36.508028",
-    "updated_at": "2025-08-16T09:06:39.131331",
+    "updated_at": "2025-08-16T10:06:47.387414",
     "categories": [
       {
         "categoryId": 2,
@@ -1200,7 +1200,7 @@
     "color_depth": "",
     "cpu_type": "10 nhân, 3.3 GHz, 2.74GHz, 2.36GHz, 1.8GHz",
     "created_at": "2025-08-16T07:46:36.524174",
-    "updated_at": "2025-08-16T09:06:39.237105",
+    "updated_at": "2025-08-16T10:06:47.490322",
     "categories": [
       {
         "categoryId": 2,
@@ -1256,7 +1256,7 @@
     "color_depth": "",
     "cpu_type": " 3.22 GHz",
     "created_at": "2025-08-16T07:46:36.539621",
-    "updated_at": "2025-08-16T09:06:39.343134",
+    "updated_at": "2025-08-16T10:06:47.577080",
     "categories": [
       {
         "categoryId": 2,
@@ -1338,7 +1338,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:36.555553",
-    "updated_at": "2025-08-16T09:06:39.470752",
+    "updated_at": "2025-08-16T10:06:47.686464",
     "categories": [
       {
         "categoryId": 2,
@@ -1420,7 +1420,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:36.573263",
-    "updated_at": "2025-08-16T09:06:39.593772",
+    "updated_at": "2025-08-16T10:06:47.786379",
     "categories": [
       {
         "categoryId": 2,
@@ -1501,7 +1501,7 @@
     "color_depth": "",
     "cpu_type": "Octa-core processor, up to 2.5GHz<br>Tiền trình 6nm",
     "created_at": "2025-08-16T07:46:36.590627",
-    "updated_at": "2025-08-16T09:06:39.688351",
+    "updated_at": "2025-08-16T10:06:47.880779",
     "categories": [
       {
         "categoryId": 3,
@@ -1562,7 +1562,7 @@
     "color_depth": "",
     "cpu_type": "Octa-Core (4*Cortex-A76 @ 2.2GHz + 4*Cortex-A55 @2.0GHz)",
     "created_at": "2025-08-16T07:46:36.612879",
-    "updated_at": "2025-08-16T09:06:39.793949",
+    "updated_at": "2025-08-16T10:06:47.983590",
     "categories": [
       {
         "categoryId": 2,
@@ -1608,7 +1608,7 @@
     "color_depth": "",
     "cpu_type": "3.39GHz,3.1GHz,2.9GHz,2.2GHz",
     "created_at": "2025-08-16T07:46:36.629894",
-    "updated_at": "2025-08-16T09:06:39.901765",
+    "updated_at": "2025-08-16T10:06:48.085607",
     "categories": [
       {
         "categoryId": 2,
@@ -1699,7 +1699,7 @@
     "color_depth": "",
     "cpu_type": "1x2.4 GHz Cortex-A710 & 3x2.36 GHz Cortex-A710 & 4x1.8 GHz Cortex-A510",
     "created_at": "2025-08-16T07:46:36.649611",
-    "updated_at": "2025-08-16T09:06:40.018582",
+    "updated_at": "2025-08-16T10:06:48.185467",
     "categories": [
       {
         "categoryId": 2,
@@ -1775,7 +1775,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:36.672225",
-    "updated_at": "2025-08-16T09:06:40.140624",
+    "updated_at": "2025-08-16T10:06:48.304262",
     "categories": [
       {
         "categoryId": 2,
@@ -1861,7 +1861,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân 3.39 GHz, 3.1GHz, 2.9GHz, 2.2GHz",
     "created_at": "2025-08-16T07:46:36.696048",
-    "updated_at": "2025-08-16T09:06:40.264203",
+    "updated_at": "2025-08-16T10:06:48.411844",
     "categories": [
       {
         "categoryId": 3,
@@ -1942,7 +1942,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:36.719849",
-    "updated_at": "2025-08-16T09:06:40.374008",
+    "updated_at": "2025-08-16T10:06:48.502422",
     "categories": [
       {
         "categoryId": 3,
@@ -2013,7 +2013,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân 2.4GHz, 1.8GHz",
     "created_at": "2025-08-16T07:46:36.741401",
-    "updated_at": "2025-08-16T09:06:40.499883",
+    "updated_at": "2025-08-16T10:06:48.581016",
     "categories": [
       {
         "categoryId": 2,
@@ -2064,7 +2064,7 @@
     "color_depth": "",
     "cpu_type": "2*A76 up to 2.2Ghz, 6*A55 up to 2.0Ghz",
     "created_at": "2025-08-16T07:46:36.765318",
-    "updated_at": "2025-08-16T09:06:40.629980",
+    "updated_at": "2025-08-16T10:06:48.674909",
     "categories": [
       {
         "categoryId": 2,
@@ -2115,7 +2115,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:36.798565",
-    "updated_at": "2025-08-16T09:06:40.752229",
+    "updated_at": "2025-08-16T10:06:48.765701",
     "categories": [
       {
         "categoryId": 2,
@@ -2161,7 +2161,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi hiệu suất",
     "created_at": "2025-08-16T07:46:36.823743",
-    "updated_at": "2025-08-16T09:06:40.904315",
+    "updated_at": "2025-08-16T10:06:48.854240",
     "categories": [
       {
         "categoryId": 2,
@@ -2247,7 +2247,7 @@
     "color_depth": "",
     "cpu_type": "1x Cortex-A715, Lên đến 3,35GHz; 3x  Cortex-A715, Lên đến 3,2GHz; 4x Cortex-A510  lên đến 2,2GHz",
     "created_at": "2025-08-16T07:46:36.847958",
-    "updated_at": "2025-08-16T09:06:41.008175",
+    "updated_at": "2025-08-16T10:06:48.954803",
     "categories": [
       {
         "categoryId": 2,
@@ -2328,7 +2328,7 @@
     "color_depth": "",
     "cpu_type": "4 nhân 2.4 GHz & 4 nhân 1.95 GHz",
     "created_at": "2025-08-16T07:46:36.870091",
-    "updated_at": "2025-08-16T09:06:41.096879",
+    "updated_at": "2025-08-16T10:06:49.045605",
     "categories": [
       {
         "categoryId": 3,
@@ -2404,7 +2404,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:36.894575",
-    "updated_at": "2025-08-16T09:06:41.204132",
+    "updated_at": "2025-08-16T10:06:49.153002",
     "categories": [
       {
         "categoryId": 3,
@@ -2480,7 +2480,7 @@
     "color_depth": "",
     "cpu_type": "Tốc độ xung nhịp lên đến 2.4GHz",
     "created_at": "2025-08-16T07:46:36.919970",
-    "updated_at": "2025-08-16T09:06:41.328745",
+    "updated_at": "2025-08-16T10:06:49.232911",
     "categories": [
       {
         "categoryId": 2,
@@ -2531,7 +2531,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:36.943730",
-    "updated_at": "2025-08-16T09:06:41.432375",
+    "updated_at": "2025-08-16T10:06:49.339086",
     "categories": [
       {
         "categoryId": 2,
@@ -2607,7 +2607,7 @@
     "color_depth": "",
     "cpu_type": "3.2GHz,2.9GHz,2.6GHz,1.95GHz",
     "created_at": "2025-08-16T07:46:36.968490",
-    "updated_at": "2025-08-16T09:06:41.543329",
+    "updated_at": "2025-08-16T10:06:49.436880",
     "categories": [
       {
         "categoryId": 2,
@@ -2698,7 +2698,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:36.993600",
-    "updated_at": "2025-08-16T09:06:41.675864",
+    "updated_at": "2025-08-16T10:06:49.556250",
     "categories": [
       {
         "categoryId": 2,
@@ -2744,7 +2744,7 @@
     "color_depth": "",
     "cpu_type": "2x1.8 GHz Cortex-A75, 6x1.6 GHz Cortex-A55",
     "created_at": "2025-08-16T07:46:37.015038",
-    "updated_at": "2025-08-16T09:06:41.808949",
+    "updated_at": "2025-08-16T10:06:49.653482",
     "categories": [
       {
         "categoryId": 3,
@@ -2790,7 +2790,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:37.035900",
-    "updated_at": "2025-08-16T09:06:41.920420",
+    "updated_at": "2025-08-16T10:06:49.745021",
     "categories": [
       {
         "categoryId": 2,
@@ -2836,7 +2836,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi hiệu suất",
     "created_at": "2025-08-16T07:46:37.061386",
-    "updated_at": "2025-08-16T09:06:42.022853",
+    "updated_at": "2025-08-16T10:06:49.839323",
     "categories": [
       {
         "categoryId": 2,
@@ -2922,7 +2922,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:37.086388",
-    "updated_at": "2025-08-16T09:06:42.151525",
+    "updated_at": "2025-08-16T10:06:49.923867",
     "categories": [
       {
         "categoryId": 2,
@@ -3003,7 +3003,7 @@
     "color_depth": "",
     "cpu_type": "2.4GHz,2GHz, Octa-Core",
     "created_at": "2025-08-16T07:46:37.104825",
-    "updated_at": "2025-08-16T09:06:42.250375",
+    "updated_at": "2025-08-16T10:06:50.019855",
     "categories": [
       {
         "categoryId": 2,
@@ -3054,7 +3054,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân, 4.47GHz, 3.5GHz",
     "created_at": "2025-08-16T07:46:37.128384",
-    "updated_at": "2025-08-16T09:06:42.392198",
+    "updated_at": "2025-08-16T10:06:50.124421",
     "categories": [
       {
         "categoryId": 2,
@@ -3110,7 +3110,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân, 3.35GHz",
     "created_at": "2025-08-16T07:46:37.151903",
-    "updated_at": "2025-08-16T09:06:42.519162",
+    "updated_at": "2025-08-16T10:06:50.236132",
     "categories": [
       {
         "categoryId": 2,
@@ -3161,7 +3161,7 @@
     "color_depth": "",
     "cpu_type": "4 nhân 2.4 GHz & 4 nhân 1.95 GHz",
     "created_at": "2025-08-16T07:46:37.172015",
-    "updated_at": "2025-08-16T09:06:42.609116",
+    "updated_at": "2025-08-16T10:06:50.327057",
     "categories": [
       {
         "categoryId": 3,
@@ -3237,7 +3237,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:37.192726",
-    "updated_at": "2025-08-16T09:06:42.747059",
+    "updated_at": "2025-08-16T10:06:50.427219",
     "categories": [
       {
         "categoryId": 2,
@@ -3323,7 +3323,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:37.213663",
-    "updated_at": "2025-08-16T09:06:42.857932",
+    "updated_at": "2025-08-16T10:06:50.527755",
     "categories": [
       {
         "categoryId": 3,
@@ -3369,7 +3369,7 @@
     "color_depth": "",
     "cpu_type": "3.22 GHz",
     "created_at": "2025-08-16T07:46:37.233013",
-    "updated_at": "2025-08-16T09:06:42.967926",
+    "updated_at": "2025-08-16T10:06:50.615824",
     "categories": [
       {
         "categoryId": 2,
@@ -3430,7 +3430,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân",
     "created_at": "2025-08-16T07:46:37.251846",
-    "updated_at": "2025-08-16T09:06:43.077814",
+    "updated_at": "2025-08-16T10:06:50.716191",
     "categories": [
       {
         "categoryId": 2,
@@ -3516,7 +3516,7 @@
     "color_depth": "",
     "cpu_type": "2 nhân 2.0 GHz & 6 nhân 1.8 GHz",
     "created_at": "2025-08-16T07:46:37.271131",
-    "updated_at": "2025-08-16T09:06:43.180944",
+    "updated_at": "2025-08-16T10:06:50.806728",
     "categories": [
       {
         "categoryId": 3,
@@ -3557,7 +3557,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:37.289882",
-    "updated_at": "2025-08-16T09:06:43.285682",
+    "updated_at": "2025-08-16T10:06:50.907211",
     "categories": [
       {
         "categoryId": 2,
@@ -3638,7 +3638,7 @@
     "color_depth": "",
     "cpu_type": "2 nhân 2.0 GHz & 6 nhân 1.8 GHz",
     "created_at": "2025-08-16T07:46:37.311959",
-    "updated_at": "2025-08-16T09:06:43.394880",
+    "updated_at": "2025-08-16T10:06:51.016029",
     "categories": [
       {
         "categoryId": 2,
@@ -3699,7 +3699,7 @@
     "color_depth": "",
     "cpu_type": "1x2.7 GHz Cortex-A76 & 3x2.3 GHz Cortex-A76 & 4x2.1 GHz Cortex-A55",
     "created_at": "2025-08-16T07:46:37.331971",
-    "updated_at": "2025-08-16T09:06:43.499697",
+    "updated_at": "2025-08-16T10:06:51.113662",
     "categories": [
       {
         "categoryId": 2,
@@ -3760,7 +3760,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:37.352127",
-    "updated_at": "2025-08-16T09:06:43.596234",
+    "updated_at": "2025-08-16T10:06:51.213746",
     "categories": [
       {
         "categoryId": 2,
@@ -3846,7 +3846,7 @@
     "color_depth": "",
     "cpu_type": "10 nhân, 3.3 GHz, 2.74GHz, 2.36GHz, 1.8GHz",
     "created_at": "2025-08-16T07:46:37.372437",
-    "updated_at": "2025-08-16T09:06:43.708486",
+    "updated_at": "2025-08-16T10:06:51.306140",
     "categories": [
       {
         "categoryId": 2,
@@ -3902,7 +3902,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:37.392727",
-    "updated_at": "2025-08-16T09:06:43.801091",
+    "updated_at": "2025-08-16T10:06:51.399869",
     "categories": [
       {
         "categoryId": 2,
@@ -3962,7 +3962,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:37.413136",
-    "updated_at": "2025-08-16T09:06:43.904609",
+    "updated_at": "2025-08-16T10:06:51.508604",
     "categories": [
       {
         "categoryId": 3,
@@ -4064,7 +4064,7 @@
     "color_depth": "",
     "cpu_type": "Octa-Core (2*Cortex-A78 @ 2.2GHz + 6*Cortex-A55 @2.0GHz)",
     "created_at": "2025-08-16T07:46:37.468464",
-    "updated_at": "2025-08-16T09:06:44.160084",
+    "updated_at": "2025-08-16T10:06:51.684739",
     "categories": [
       {
         "categoryId": 2,
@@ -4110,7 +4110,7 @@
     "color_depth": "",
     "cpu_type": "Tốc độ CPU: 4.47GHz, 3.5GHz <br> 8 nhân",
     "created_at": "2025-08-16T07:46:37.492895",
-    "updated_at": "2025-08-16T09:06:44.257237",
+    "updated_at": "2025-08-16T10:06:51.780746",
     "categories": [
       {
         "categoryId": 2,
@@ -4166,7 +4166,7 @@
     "color_depth": "",
     "cpu_type": "1x3.0 GHz Cortex-X2 & 3x2.75 GHz Cortex-A710 & 4x2.0 GHz Cortex-A510",
     "created_at": "2025-08-16T07:46:37.515716",
-    "updated_at": "2025-08-16T09:06:44.358893",
+    "updated_at": "2025-08-16T10:06:51.888960",
     "categories": [
       {
         "categoryId": 3,
@@ -4242,7 +4242,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân 2GHz, 1.8GHz",
     "created_at": "2025-08-16T07:46:37.536234",
-    "updated_at": "2025-08-16T09:06:44.452038",
+    "updated_at": "2025-08-16T10:06:52.007099",
     "categories": [
       {
         "categoryId": 2,
@@ -4303,7 +4303,7 @@
     "color_depth": "",
     "cpu_type": "1x2.4 GHz Cortex-A710 & 3x2.36 GHz Cortex-A710 & 4x1.8 GHz Cortex-A510",
     "created_at": "2025-08-16T07:46:37.563064",
-    "updated_at": "2025-08-16T09:06:44.540584",
+    "updated_at": "2025-08-16T10:06:52.166648",
     "categories": [
       {
         "categoryId": 2,
@@ -4379,7 +4379,7 @@
     "color_depth": "",
     "cpu_type": "Up to 3.0 GHz",
     "created_at": "2025-08-16T07:46:37.592055",
-    "updated_at": "2025-08-16T09:06:44.670961",
+    "updated_at": "2025-08-16T10:06:52.318775",
     "categories": [
       {
         "categoryId": 3,
@@ -4445,7 +4445,7 @@
     "color_depth": "",
     "cpu_type": "Tốc độ CPU 4.47GHz, 3.5GHz <br> 8 nhân",
     "created_at": "2025-08-16T07:46:37.616334",
-    "updated_at": "2025-08-16T09:06:44.795682",
+    "updated_at": "2025-08-16T10:06:52.426789",
     "categories": [
       {
         "categoryId": 2,
@@ -4501,7 +4501,7 @@
     "color_depth": "",
     "cpu_type": "6 nhân ",
     "created_at": "2025-08-16T07:46:37.639692",
-    "updated_at": "2025-08-16T09:06:44.902657",
+    "updated_at": "2025-08-16T10:06:52.544876",
     "categories": [
       {
         "categoryId": 3,
@@ -4577,7 +4577,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:37.662853",
-    "updated_at": "2025-08-16T09:06:45.004031",
+    "updated_at": "2025-08-16T10:06:52.657128",
     "categories": [
       {
         "categoryId": 3,
@@ -4653,7 +4653,7 @@
     "color_depth": "",
     "cpu_type": "Tốc độ CPU: 4.47GHz, 3.5GHz <br> 8 nhân",
     "created_at": "2025-08-16T07:46:37.685932",
-    "updated_at": "2025-08-16T09:06:45.127092",
+    "updated_at": "2025-08-16T10:06:52.745974",
     "categories": [
       {
         "categoryId": 2,
@@ -4709,7 +4709,7 @@
     "color_depth": "",
     "cpu_type": "Lõi tám nhân 4*A78 @2.5 GHz，4*A55 @2.5 GHz",
     "created_at": "2025-08-16T07:46:37.706429",
-    "updated_at": "2025-08-16T09:06:45.244374",
+    "updated_at": "2025-08-16T10:06:52.834224",
     "categories": [
       {
         "categoryId": 2,
@@ -4775,7 +4775,7 @@
     "color_depth": "",
     "cpu_type": "2 x Lõi Prime, tốc độ tối đa 4,32GHz<br>6 x Lõi hiệu suất, lên đến 3,53GHz",
     "created_at": "2025-08-16T07:46:37.729787",
-    "updated_at": "2025-08-16T09:06:45.357186",
+    "updated_at": "2025-08-16T10:06:52.947228",
     "categories": [
       {
         "categoryId": 2,
@@ -4826,7 +4826,7 @@
     "color_depth": "",
     "cpu_type": "CPU 6 lõi mới với 2 lõi hiệu năng và 4 lõi tiết kiệm điện",
     "created_at": "2025-08-16T07:46:37.758018",
-    "updated_at": "2025-08-16T09:06:45.459533",
+    "updated_at": "2025-08-16T10:06:53.053058",
     "categories": [
       {
         "categoryId": 2,
@@ -4907,7 +4907,7 @@
     "color_depth": "",
     "cpu_type": "2.2 GHz",
     "created_at": "2025-08-16T07:46:37.789027",
-    "updated_at": "2025-08-16T09:06:45.596049",
+    "updated_at": "2025-08-16T10:06:53.152498",
     "categories": [
       {
         "categoryId": 3,
@@ -4983,7 +4983,7 @@
     "color_depth": "",
     "cpu_type": "2*A76 up to 2.2Ghz, 6*A55 up to 2.0Ghz",
     "created_at": "2025-08-16T07:46:37.820725",
-    "updated_at": "2025-08-16T09:06:45.690222",
+    "updated_at": "2025-08-16T10:06:53.262300",
     "categories": [
       {
         "categoryId": 3,
@@ -5029,7 +5029,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:37.848213",
-    "updated_at": "2025-08-16T09:06:45.824891",
+    "updated_at": "2025-08-16T10:06:53.370317",
     "categories": [
       {
         "categoryId": 3,
@@ -5105,7 +5105,7 @@
     "color_depth": "",
     "cpu_type": "4 nhân 2.7 GHz & 4 nhân 2.0 GHz",
     "created_at": "2025-08-16T07:46:37.878708",
-    "updated_at": "2025-08-16T09:06:45.935252",
+    "updated_at": "2025-08-16T10:06:53.471839",
     "categories": [
       {
         "categoryId": 2,
@@ -5176,7 +5176,7 @@
     "color_depth": "",
     "cpu_type": "2.2 GHz",
     "created_at": "2025-08-16T07:46:37.902095",
-    "updated_at": "2025-08-16T09:06:46.062323",
+    "updated_at": "2025-08-16T10:06:53.563185",
     "categories": [
       {
         "categoryId": 3,
@@ -5247,7 +5247,7 @@
     "color_depth": "",
     "cpu_type": "Up to 2.8 GHz",
     "created_at": "2025-08-16T07:46:37.928603",
-    "updated_at": "2025-08-16T09:06:46.186695",
+    "updated_at": "2025-08-16T10:06:53.662886",
     "categories": [
       {
         "categoryId": 3,
@@ -5308,7 +5308,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:37.953354",
-    "updated_at": "2025-08-16T09:06:46.302593",
+    "updated_at": "2025-08-16T10:06:53.748980",
     "categories": [
       {
         "categoryId": 2,
@@ -5354,7 +5354,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:37.976986",
-    "updated_at": "2025-08-16T09:06:46.480748",
+    "updated_at": "2025-08-16T10:06:53.844844",
     "categories": [
       {
         "categoryId": 2,
@@ -5400,7 +5400,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.001803",
-    "updated_at": "2025-08-16T09:06:46.574601",
+    "updated_at": "2025-08-16T10:06:53.935447",
     "categories": [
       {
         "categoryId": 2,
@@ -5456,7 +5456,7 @@
     "color_depth": "",
     "cpu_type": "2.2GHz,2.0GHz Octa-Core",
     "created_at": "2025-08-16T07:46:38.030599",
-    "updated_at": "2025-08-16T09:06:46.700710",
+    "updated_at": "2025-08-16T10:06:54.031362",
     "categories": [
       {
         "categoryId": 2,
@@ -5522,7 +5522,7 @@
     "color_depth": "",
     "cpu_type": "2 x Lõi Prime, tốc độ tối đa 4,32GHz<br>6 x Lõi hiệu suất, lên đến 3,53GHz",
     "created_at": "2025-08-16T07:46:38.053171",
-    "updated_at": "2025-08-16T09:06:46.819507",
+    "updated_at": "2025-08-16T10:06:54.126883",
     "categories": [
       {
         "categoryId": 3,
@@ -5588,7 +5588,7 @@
     "color_depth": "",
     "cpu_type": "2x2.2 GHz Cortex-A76 & 6x2.0 GHz Cortex-A55",
     "created_at": "2025-08-16T07:46:38.077824",
-    "updated_at": "2025-08-16T09:06:46.921571",
+    "updated_at": "2025-08-16T10:06:54.210404",
     "categories": [
       {
         "categoryId": 3,
@@ -5649,7 +5649,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.100813",
-    "updated_at": "2025-08-16T09:06:47.026128",
+    "updated_at": "2025-08-16T10:06:54.303182",
     "categories": [
       {
         "categoryId": 2,
@@ -5720,7 +5720,7 @@
     "color_depth": "",
     "cpu_type": "8 nhân (1x3.3 GHz & 3x3.2 GHz & 2x3.0 GHz & 2x2.3 GHz)",
     "created_at": "2025-08-16T07:46:38.126492",
-    "updated_at": "2025-08-16T09:06:47.127120",
+    "updated_at": "2025-08-16T10:06:54.391745",
     "categories": [
       {
         "categoryId": 2,
@@ -5791,7 +5791,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.172056",
-    "updated_at": "2025-08-16T09:06:47.240961",
+    "updated_at": "2025-08-16T10:06:54.483436",
     "categories": [
       {
         "categoryId": 2,
@@ -5862,7 +5862,7 @@
     "color_depth": "",
     "cpu_type": "3.39GHz,3.1GHz,2.9GHz,2.2GHz",
     "created_at": "2025-08-16T07:46:38.203096",
-    "updated_at": "2025-08-16T09:06:47.360766",
+    "updated_at": "2025-08-16T10:06:54.576378",
     "categories": [
       {
         "categoryId": 2,
@@ -5953,7 +5953,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.234396",
-    "updated_at": "2025-08-16T09:06:47.455771",
+    "updated_at": "2025-08-16T10:06:54.677786",
     "categories": [
       {
         "categoryId": 2,
@@ -5999,7 +5999,7 @@
     "color_depth": "",
     "cpu_type": "Octa-core CPU, up to 2.5GHz",
     "created_at": "2025-08-16T07:46:38.264312",
-    "updated_at": "2025-08-16T09:06:47.582640",
+    "updated_at": "2025-08-16T10:06:54.769538",
     "categories": [
       {
         "categoryId": 3,
@@ -6045,7 +6045,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.308167",
-    "updated_at": "2025-08-16T09:06:47.726947",
+    "updated_at": "2025-08-16T10:06:54.873570",
     "categories": [
       {
         "categoryId": 2,
@@ -6091,7 +6091,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.338414",
-    "updated_at": "2025-08-16T09:06:47.826938",
+    "updated_at": "2025-08-16T10:06:54.956210",
     "categories": [
       {
         "categoryId": 2,
@@ -6152,7 +6152,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.369153",
-    "updated_at": "2025-08-16T09:06:47.949751",
+    "updated_at": "2025-08-16T10:06:55.045796",
     "categories": [
       {
         "categoryId": 3,
@@ -6198,7 +6198,7 @@
     "color_depth": "",
     "cpu_type": "lõi tám, lên tới 3,35GHz",
     "created_at": "2025-08-16T07:46:38.395254",
-    "updated_at": "2025-08-16T09:06:48.073398",
+    "updated_at": "2025-08-16T10:06:55.158197",
     "categories": [
       {
         "categoryId": 3,
@@ -6279,7 +6279,7 @@
     "color_depth": "",
     "cpu_type": "Up to 2.8 GHz",
     "created_at": "2025-08-16T07:46:38.425411",
-    "updated_at": "2025-08-16T09:06:48.182962",
+    "updated_at": "2025-08-16T10:06:55.247137",
     "categories": [
       {
         "categoryId": 2,
@@ -6350,7 +6350,7 @@
     "color_depth": "",
     "cpu_type": "Octa-Core,2.7GHz 1*A76@2.7GHz+3*A76@2.3GHz+4*A55@2.1GHz",
     "created_at": "2025-08-16T07:46:38.500854",
-    "updated_at": "2025-08-16T09:06:48.293950",
+    "updated_at": "2025-08-16T10:06:55.349641",
     "categories": [
       {
         "categoryId": 2,
@@ -6406,7 +6406,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.564295",
-    "updated_at": "2025-08-16T09:06:48.416064",
+    "updated_at": "2025-08-16T10:06:55.443165",
     "categories": [
       {
         "categoryId": 2,
@@ -6472,7 +6472,7 @@
     "color_depth": "",
     "cpu_type": null,
     "created_at": "2025-08-16T07:46:38.610958",
-    "updated_at": "2025-08-16T09:06:48.532748",
+    "updated_at": "2025-08-16T10:06:55.548700",
     "categories": [
       {
         "categoryId": 2,
@@ -6553,7 +6553,7 @@
     "color_depth": "",
     "cpu_type": "2x2.8 GHz Cortex-A715 & 6x2.0 GHz Cortex-A510",
     "created_at": "2025-08-16T07:46:38.663176",
-    "updated_at": "2025-08-16T09:06:48.658139",
+    "updated_at": "2025-08-16T10:06:55.648223",
     "categories": [
       {
         "categoryId": 2,
@@ -27866,7 +27866,7 @@
     "color_depth": "",
     "cpu_type": "2 x Lõi Prime, tốc độ tối đa 4,32GHz<br>6 x Lõi hiệu suất, lên đến 3,53GHz",
     "created_at": "2025-08-16T07:47:18.430192",
-    "updated_at": "2025-08-16T09:06:44.043865",
+    "updated_at": "2025-08-16T10:06:51.590308",
     "categories": [
       {
         "categoryId": 3,
