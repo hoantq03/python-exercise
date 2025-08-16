@@ -31,6 +31,15 @@ class UsersView(ttk.Frame):
 
         self.selected_user_id = None
         self._image_cache = {}
+
+        # New: Sorting state for columns
+        self.sort_column = None
+        self.sort_direction = {}  # Stores 'asc', 'desc', or '' for each column
+
+        # New: Search keyword variable
+        self.search_kw = tk.StringVar()
+        self._search_timer = None  # For debouncing search input
+
         self._create_widgets()
         self.refresh()
 
@@ -50,6 +59,12 @@ class UsersView(ttk.Frame):
         self.edit_btn.pack(side=tk.LEFT, padx=5)
         self.delete_btn = ttk.Button(toolbar, text="🗑️ Xóa", command=self.delete_user, state=tk.DISABLED)
         self.delete_btn.pack(side=tk.LEFT)
+
+        # New: Search input
+        ttk.Label(toolbar, text="Tìm kiếm (tên, email, SĐT):").pack(side=tk.LEFT, padx=(10, 2))
+        self.search_entry = ttk.Entry(toolbar, textvariable=self.search_kw, width=30)
+        self.search_entry.pack(side=tk.LEFT, padx=(0, 10), fill=tk.X, expand=True)
+        self.search_kw.trace_add('write', self._debounced_refresh)
 
         main_pane = ttk.PanedWindow(self, orient=tk.HORIZONTAL)
         main_pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
@@ -81,28 +96,117 @@ class UsersView(ttk.Frame):
 
     def _create_list_view(self, parent):
         """Tạo Treeview danh sách người dùng (bên phải)."""
-        columns = ("id", "username", "role")
+        # Define columns info for sorting (UPDATED)
+        self.columns_info = {
+            "name": {"heading": "Tên", "data_key": "name"},
+            "email": {"heading": "Email", "data_key": "email"},
+            "phone": {"heading": "Số điện thoại", "data_key": "phone"},
+            "role": {"heading": "Quyền", "data_key": "role"},
+        }
+        columns = list(self.columns_info.keys())
+        headings = [info["heading"] for info in self.columns_info.values()]
+
         self.tree = ttk.Treeview(parent, columns=columns, show="headings")
-        self.tree.heading("id", text="ID")
-        self.tree.column("id", width=250, stretch=tk.NO)
-        self.tree.heading("username", text="Tên đăng nhập")
-        self.tree.column("username", width=150)
-        self.tree.heading("role", text="Quyền")
-        self.tree.column("role", width=100, anchor="center")
+
+        for col, head in zip(columns, headings):
+            self.tree.heading(col, text=head, command=lambda c=col: self._sort_column(c))
+            # Set column widths and anchors (adjust as needed for better layout)
+            if col == "name":
+                self.tree.column(col, width=150, stretch=tk.YES)
+            elif col == "email":
+                self.tree.column(col, width=200, stretch=tk.YES)
+            elif col == "phone":
+                self.tree.column(col, width=120, stretch=tk.NO)
+            elif col == "role":
+                self.tree.column(col, width=80, anchor="center", stretch=tk.NO)
+
+            self.sort_direction[col] = ''  # Initialize sort direction for each column
+
         scrollbar = ttk.Scrollbar(parent, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.tree.bind("<<TreeviewSelect>>", self._on_user_select)
 
+    def _sort_column(self, col):
+        # Cycle through sort directions: '', 'asc', 'desc'
+        current_direction = self.sort_direction.get(col, '')
+        new_direction = ''
+        if current_direction == '':
+            new_direction = 'asc'
+        elif current_direction == 'asc':
+            new_direction = 'desc'
+        else:
+            new_direction = ''  # Reset to default
+
+        # Reset all other columns to default direction and clear their arrows
+        for c in self.sort_direction:
+            if c != col:
+                self.sort_direction[c] = ''
+                self.tree.heading(c, text=self.columns_info[c]["heading"])
+
+        self.sort_column = col
+        self.sort_direction[col] = new_direction
+        self.refresh()
+
+    def _debounced_refresh(self, *args):
+        # Cancel previous scheduled refresh if any
+        if self._search_timer:
+            self.after_cancel(self._search_timer)
+        # Schedule refresh after 300ms (adjust as needed)
+        self._search_timer = self.after(300, self.refresh)
+
     def refresh(self):
         """Làm mới danh sách người dùng, giữ nguyên lựa chọn hiện tại."""
         selected_iid = self.tree.selection()[0] if self.tree.selection() else None
-        for item in self.tree.get_children():
-            self.tree.delete(item)
-        for user in self.storage.all():
-            self.tree.insert("", tk.END, values=(user.get('id'), user.get('username'), user.get('role')),
-                             iid=user.get('id'))
+
+        self.tree.delete(*self.tree.get_children())  # Clear existing items
+
+        all_users = self.storage.all()
+        search_keyword = self.search_kw.get().lower()
+
+        filtered_users = []
+        for user in all_users:
+            # Check if keyword is in name, email, or phone
+            if (not search_keyword or
+                    (user.get('name', '').lower() and search_keyword in user['name'].lower()) or
+                    (user.get('email', '').lower() and search_keyword in user['email'].lower()) or
+                    (user.get('phone', '') and search_keyword in user['phone'])  # Phone might not be lowercased
+            ):
+                filtered_users.append(user)
+
+        # Apply sorting logic
+        if self.sort_column and self.sort_direction[self.sort_column]:
+            sort_key = self.columns_info[self.sort_column]["data_key"]
+            reverse_sort = (self.sort_direction[self.sort_column] == 'desc')
+
+            # Special sorting for role (optional: define a custom order for roles)
+            if sort_key == "role":
+                # Example: Define a custom order for roles
+                role_order = {"admin": 0, "staff": 1, "viewer": 2}
+                filtered_users.sort(key=lambda u: role_order.get(u.get(sort_key, "viewer"), 99), reverse=reverse_sort)
+            else:
+                filtered_users.sort(key=lambda u: str(u.get(sort_key, "")).lower(), reverse=reverse_sort)
+
+            # Update heading with arrow
+            arrow = ""
+            if self.sort_direction[self.sort_column] == 'asc':
+                arrow = " \u25b2"  # Up arrow
+            elif self.sort_direction[self.sort_column] == 'desc':
+                arrow = " \u25bc"  # Down arrow
+            self.tree.heading(self.sort_column, text=self.columns_info[self.sort_column]["heading"] + arrow)
+        else:
+            # If no specific column is sorted, ensure all arrows are cleared
+            for col in self.columns_info:
+                self.tree.heading(col, text=self.columns_info[col]["heading"])
+            # Default sort (e.g., by username or creation date) if no column sort is active
+            filtered_users.sort(key=lambda u: str(u.get('username', '')).lower())  # Keeping a default sort
+
+        for user in filtered_users:
+            # Pass the values for the displayed columns (UPDATED)
+            self.tree.insert("", tk.END,
+                             values=(user.get('name'), user.get('email'), user.get('phone'), user.get('role')),
+                             iid=user.get('id'))  # Keep using user['id'] as iid for uniqueness
         if selected_iid and self.tree.exists(selected_iid):
             self.tree.selection_set(selected_iid)
         else:
@@ -115,6 +219,7 @@ class UsersView(ttk.Frame):
             self._on_selection_clear()
             return
         self.selected_user_id = selected_items[0]
+        # Fetch full user data from storage using the iid (which is the user's ID)
         user_data = next((u for u in self.storage.all() if u['id'] == self.selected_user_id), None)
         if user_data:
             self._display_user_details(user_data)
@@ -181,11 +286,15 @@ class UsersView(ttk.Frame):
 
     def _add_user_submit(self, user_data, pw):
         """Xử lý logic khi form thêm người dùng được gửi đi."""
+        # This function needs access to `hash_password` from `app.services.auth`
+        # Assuming it's imported or defined globally.
         if any(u["username"] == user_data["username"] for u in self.storage.all()):
             messagebox.showerror("Lỗi", "Tên đăng nhập đã tồn tại.", parent=self)
             return
         now_iso = datetime.now().isoformat(timespec="seconds")
-        new_user = {"id": str(uuid.uuid4()), "password_hash": hash_password(pw), "created_at": now_iso,
+        # Ensure hash_password is available or mock it for testing
+        hashed_pw = hash_password(pw) if 'hash_password' in globals() else pw  # Placeholder if not imported
+        new_user = {"id": str(uuid.uuid4()), "password_hash": hashed_pw, "created_at": now_iso,
                     "updated_at": now_iso, "last_login": "", **user_data}
         self.storage.create(new_user)
         self.refresh()

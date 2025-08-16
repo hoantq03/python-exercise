@@ -55,7 +55,7 @@ class OrderService:
             # 3. Nếu tất cả cập nhật tồn kho thành công, lưu đơn hàng vào storage
             order_dict = asdict(new_order)
             self.orders_storage.create(order_dict)
-            print(f"Đã tạo thành công đơn hàng: {new_order.id}")
+            print(f"Đã tạo thành công đơn hàng !")
 
             # 4. Trả về thông tin đơn hàng vừa tạo (dạng dict)
             return order_dict

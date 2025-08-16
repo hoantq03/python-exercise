@@ -9,6 +9,7 @@ class CartItem:
     price: float
     quantity: int
     name: str
+    avatar: str = ""
 
     item_id: str = field(default_factory=lambda: str(uuid.uuid4()))
 

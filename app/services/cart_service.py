@@ -59,8 +59,9 @@ class CartService:
             new_item = CartItem(
                 product_id=product.get("id"),
                 name=product.get("name"),
-                price=float(product.get("price", 0)),  # Đảm bảo giá là float
-                quantity=quantity
+                price=float(product.get("price", 0)),
+                quantity=quantity,
+                avatar=product.get("avatar", ""),
             )
             cart.items.append(new_item)
 

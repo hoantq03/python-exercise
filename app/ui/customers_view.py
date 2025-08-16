@@ -68,6 +68,9 @@ class CustomerPurchaseHistoryView(tk.Toplevel):
                 order.get("status", "N/A"),
                 order.get("id")
             )
+            # You might encounter "Item already exists" if order["id"] is used as iid here.
+            # However, for CustomerPurchaseHistoryView, inserting with default iid and just values should be fine.
+            # If order["id"] is unique across all orders, it's fine.
             self.tree.insert("", tk.END, values=values)
 
 
@@ -79,6 +82,10 @@ class CustomersView(ttk.Frame):
         self.customer_service = customer_service
         self.order_service = order_service  # Service mới được thêm vào
         self.can_edit = can_edit
+
+        # New: Sorting state for columns
+        self.sort_column = None
+        self.sort_direction = {} # Stores 'asc', 'desc', or '' for each column
 
         self._create_widgets()
         self.refresh()
@@ -97,28 +104,85 @@ class CustomersView(ttk.Frame):
         )
         self.history_button.pack(side=tk.RIGHT, padx=5)
 
-        self.tree = ttk.Treeview(self, columns=("name", "phone", "email", "address"), show="headings")
-        self.tree.heading("name", text="Họ và Tên")
-        self.tree.heading("phone", text="Số điện thoại")
-        self.tree.heading("email", text="Email")
-        self.tree.heading("address", text="Địa chỉ")
+        # New: Define columns info for sorting
+        self.columns_info = {
+            "name": {"heading": "Họ và Tên", "data_key": "name"},
+            "phone": {"heading": "Số điện thoại", "data_key": "phone"},
+            "email": {"heading": "Email", "data_key": "email"},
+            "address": {"heading": "Địa chỉ", "data_key": "address"},
+        }
+        columns = list(self.columns_info.keys())
+        headings = [info["heading"] for info in self.columns_info.values()]
+
+        self.tree = ttk.Treeview(self, columns=columns, show="headings")
+
+        for col, head in zip(columns, headings):
+            self.tree.heading(col, text=head, command=lambda c=col: self._sort_column(c))
+            self.sort_direction[col] = '' # Initialize sort direction for each column
+
         self.tree.pack(expand=True, fill=tk.BOTH, pady=5)
         self.tree.bind("<<TreeviewSelect>>", self._on_customer_select)
 
+    def _sort_column(self, col):
+        # Cycle through sort directions: '', 'asc', 'desc'
+        current_direction = self.sort_direction.get(col, '')
+        new_direction = ''
+        if current_direction == '':
+            new_direction = 'asc'
+        elif current_direction == 'asc':
+            new_direction = 'desc'
+        else:
+            new_direction = '' # Reset to default
+
+        # Reset all other columns to default direction and clear their arrows
+        for c in self.sort_direction:
+            if c != col:
+                self.sort_direction[c] = ''
+                self.tree.heading(c, text=self.columns_info[c]["heading"])
+
+        self.sort_column = col
+        self.sort_direction[col] = new_direction
+        self.refresh()
+
     def refresh(self):
-        for i in self.tree.get_children():
-            self.tree.delete(i)
+        # Always clear the tree before populating it
+        self.tree.delete(*self.tree.get_children())
 
         keyword = self.search_entry.get().lower()
         all_customers = self.customer_service.list()
 
+        filtered_customers = []
         for customer in all_customers:
             if keyword in customer.get("name", "").lower() or keyword in customer.get("phone", ""):
-                values = (
-                    customer.get("name"), customer.get("phone"),
-                    customer.get("email"), customer.get("address")
-                )
-                self.tree.insert("", tk.END, iid=customer["id"], values=values)
+                filtered_customers.append(customer)
+
+        # Apply sorting logic
+        if self.sort_column and self.sort_direction[self.sort_column]:
+            sort_key = self.columns_info[self.sort_column]["data_key"]
+            reverse_sort = (self.sort_direction[self.sort_column] == 'desc')
+
+            filtered_customers.sort(key=lambda c: str(c.get(sort_key, "")).lower(), reverse=reverse_sort)
+
+            # Update heading with arrow
+            arrow = ""
+            if self.sort_direction[self.sort_column] == 'asc':
+                arrow = " \u25b2" # Up arrow
+            elif self.sort_direction[self.sort_column] == 'desc':
+                arrow = " \u25bc" # Down arrow
+            self.tree.heading(self.sort_column, text=self.columns_info[self.sort_column]["heading"] + arrow)
+        else:
+            # If no specific column is sorted, ensure all arrows are cleared
+            for col in self.columns_info:
+                self.tree.heading(col, text=self.columns_info[col]["heading"])
+
+
+        for customer in filtered_customers:
+            values = (
+                customer.get("name"), customer.get("phone"),
+                customer.get("email"), customer.get("address")
+            )
+            # It's crucial to use a unique ID for iid. customer["id"] should be unique.
+            self.tree.insert("", tk.END, iid=customer["id"], values=values)
 
         self._on_customer_select()
 
@@ -142,11 +206,12 @@ class CustomersView(ttk.Frame):
 
         # Tạo một dictionary chứa thông tin khách hàng từ dòng đã chọn
         customer_data = {
-            "id": customer_id,
-            "name": item_values[0],
-            "phone": item_values[1],
-            "email": item_values[2],
-            "address": item_values[3],
+            "id": customer_id, # Include the ID for potential future use
+            "name": item_values,
+            "phone": item_values,
+            "email": item_values,
+            "address": item_values,
         }
 
         CustomerPurchaseHistoryView(self, self.order_service, customer_data)
+

@@ -8,50 +8,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 314,
-    "categoryName": "ASUS",
-    "categoryUri": "asus",
-    "id": "4683914f-00cf-4a2c-9eba-60d5498ca262",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 132,
     "categoryName": "Apple",
     "categoryUri": "apple",
     "id": "ad67494a-1741-459d-a348-a6305a48d9b9",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 436,
-    "categoryName": "BKAV Bphone",
-    "categoryUri": "bkav-bphone",
-    "id": "ae745017-8d68-4e1e-899b-8243b4fb91e0",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 2080,
-    "categoryName": "Benco",
-    "categoryUri": "benco",
-    "id": "d4317324-8393-4012-936c-fd542c10fcb7",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1732,
-    "categoryName": "Blackview",
-    "categoryUri": "blackview",
-    "id": "4fa0a0bc-f903-44ed-8d9a-135587149e93",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1021,
-    "categoryName": "C Series",
-    "categoryUri": "c-series",
-    "id": "596193ae-63b9-43d2-b676-905ae63bf1ad",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -80,14 +40,6 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 479,
-    "categoryName": "Galaxy J",
-    "categoryUri": "galaxy-j",
-    "id": "4d9983a3-1a39-4636-8ed5-ae4f1ee89959",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 882,
     "categoryName": "Galaxy M",
     "categoryUri": "galaxy-m",
@@ -96,42 +48,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 474,
-    "categoryName": "Galaxy Note",
-    "categoryUri": "galaxy-note",
-    "id": "b94c1584-0809-4ff3-8a8a-a2041949c597",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 475,
     "categoryName": "Galaxy S",
     "categoryUri": "galaxy-s",
     "id": "c89e896c-7e34-44d1-80c0-9410a544e019",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1129,
-    "categoryName": "Galaxy S21 Series",
-    "categoryUri": "s21-series",
-    "id": "226d11be-1cbb-41c0-b5d3-f0d56290eda2",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1130,
-    "categoryName": "Galaxy S22 Series",
-    "categoryUri": "s22-series",
-    "id": "549440cb-b7d3-4a81-b16a-82d883ba76f7",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1541,
-    "categoryName": "Galaxy S23 Series",
-    "categoryUri": "s23-series",
-    "id": "83c6e2e1-13ef-4e09-a84a-f8a4ca81979b",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -168,138 +88,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 41,
-    "categoryName": "HTC",
-    "categoryUri": "htc",
-    "id": "38257856-9b9e-4ab2-99ee-56a572915989",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 416,
-    "categoryName": "Honor",
-    "categoryUri": "honor",
-    "id": "ea232b51-abb2-4856-a23f-ae9b04634748",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 403,
-    "categoryName": "Huawei",
-    "categoryUri": "huawei",
-    "id": "54cd886c-cc1a-4d1c-9601-f9cb475c7c84",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 29,
-    "categoryName": "Hàng cũ",
-    "categoryUri": "hang-cu",
-    "id": "861ab013-dad3-4149-b8c4-fdfcc1624852",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 452,
-    "categoryName": "Hãng khác",
-    "categoryUri": "hang-khac",
-    "id": "14e5e22e-2d84-4b32-89eb-34d2517775ff",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1912,
-    "categoryName": "INOI",
-    "categoryUri": "inoi",
-    "id": "f08aef27-78ee-4785-9880-d4d6a316e8fc",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1675,
-    "categoryName": "Infinix",
-    "categoryUri": "infinix",
-    "id": "94c71ba9-8e1b-47ea-b051-cca375964306",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 1709,
     "categoryName": "Itel",
     "categoryUri": "itel",
     "id": "11b763e2-78ca-4e93-b169-a5489135d60e",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 167,
-    "categoryName": "Lenovo",
-    "categoryUri": "lenovo",
-    "id": "b669abe2-1b5a-4d82-808a-bedd0ee41b5b",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1720,
-    "categoryName": "Masstel",
-    "categoryUri": "masstel",
-    "id": "92b5bdf5-0f8b-4eb7-8e4c-534db10438aa",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 2320,
-    "categoryName": "Mobell",
-    "categoryUri": "mobell",
-    "id": "20905775-3a30-4b36-8696-1abfd5e288ad",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 4,
-    "categoryName": "Máy tính bảng",
-    "categoryUri": "tablet",
-    "id": "5b6bb2b9-c569-4f00-b14a-b79c19cf191b",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1288,
-    "categoryName": "Máy tính bảng mới",
-    "categoryUri": "may-tinh-bang",
-    "id": "b27f8237-2c22-4ba6-a34e-75a9008448da",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 98,
-    "categoryName": "Nokia",
-    "categoryUri": "nokia",
-    "id": "a4ca8c5e-040d-496e-9c45-20acc28fa9d9",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1385,
-    "categoryName": "Note 10 Series",
-    "categoryUri": "note-10-series",
-    "id": "1aff69e4-50a4-4e4e-8427-81c49613f0c4",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1386,
-    "categoryName": "Note 11 Series",
-    "categoryUri": "note-11-series",
-    "id": "52edf941-6f5a-4857-b945-3a4a3b507af7",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1596,
-    "categoryName": "Note 12 Series",
-    "categoryUri": "note-12-series",
-    "id": "c93effae-cb28-4545-b503-db1f20609d48",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -336,26 +128,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 1881,
-    "categoryName": "Nubia Redmagic",
-    "categoryUri": "redmagic",
-    "id": "57a463e7-a344-4eb6-9b05-e8341da9c5f6",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 133,
     "categoryName": "OPPO",
     "categoryUri": "oppo",
     "id": "01767117-013e-40b0-9c6a-d229f4783aa9",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 906,
-    "categoryName": "OnePlus",
-    "categoryUri": "oneplus",
-    "id": "880856d9-3e1c-44d7-825d-d70c1b3a6c89",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -400,34 +176,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 605,
-    "categoryName": "Sharp",
-    "categoryUri": "sharp",
-    "id": "b5ef4c39-31c9-4ea2-8fe2-9a402907ac65",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 36,
     "categoryName": "Sony",
     "categoryUri": "sony",
     "id": "cb1b0195-26a6-4d35-8795-5b8d8bdeb55b",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 937,
-    "categoryName": "Sản phẩm mới",
-    "categoryUri": "san-pham-moi",
-    "id": "2b352ee3-5f49-4122-8394-cc6fd01a6237",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1319,
-    "categoryName": "TCL",
-    "categoryUri": "tcl",
-    "id": "dcce1a48-069b-4573-a86a-240d8f3ab770",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -480,50 +232,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 641,
-    "categoryName": "Vsmart",
-    "categoryUri": "vsmart",
-    "id": "03ef94eb-a534-4347-9620-790c188528e9",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1020,
-    "categoryName": "X Series",
-    "categoryUri": "x-series",
-    "id": "ffb76063-80d5-4c83-84bd-c14abbe0e85f",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 340,
     "categoryName": "Xiaomi",
     "categoryUri": "xiaomi",
     "id": "62da841c-c33d-4fb9-a7d9-f0b58d3881ec",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1387,
-    "categoryName": "Xiaomi 11 Series",
-    "categoryUri": "11-series",
-    "id": "3a4ce632-594a-4af2-b1fb-d8ff725dadbb",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1388,
-    "categoryName": "Xiaomi 12 Series",
-    "categoryUri": "12-series",
-    "id": "a70ffc8d-2ff3-43d4-a727-7abdf7f4575a",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1563,
-    "categoryName": "Xiaomi 13 Series",
-    "categoryUri": "13-series",
-    "id": "2e48a549-6720-4987-b71b-df9ad98f4b4d",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -544,50 +256,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 1018,
-    "categoryName": "Y Series",
-    "categoryUri": "y-series",
-    "id": "ac4c12e3-be86-4b97-b04e-a9b93c28bd28",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1907,
-    "categoryName": "Z5 Series",
-    "categoryUri": "z5-series",
-    "id": "9f7805da-60c5-48f6-b0d0-3dbaf76b85be",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 2204,
     "categoryName": "Z6 Series",
     "categoryUri": "z6-series",
     "id": "096352f4-6d5f-4d37-a6da-048174df442b",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 1797,
-    "categoryName": "ZTE",
-    "categoryUri": "zte",
-    "id": "fc7238d0-8425-4548-958d-ce26c9860a8b",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 758,
-    "categoryName": "iPhone 11 Series",
-    "categoryUri": "iphone-11-series",
-    "id": "e77638a4-07c8-4e5c-8751-8907b8dbf45f",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 861,
-    "categoryName": "iPhone 12 Series",
-    "categoryUri": "iphone-12-vna",
-    "id": "b23657a1-f146-4a76-abf9-dc1d31e48b6c",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -656,14 +328,6 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 1484,
-    "categoryName": "Điện thoại Google Pixel",
-    "categoryUri": "google-pixel",
-    "id": "077a705b-85b0-4cb9-b295-b616a91e561a",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 1864,
     "categoryName": "Điện thoại Meizu",
     "categoryUri": "meizu",
@@ -672,26 +336,10 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 1489,
-    "categoryName": "Điện thoại Motorola",
-    "categoryUri": "motorola",
-    "id": "1e15e024-eea0-4586-95d6-872c0f4f98fe",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 1605,
     "categoryName": "Điện thoại chụp ảnh/quay phim đẹp",
     "categoryUri": "dien-thoai-chup-anh-quay-phim",
     "id": "f3e79723-6712-4609-9039-d2c015fc80ea",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
-    "categoryId": 940,
-    "categoryName": "Điện thoại cũ",
-    "categoryUri": "dien-thoai",
-    "id": "7ddeef79-0f16-47ee-adc2-9b4f7ad687e9",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
   },
@@ -728,19 +376,19 @@
     "updated_at": "2025-08-16T08:44:59"
   },
   {
-    "categoryId": 696,
-    "categoryName": "Điện thoại phổ thông",
-    "categoryUri": "dien-thoai-pho-thong",
-    "id": "aca21414-10f3-4539-ac49-f0d238a4309f",
-    "created_at": "2025-08-16T08:44:59",
-    "updated_at": "2025-08-16T08:44:59"
-  },
-  {
     "categoryId": 1601,
     "categoryName": "Điện thoại pin trâu",
     "categoryUri": "dien-thoai-pin-trau",
     "id": "d5672df4-0286-4ac6-9863-b33a6abf680d",
     "created_at": "2025-08-16T08:44:59",
     "updated_at": "2025-08-16T08:44:59"
+  },
+  {
+    "categoryId": 1675,
+    "categoryName": "Infinix",
+    "categoryUri": "infinix",
+    "id": "c3bb317b-85ae-4ce1-b5f0-99ad1d72fcdc",
+    "created_at": "2025-08-16T10:43:57",
+    "updated_at": "2025-08-16T10:43:57"
   }
 ]

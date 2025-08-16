@@ -1,4 +1,5 @@
 import uuid
+from typing import Dict
 
 from app.models.storage import JsonStorage
 
@@ -50,3 +51,10 @@ class CustomerService:
             }
             self.storage.create(new_customer)
             return new_customer["id"]
+
+
+    def find_by_phone(self, phone: str) -> Dict | None:
+        """Tìm khách hàng theo số điện thoại."""
+        all_customers = self.storage.all()
+        return next((c for c in all_customers if c.get("phone") == phone), None)
+

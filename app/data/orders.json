@@ -1,57 +1,39 @@
 [
   {
+    "customer_id": "75ce2836-01a9-4539-a94b-819167f6ab2e",
     "customer_info": {
-      "name": "11",
-      "phone": "1",
-      "email": "",
-      "address": ""
+      "name": "Nguyễn Thị Diệu Hiền",
+      "phone": "0912738131",
+      "email": "123",
+      "address": "123",
+      "id": "75ce2836-01a9-4539-a94b-819167f6ab2e"
     },
     "items": [
       {
-        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
-        "price": 10990000.0,
-        "quantity": 11,
-        "name": " Xiaomi 11T",
-        "item_id": "8ffd0caa-f70c-47d3-bff3-55ec83e9d5db"
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 4,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "7321fe6c-25aa-4cb6-8852-5309e16bdfb3"
       },
       {
-        "product_id": "5d4c9c46-411b-4ac0-9fa5-1190216be3ae",
-        "price": 48990000.0,
-        "quantity": 11,
-        "name": "Samsung Galaxy Z Fold7 12GB 512GB",
-        "item_id": "d9796ab8-4ebc-4151-ac3a-3c4718851a48"
-      },
-      {
-        "product_id": "a17a0fc1-9eae-44df-8bb7-f24b14e73c95",
-        "price": 45490000.0,
-        "quantity": 1,
-        "name": "Samsung Galaxy Z Fold6 12GB 1TB",
-        "item_id": "f3b91eef-0b6d-42de-8e3d-cc282c224eb5"
-      },
-      {
-        "product_id": "1c64c2a5-c3e8-4008-9fa9-04abd0b38b96",
-        "price": 44990000.0,
-        "quantity": 1,
-        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
-        "item_id": "c25a7767-350d-4f71-8bd4-57eb71dc1a9c"
-      },
-      {
-        "product_id": "5f01f51d-e34c-4051-a2e6-ba6f65e3437b",
-        "price": 44180000.0,
-        "quantity": 1,
-        "name": "OPPO FIND N5",
-        "item_id": "a2db07d8-d2ac-4f1a-a89c-6b350d9e876d"
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
+        "quantity": 3,
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "5a62b13e-39ba-410d-bc2a-c186fd6a13a2"
       }
     ],
-    "total_amount": 794440000.0,
+    "total_amount": 116450000.0,
     "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
-    "status": "pending",
-    "order_date": "2025-08-10T14:17:13",
-    "id": "2102c60f-aaf7-4800-ba6e-377e1718a1db"
+    "status": "completed",
+    "order_date": "2024-10-06T07:01:39",
+    "id": "7f6b0f89-ddb5-408b-8d21-016d5b9ba77d"
   },
   {
     "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
     "customer_info": {
+      "id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
       "name": "Trần Quốc Hoàn",
       "phone": "0367685425",
       "email": "admin@gmail.com",
@@ -59,100 +41,863 @@
     },
     "items": [
       {
-        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
-        "price": 10990000.0,
+        "product_id": "d98963a7-a327-4f7c-979b-c37dd928d4e0",
+        "price": 10300000.0,
         "quantity": 1,
-        "name": " Xiaomi 11T",
-        "item_id": "f3ca3e98-e7f4-4302-9dd6-845b93230100"
+        "name": "OPPO Reno14 F 5G 8GB 256GB",
+        "item_id": "ea0d6f1a-9f16-4f50-b8d8-9b8da1ac7f90"
       },
       {
-        "product_id": "4ee7df00-8158-4678-a939-290fa6ef8a87",
-        "price": 33590000.0,
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
         "quantity": 1,
-        "name": " Xiaomi 15 Ultra 5G 16GB 1TB ",
-        "item_id": "ac3613a5-53e0-4ff9-8a2c-6544e5bd4001"
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "0d6bc07b-006b-47b8-b356-3f8a4711e9c7"
       }
     ],
-    "total_amount": 44580000.0,
+    "total_amount": 29290000.0,
     "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
     "status": "completed",
-    "order_date": "2025-08-10T14:47:17",
-    "id": "eba142e0-1974-4594-a9be-d2b0c8f06d0f"
+    "order_date": "2025-07-14T07:01:39",
+    "id": "af9562b5-3a63-4eb1-9210-e694ea9cb619"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61944",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61944",
+      "name": "Trần Trọng Kim",
+      "phone": "0123456789",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "b07afac4-d3e2-4ff0-ae99-88bf65e42751"
+      },
+      {
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 3,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "e8c495d8-b4c4-425b-86e9-4e86789d933d"
+      },
+      {
+        "product_id": "74b48107-d5c8-4370-8e0a-d26e4b5d4c86",
+        "price": 29990000.0,
+        "quantity": 1,
+        "name": "iPhone 16 Pro Max 256GB",
+        "item_id": "f3854a9d-11ea-459d-a5ac-f0f3901f97a5"
+      }
+    ],
+    "total_amount": 101580000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-11-11T07:01:39",
+    "id": "76bb2a6e-9c08-43a5-a8b0-e8bd8ee22312"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61943",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61943",
+      "name": "Trần Văn Tiếm",
+      "phone": "0123461927",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 5,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "5a62b13e-39ba-410d-bc2a-c186fd6a13a2"
+      }
+    ],
+    "total_amount": 134900000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-01-01T07:01:39",
+    "id": "23d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61942",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61942",
+      "name": "Phạm Thị Thúy Phượng",
+      "phone": "0123401834",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "4edab479-43b8-46cd-a341-404cdf9edcae",
+        "price": 15190000.0,
+        "quantity": 10,
+        "name": "iPhone 15 128GB",
+        "item_id": "5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8a9b0c"
+      }
+    ],
+    "total_amount": 151900000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-12-15T07:01:39",
+    "id": "8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61941",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61941",
+      "name": "Nguyễn Văn An",
+      "phone": "0123459173",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "949bdd33-38a6-46e2-b666-172144923cdc",
+        "price": 44990000.0,
+        "quantity": 2,
+        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
+        "item_id": "b0c1d2e3-f4a5-6b7c-8d9e-0f1a2b3c4d5e"
+      },
+      {
+        "product_id": "d98963a7-a327-4f7c-979b-c37dd928d4e0",
+        "price": 10300000.0,
+        "quantity": 1,
+        "name": "OPPO Reno14 F 5G 8GB 256GB",
+        "item_id": "c1d2e3f4-a5b6-c7d8-e9f0-1a2b3c4d5e6f"
+      }
+    ],
+    "total_amount": 100280000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-02-28T07:01:39",
+    "id": "d2e3f4a5-b6c7-d8e9-f0a1-b2c3d4e5f6a7"
+  },
+  {
+    "customer_id": "c1a2b3c4-d5e6-f7a8-b9c0-1a2b3c4d5e6f",
+    "customer_info": {
+      "id": "c1a2b3c4-d5e6-f7a8-b9c0-1a2b3c4d5e6f",
+      "name": "Lê Thị Thanh Bình",
+      "phone": "0987654321",
+      "email": "binh.le@example.com",
+      "address": "Hà Nội"
+    },
+    "items": [
+      {
+        "product_id": "74b48107-d5c8-4370-8e0a-d26e4b5d4c86",
+        "price": 29990000.0,
+        "quantity": 3,
+        "name": "iPhone 16 Pro Max 256GB",
+        "item_id": "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f"
+      }
+    ],
+    "total_amount": 89970000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-04-05T07:01:39",
+    "id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b7"
+  },
+  {
+    "customer_id": "d2b3c4d5-e6f7-a8b9-c0d1-2e3f4a5b6c7d",
+    "customer_info": {
+      "id": "d2b3c4d5-e6f7-a8b9-c0d1-2e3f4a5b6c7d",
+      "name": "Phan Văn Cường",
+      "phone": "0912345678",
+      "email": "cuong.phan@example.com",
+      "address": "Hồ Chí Minh"
+    },
+    "items": [
+      {
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 1,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b"
+      },
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 2,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "f6a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1"
+      }
+    ],
+    "total_amount": 68830000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-05-10T07:01:39",
+    "id": "f7a8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c1"
+  },
+  {
+    "customer_id": "e3c4d5e6-f7a8-b9c0-d1e2-3f4a5b6c7d8e",
+    "customer_info": {
+      "id": "e3c4d5e6-f7a8-b9c0-d1e2-3f4a5b6c7d8e",
+      "name": "Hoàng Thị Mai",
+      "phone": "0978123456",
+      "email": "mai.hoang@example.com",
+      "address": "Đà Nẵng"
+    },
+    "items": [
+      {
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
+        "quantity": 4,
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      }
+    ],
+    "total_amount": 75960000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-06-18T07:01:39",
+    "id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6g"
+  },
+  {
+    "customer_id": "f4d5e6f7-a8b9-c0d1-e2f3-4a5b6c7d8e9f",
+    "customer_info": {
+      "id": "f4d5e6f7-a8b9-c0d1-e2f3-4a5b6c7d8e9f",
+      "name": "Nguyễn Trung Kiên",
+      "phone": "0934567890",
+      "email": "kien.nguyen@example.com",
+      "address": "Cần Thơ"
+    },
+    "items": [
+      {
+        "product_id": "4edab479-43b8-46cd-a341-404cdf9edcae",
+        "price": 15190000.0,
+        "quantity": 2,
+        "name": "iPhone 15 128GB",
+        "item_id": "d2e3f4a5-b6c7-d8e9-f0a1-b2c3d4e5f6a7"
+      },
+      {
+        "product_id": "949bdd33-38a6-46e2-b666-172144923cdc",
+        "price": 44990000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
+        "item_id": "e3f4a5b6-c7d8-e9f0-1a2b-3c4d5e6f7a8b"
+      }
+    ],
+    "total_amount": 75370000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-07-01T07:01:39",
+    "id": "f4a5b6c7-d8e9-f0a1-b2c3-d4e5f6a7b8c9"
+  },
+  {
+    "customer_id": "a5e6f7a8-b9c0-d1e2-f3a4-5b6c7d8e9f0a",
+    "customer_info": {
+      "id": "a5e6f7a8-b9c0-d1e2-f3a4-5b6c7d8e9f0a",
+      "name": "Trần Văn Dũng",
+      "phone": "0909876543",
+      "email": "dung.tran@example.com",
+      "address": "Hải Phòng"
+    },
+    "items": [
+      {
+        "product_id": "d98963a7-a327-4f7c-979b-c37dd928d4e0",
+        "price": 10300000.0,
+        "quantity": 3,
+        "name": "OPPO Reno14 F 5G 8GB 256GB",
+        "item_id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b9"
+      }
+    ],
+    "total_amount": 30900000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-09-08T07:01:39",
+    "id": "a5b6c7d8-e9f0-1a2b-3c4d-5e6f7a8b9c0d"
+  },
+  {
+    "customer_id": "b6f7a8b9-c0d1-e2f3-a4b5-6c7d8e9f0a1b",
+    "customer_info": {
+      "id": "b6f7a8b9-c0d1-e2f3-a4b5-6c7d8e9f0a1b",
+      "name": "Lê Thị Hồng",
+      "phone": "0943123456",
+      "email": "hong.le@example.com",
+      "address": "Quảng Ninh"
+    },
+    "items": [
+      {
+        "product_id": "74b48107-d5c8-4370-8e0a-d26e4b5d4c86",
+        "price": 29990000.0,
+        "quantity": 1,
+        "name": "iPhone 16 Pro Max 256GB",
+        "item_id": "e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b"
+      }
+    ],
+    "total_amount": 29990000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-10-22T07:01:39",
+    "id": "b6f7a8b9-c0d1-e2f3-a4b5-6c7d8e9f0a1b"
+  },
+  {
+    "customer_id": "c7a8b9c0-d1e2-f3a4-b5c6-7d8e9f0a1b2c",
+    "customer_info": {
+      "id": "c7a8b9c0-d1e2-f3a4-b5c6-7d8e9f0a1b2c",
+      "name": "Phạm Văn Hoàng",
+      "phone": "0911987654",
+      "email": "hoang.pham@example.com",
+      "address": "Nha Trang"
+    },
+    "items": [
+      {
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 2,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "f6a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1"
+      },
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      }
+    ],
+    "total_amount": 56720000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-11-03T07:01:39",
+    "id": "c7a8b9c0-d1e2-f3a4-b5c6-7d8e9f0a1b2c"
+  },
+  {
+    "customer_id": "d8b9c0d1-e2f3-a4b5-c6d7-8e9f0a1b2c3d",
+    "customer_info": {
+      "id": "d8b9c0d1-e2f3-a4b5-c6d7-8e9f0a1b2c3d",
+      "name": "Vũ Thị Thanh Thảo",
+      "phone": "0923456789",
+      "email": "thao.vu@example.com",
+      "address": "Huế"
+    },
+    "items": [
+      {
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
+        "quantity": 5,
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e"
+      }
+    ],
+    "total_amount": 94950000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-12-20T07:01:39",
+    "id": "d8b9c0d1-e2f3-a4b5-c6d7-8e9f0a1b2c3d"
+  },
+  {
+    "customer_id": "e9c0d1e2-f3a4-b5c6-d7e8-9f0a1b2c3d4e",
+    "customer_info": {
+      "id": "e9c0d1e2-f3a4-b5c6-d7e8-9f0a1b2c3d4e",
+      "name": "Trịnh Văn Sơn",
+      "phone": "0986123457",
+      "email": "son.trinh@example.com",
+      "address": "Thái Nguyên"
+    },
+    "items": [
+      {
+        "product_id": "4edab479-43b8-46cd-a341-404cdf9edcae",
+        "price": 15190000.0,
+        "quantity": 3,
+        "name": "iPhone 15 128GB",
+        "item_id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7"
+      },
+      {
+        "product_id": "949bdd33-38a6-46e2-b666-172144923cdc",
+        "price": 44990000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
+        "item_id": "d3e4f5a6-b7c8-d9e0-f1a2-b3c4d5e6f7a8"
+      }
+    ],
+    "total_amount": 90560000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-01-08T07:01:39",
+    "id": "e9c0d1e2-f3a4-b5c6-d7e8-9f0a1b2c3d4e"
+  },
+  {
+    "customer_id": "fad1e2f3-a4b5-c6d7-e8f9-0a1b2c3d4e5f",
+    "customer_info": {
+      "id": "fad1e2f3-a4b5-c6d7-e8f9-0a1b2c3d4e5f",
+      "name": "Đỗ Thị Ngọc",
+      "phone": "0901239876",
+      "email": "ngoc.do@example.com",
+      "address": "Vũng Tàu"
+    },
+    "items": [
+      {
+        "product_id": "d98963a7-a327-4f7c-979b-c37dd928d4e0",
+        "price": 10300000.0,
+        "quantity": 5,
+        "name": "OPPO Reno14 F 5G 8GB 256GB",
+        "item_id": "e0f1a2b3-c4d5-6e7f-8a9b-0c1d2e3f4a5b"
+      }
+    ],
+    "total_amount": 51500000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-02-01T07:01:39",
+    "id": "fad1e2f3-a4b5-c6d7-e8f9-0a1b2c3d4e5f"
+  },
+  {
+    "customer_id": "75ce2836-01a9-4539-a94b-819167f6ab2e",
+    "customer_info": {
+      "id": "75ce2836-01a9-4539-a94b-819167f6ab2e",
+      "name": "Nguyễn Thị Diệu Hiền",
+      "phone": "0912738131",
+      "email": "123",
+      "address": "123"
+    },
+    "items": [
+      {
+        "product_id": "74b48107-d5c8-4370-8e0a-d26e4b5d4c86",
+        "price": 29990000.0,
+        "quantity": 2,
+        "name": "iPhone 16 Pro Max 256GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      },
+      {
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 1,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e"
+      }
+    ],
+    "total_amount": 74850000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-03-05T07:01:39",
+    "id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f6"
   },
   {
     "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
     "customer_info": {
+      "id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
       "name": "Trần Quốc Hoàn",
       "phone": "0367685425",
+      "email": "admin@gmail.com",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 3,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "d3e4f5a6-b7c8-d9e0-f1a2-b3c4d5e6f7a8"
+      }
+    ],
+    "total_amount": 80940000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-04-10T07:01:39",
+    "id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b6"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61944",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61944",
+      "name": "Trần Trọng Kim",
+      "phone": "0123456789",
       "email": "",
       "address": ""
     },
     "items": [
       {
-        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
-        "price": 10990000.0,
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
         "quantity": 1,
-        "name": " Xiaomi 11T",
-        "item_id": "0949e0f6-3aa9-4bad-971d-6539275b1c1d"
-      }
-    ],
-    "total_amount": 10990000.0,
-    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
-    "status": "completed",
-    "order_date": "2025-08-10T14:52:17",
-    "id": "0ca907bb-bb72-4096-a40e-2ec3dec75f2c"
-  },
-  {
-    "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
-    "customer_info": {
-      "name": "Trần QUốc ",
-      "phone": "0367685425",
-      "email": "",
-      "address": ""
-    },
-    "items": [
-      {
-        "product_id": "b94686a2-0510-4f3a-b579-addb93270f3b",
-        "price": 10990000.0,
-        "quantity": 16,
-        "name": " Xiaomi 11T",
-        "item_id": "d8726fd2-6d17-4da4-8900-5ac7fcdf3e1c"
-      }
-    ],
-    "total_amount": 175840000.0,
-    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
-    "status": "completed",
-    "order_date": "2025-08-10T14:59:39",
-    "id": "322b72a4-1b3a-4087-a24e-31edbc6fe08e"
-  },
-  {
-    "customer_id": "53507359-68ed-4f6a-a6c0-1adc66c6dcdb",
-    "customer_info": {
-      "name": "Tran QUoc Hoan",
-      "phone": "0367685425",
-      "email": "",
-      "address": ""
-    },
-    "items": [
-      {
-        "product_id": "983b4fce-3bf4-4d5c-80f7-fad26437d3e2",
-        "price": 7990000.0,
-        "quantity": 14,
-        "name": "iPhone 12 64GB | Chính hãng VN/A ",
-        "item_id": "127cee3b-58eb-4a4f-8292-0053c60e3c45"
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b"
       },
       {
-        "product_id": "cb007659-d5a2-4534-9cd7-44ed36bb89af",
-        "price": 11090000.0,
-        "quantity": 4,
-        "name": "iPhone 13 128GB | Chính hãng VN/A",
-        "item_id": "f4450198-5e2a-4cd1-a192-f9555cb2984e"
+        "product_id": "4edab479-43b8-46cd-a341-404cdf9edcae",
+        "price": 15190000.0,
+        "quantity": 2,
+        "name": "iPhone 15 128GB",
+        "item_id": "f6a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1"
       }
     ],
-    "total_amount": 156220000.0,
-    "user_id": "53ec115a-8bb7-4799-8bd6-e88b329bca54",
+    "total_amount": 49370000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
     "status": "completed",
-    "order_date": "2025-08-10T15:36:11",
-    "id": "8d4d6914-b381-4174-8abe-f138a119bce0"
+    "order_date": "2025-05-15T07:01:39",
+    "id": "f7a8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61943",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61943",
+      "name": "Trần Văn Tiếm",
+      "phone": "0123461927",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "949bdd33-38a6-46e2-b666-172144923cdc",
+        "price": 44990000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      },
+      {
+        "product_id": "d98963a7-a327-4f7c-979b-c37dd928d4e0",
+        "price": 10300000.0,
+        "quantity": 4,
+        "name": "OPPO Reno14 F 5G 8GB 256GB",
+        "item_id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e"
+      }
+    ],
+    "total_amount": 86190000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-06-01T07:01:39",
+    "id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f5"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61942",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61942",
+      "name": "Phạm Thị Thúy Phượng",
+      "phone": "0123401834",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "74b48107-d5c8-4370-8e0a-d26e4b5d4c86",
+        "price": 29990000.0,
+        "quantity": 1,
+        "name": "iPhone 16 Pro Max 256GB",
+        "item_id": "d3e4f5a6-b7c8-d9e0-f1a2-b3c4d5e6f7a8"
+      },
+      {
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 5,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b9"
+      },
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 2,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "f5a6b7c8-d9e0-1f2a-3b4c-5d6e7f8a9b0c"
+      }
+    ],
+    "total_amount": 175370000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-07-20T07:01:39",
+    "id": "f6a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c2"
+  },
+  {
+    "customer_id": "fff62869-fa32-4bc6-b493-bd49ffa61941",
+    "customer_info": {
+      "id": "fff62869-fa32-4bc6-b493-bd49ffa61941",
+      "name": "Nguyễn Văn An",
+      "phone": "0123459173",
+      "email": "",
+      "address": ""
+    },
+    "items": [
+      {
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
+        "quantity": 2,
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "a7b8c9d0-e1f2-a3b4-c5d6-e7f8a9b0c1d2"
+      }
+    ],
+    "total_amount": 37980000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-09-25T07:01:39",
+    "id": "b8c9d0e1-f2a3-b4c5-d6e7-f8a9b0c1d2e3"
+  },
+  {
+    "customer_id": "c1a2b3c4-d5e6-f7a8-b9c0-1a2b3c4d5e6f",
+    "customer_info": {
+      "id": "c1a2b3c4-d5e6-f7a8-b9c0-1a2b3c4d5e6f",
+      "name": "Lê Thị Thanh Bình",
+      "phone": "0987654321",
+      "email": "binh.le@example.com",
+      "address": "Hà Nội"
+    },
+    "items": [
+      {
+        "product_id": "4edab479-43b8-46cd-a341-404cdf9edcae",
+        "price": 15190000.0,
+        "quantity": 1,
+        "name": "iPhone 15 128GB",
+        "item_id": "c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4"
+      },
+      {
+        "product_id": "949bdd33-38a6-46e2-b666-172144923cdc",
+        "price": 44990000.0,
+        "quantity": 3,
+        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
+        "item_id": "d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a"
+      }
+    ],
+    "total_amount": 150160000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-10-10T07:01:39",
+    "id": "e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b"
+  },
+  {
+    "customer_id": "d2b3c4d5-e6f7-a8b9-c0d1-2e3f4a5b6c7d",
+    "customer_info": {
+      "id": "d2b3c4d5-e6f7-a8b9-c0d1-2e3f4a5b6c7d",
+      "name": "Phan Văn Cường",
+      "phone": "0912345678",
+      "email": "cuong.phan@example.com",
+      "address": "Hồ Chí Minh"
+    },
+    "items": [
+      {
+        "product_id": "d98963a7-a327-4f7c-979b-c37dd928d4e0",
+        "price": 10300000.0,
+        "quantity": 1,
+        "name": "OPPO Reno14 F 5G 8GB 256GB",
+        "item_id": "f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c"
+      },
+      {
+        "product_id": "74b48107-d5c8-4370-8e0a-d26e4b5d4c86",
+        "price": 29990000.0,
+        "quantity": 4,
+        "name": "iPhone 16 Pro Max 256GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      }
+    ],
+    "total_amount": 130260000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-11-25T07:01:39",
+    "id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6h"
+  },
+  {
+    "customer_id": "e3c4d5e6-f7a8-b9c0-d1e2-3f4a5b6c7d8e",
+    "customer_info": {
+      "id": "e3c4d5e6-f7a8-b9c0-d1e2-3f4a5b6c7d8e",
+      "name": "Hoàng Thị Mai",
+      "phone": "0978123456",
+      "email": "mai.hoang@example.com",
+      "address": "Đà Nẵng"
+    },
+    "items": [
+      {
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 5,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7"
+      }
+    ],
+    "total_amount": 74350000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2024-12-10T07:01:39",
+    "id": "d3e4f5a6-b7c8-d9e0-f1a2-b3c4d5e6f7a8"
+  },
+  {
+    "customer_id": "f4d5e6f7-a8b9-c0d1-e2f3-4a5b6c7d8e9f",
+    "customer_info": {
+      "id": "f4d5e6f7-a8b9-c0d1-e2f3-4a5b6c7d8e9f",
+      "name": "Nguyễn Trung Kiên",
+      "phone": "0934567890",
+      "email": "kien.nguyen@example.com",
+      "address": "Cần Thơ"
+    },
+    "items": [
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 1,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b9"
+      }
+    ],
+    "total_amount": 26980000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-01-05T07:01:39",
+    "id": "f5a6b7c8-d9e0-1f2a-3b4c-5d6e7f8a9b0c"
+  },
+  {
+    "customer_id": "a5e6f7a8-b9c0-d1e2-f3a4-5b6c7d8e9f0a",
+    "customer_info": {
+      "id": "a5e6f7a8-b9c0-d1e2-f3a4-5b6c7d8e9f0a",
+      "name": "Trần Văn Dũng",
+      "phone": "0909876543",
+      "email": "dung.tran@example.com",
+      "address": "Hải Phòng"
+    },
+    "items": [
+      {
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
+        "quantity": 2,
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      },
+      {
+        "product_id": "4edab479-43b8-46cd-a341-404cdf9edcae",
+        "price": 15190000.0,
+        "quantity": 1,
+        "name": "iPhone 15 128GB",
+        "item_id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e"
+      }
+    ],
+    "total_amount": 53170000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-02-19T07:01:39",
+    "id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f4"
+  },
+  {
+    "customer_id": "b6f7a8b9-c0d1-e2f3-a4b5-6c7d8e9f0a1b",
+    "customer_info": {
+      "id": "b6f7a8b9-c0d1-e2f3-a4b5-6c7d8e9f0a1b",
+      "name": "Lê Thị Hồng",
+      "phone": "0943123456",
+      "email": "hong.le@example.com",
+      "address": "Quảng Ninh"
+    },
+    "items": [
+      {
+        "product_id": "949bdd33-38a6-46e2-b666-172144923cdc",
+        "price": 44990000.0,
+        "quantity": 3,
+        "name": "Samsung Galaxy Z Fold7 12GB 256GB",
+        "item_id": "b3c4d5e6-f7a8-9b0c-1d2e-3f4a5b6c7d8e"
+      }
+    ],
+    "total_amount": 134970000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-03-08T07:01:39",
+    "id": "d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a"
+  },
+  {
+    "customer_id": "c7a8b9c0-d1e2-f3a4-b5c6-7d8e9f0a1b2c",
+    "customer_info": {
+      "id": "c7a8b9c0-d1e2-f3a4-b5c6-7d8e9f0a1b2c",
+      "name": "Phạm Văn Hoàng",
+      "phone": "0911987654",
+      "email": "hoang.pham@example.com",
+      "address": "Nha Trang"
+    },
+    "items": [
+      {
+        "product_id": "d98963a7-a327-4f7c-979b-c37dd928d4e0",
+        "price": 10300000.0,
+        "quantity": 1,
+        "name": "OPPO Reno14 F 5G 8GB 256GB",
+        "item_id": "e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b"
+      }
+    ],
+    "total_amount": 10300000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-04-12T07:01:39",
+    "id": "f6a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c3"
+  },
+  {
+    "customer_id": "d8b9c0d1-e2f3-a4b5-c6d7-8e9f0a1b2c3d",
+    "customer_info": {
+      "id": "d8b9c0d1-e2f3-a4b5-c6d7-8e9f0a1b2c3d",
+      "name": "Vũ Thị Thanh Thảo",
+      "phone": "0923456789",
+      "email": "thao.vu@example.com",
+      "address": "Huế"
+    },
+    "items": [
+      {
+        "product_id": "74b48107-d5c8-4370-8e0a-d26e4b5d4c86",
+        "price": 29990000.0,
+        "quantity": 2,
+        "name": "iPhone 16 Pro Max 256GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      },
+      {
+        "product_id": "8c67efe6-038f-490e-8e59-5836dc2891af",
+        "price": 14870000.0,
+        "quantity": 1,
+        "name": "Xiaomi 14T Pro 12GB 512GB",
+        "item_id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e"
+      }
+    ],
+    "total_amount": 74850000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-05-18T07:01:39",
+    "id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f3"
+  },
+  {
+    "customer_id": "e9c0d1e2-f3a4-b5c6-d7e8-9f0a1b2c3d4e",
+    "customer_info": {
+      "id": "e9c0d1e2-f3a4-b5c6-d7e8-9f0a1b2c3d4e",
+      "name": "Trịnh Văn Sơn",
+      "phone": "0986123457",
+      "email": "son.trinh@example.com",
+      "address": "Thái Nguyên"
+    },
+    "items": [
+      {
+        "product_id": "0f647826-2b39-4185-aae3-10cd658a3f09",
+        "price": 26980000.0,
+        "quantity": 3,
+        "name": "Samsung Galaxy S25 Ultra 12GB 256GB",
+        "item_id": "d3e4f5a6-b7c8-d9e0-f1a2-b3c4d5e6f7a8"
+      }
+    ],
+    "total_amount": 80940000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-06-25T07:01:39",
+    "id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b8"
+  },
+  {
+    "customer_id": "fad1e2f3-a4b5-c6d7-e8f9-0a1b2c3d4e5f",
+    "customer_info": {
+      "id": "fad1e2f3-a4b5-c6d7-e8f9-0a1b2c3d4e5f",
+      "name": "Đỗ Thị Ngọc",
+      "phone": "0901239876",
+      "email": "ngoc.do@example.com",
+      "address": "Vũng Tàu"
+    },
+    "items": [
+      {
+        "product_id": "02e138ee-1db6-43a8-8a9c-d84897f7835c",
+        "price": 18990000.0,
+        "quantity": 1,
+        "name": "iPhone 15 Plus 128GB",
+        "item_id": "f5a6b7c8-d9e0-1f2a-3b4c-5d6e7f8a9b0c"
+      },
+      {
+        "product_id": "4edab479-43b8-46cd-a341-404cdf9edcae",
+        "price": 15190000.0,
+        "quantity": 4,
+        "name": "iPhone 15 128GB",
+        "item_id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"
+      }
+    ],
+    "total_amount": 79750000.0,
+    "user_id": "f97da116-4683-4238-994a-40208fa8dafb",
+    "status": "completed",
+    "order_date": "2025-07-30T07:01:39",
+    "id": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6f"
   }
 ]

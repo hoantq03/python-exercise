@@ -14,11 +14,13 @@ from app.services.category_service import CategoryService
 from app.services.customer_service import CustomerService
 from app.services.product_service import ProductService
 from app.services.order_service import OrderService
+from app.services.user_service import UserService  # <-- Import UserService
 
 # UI Views
 from app.ui.app_window import AppWindow
 from app.ui.cart_view import CartView
 from app.ui.login_view import LoginView
+from app.ui.report_view import ReportFrame
 from app.ui.users_view import UsersView
 from app.ui.customers_view import CustomersView
 from app.ui.products_view import ProductsView
@@ -31,6 +33,7 @@ from app.scrapers.laptop_list_scraper import LaptopListScraper
 
 # Schedulers
 from app.schedulers.scraper_scheduler import ScraperScheduler
+from app.utils.dummy_orders_generation import DummyOrderCreator
 
 
 def get_bool_from_env(key: str, default: bool = False) -> bool:
@@ -51,7 +54,8 @@ def run():
     categories_store = JsonStorage("data/categories.json")
 
     # --- Khởi tạo các dịch vụ (Services) ---
-    auth = AuthService(users_store)
+    # KHỞI TẠO UserService TRƯỚC VÌ CÁC DỊCH VỤ KHÁC CÓ THỂ PHỤ THUỘC VÀO NÓ
+    auth = AuthService(users_store)  # auth vẫn dùng users_store trực tiếp, không sao
     auth.ensure_admin_seed()
 
     cust_srv = CustomerService(customers_store)
@@ -60,12 +64,12 @@ def run():
     cart_srv = CartService(carts_store)
     categories_srv = CategoryService(categories_store)
 
-    # --- Cấu hình Scraper và Task ---
+    # --- Cấu hình Scraper và Task --- (phần còn lại giữ nguyên)
     SCRAPER_CONFIG = {
         'PHONE_SCRAPER_ENABLED': PhoneListScraper,
         'PHONE_DETAILS_SCRAPER_ENABLED': PhoneDetailScraper,
         'LAPTOP_SCRAPER_ENABLED': LaptopListScraper,
-        'UPDATE_CATEGORIES_ENABLED': UpdateCategoryCronTask,  # Sử dụng CategoryScheduler
+        'UPDATE_CATEGORIES_ENABLED': UpdateCategoryCronTask,
     }
 
     all_initialized_tasks = []
@@ -96,8 +100,8 @@ def run():
             print(f" -> Đã tắt: {task_class.__name__}")
 
     # --- PHÂN LOẠI VÀ KHỞI ĐỘNG CÁC SCHEDULER ---
-    scrapers_for_main_scheduler = []  # Chỉ chứa các đối tượng BaseScraper (có scrape() method)
-    other_schedulers_to_start_manually = []  # Chứa các scheduler tự thân (có start() method)
+    scrapers_for_main_scheduler = []
+    other_schedulers_to_start_manually = []
 
     for task_instance in all_initialized_tasks:
         if isinstance(task_instance, UpdateCategoryCronTask):
@@ -137,13 +141,14 @@ def run():
         can_edit_data = auth.authorize(u, ("admin", "staff"))
 
         if can_manage_users:
+            # Truyền user_srv vào UsersView nếu nó cần để quản lý người dùng
             win.add_nav_button("Người dùng", lambda: win.show_view(UsersView, users_store, u))
 
         win.add_nav_button("Sản phẩm", lambda: win.show_view(ProductsView, prod_srv, cart_srv, categories_srv, can_edit_data))
         win.add_nav_button("🛒 Giỏ hàng", lambda: win.show_view(CartView, cart_srv, order_srv, cust_srv, u))
         win.add_nav_button("Khách hàng", lambda: win.show_view(CustomersView, cust_srv, order_srv, can_edit_data))
-        win.add_nav_button("Đơn hàng",
-                           lambda: win.show_view(OrdersView, order_srv, cust_srv, prod_srv, u, can_edit_data))
+        win.add_nav_button("Đơn hàng", lambda: win.show_view(OrdersView, order_srv, cust_srv, prod_srv, u, can_edit_data))
+        win.add_nav_button("Báo cáo", lambda: win.show_view(ReportFrame, order_srv, prod_srv, cust_srv))
 
         def logout():
             win.destroy()
@@ -169,3 +174,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+

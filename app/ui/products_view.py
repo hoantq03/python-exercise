@@ -60,9 +60,9 @@ class ProductsView(ttk.Frame):
             "img_bg_loading": "#e0e0e0",
             "img_bg_done": "#ffffff",
             "card_wrap": 150,
-            "name_font": ("Arial", 12, "bold"),
+            "name_font": ("Arial", 10, "bold"),
             "price_font": ("Arial", 12, "bold"),
-            "meta_font": ("Arial", 12),
+            "meta_font": ("Arial", 10),
             "price_color": "#d60000",
             "card_padx": 6,
             "card_pady": 8,
@@ -76,7 +76,6 @@ class ProductsView(ttk.Frame):
         },
     }
 
-    # MODIFIED: Thêm category_service vào hàm khởi tạo
     def __init__(self, master, product_service, cart_service, category_service, can_edit: bool):
         super().__init__(master)
         self.product_service = product_service
@@ -96,7 +95,7 @@ class ProductsView(ttk.Frame):
 
         # Pagination state
         self.current_page = 1
-        self.items_per_page = tk.IntVar(value=8)
+        self.items_per_page = tk.IntVar(value=14)
         self.total_pages = 1
 
         # NEW: Category filter state
@@ -109,6 +108,15 @@ class ProductsView(ttk.Frame):
         self.after(200, lambda: self.refresh(reset_page=True))
 
     def _create_widgets(self):
+        entry_width_price = 11
+        entry_padx = 3
+
+        # Hàm định dạng giá tiền
+        def format_price(event, price_var):
+            value = price_var.get().replace(',', '')  # Xóa bỏ dấu phẩy cũ nếu có
+            if value.isdigit():  # Kiểm tra xem giá trị có phải là số không
+                price_var.set('{:,}'.format(int(value)))  # Định dạng với dấu phẩy
+
         """Creates all widgets with optimized layout"""
         # Toolbar with fixed height
         toolbar = ttk.Frame(self, height=40)
@@ -120,13 +128,20 @@ class ProductsView(ttk.Frame):
         self.e_kw = ttk.Entry(toolbar, width=18)
         self.e_kw.pack(side=tk.LEFT, padx=2)
 
-        ttk.Label(toolbar, text="Giá từ:").pack(side=tk.LEFT, padx=4)
-        self.e_min_price = ttk.Entry(toolbar, width=8)
-        self.e_min_price.pack(side=tk.LEFT, padx=2)
+        # Sử dụng StringVar cho e_min_price
+        self.min_price_var = tk.StringVar()
+        self.e_min_price = ttk.Entry(toolbar, width=entry_width_price, textvariable=self.min_price_var)
+        self.e_min_price.pack(side=tk.LEFT, padx=entry_padx)
+        # Gắn sự kiện FocusOut để định dạng giá tiền khi rời khỏi trường nhập
+        self.e_min_price.bind('<FocusOut>', lambda e: format_price(e, self.min_price_var))
 
         ttk.Label(toolbar, text="đến:").pack(side=tk.LEFT)
-        self.e_max_price = ttk.Entry(toolbar, width=8)
-        self.e_max_price.pack(side=tk.LEFT, padx=2)
+        # Sử dụng StringVar cho e_max_price
+        self.max_price_var = tk.StringVar()
+        self.e_max_price = ttk.Entry(toolbar, width=entry_width_price, textvariable=self.max_price_var)
+        self.e_max_price.pack(side=tk.LEFT, padx=entry_padx)
+        # Gắn sự kiện FocusOut để định dạng giá tiền khi rời khỏi trường nhập
+        self.e_max_price.bind('<FocusOut>', lambda e: format_price(e, self.max_price_var))
 
         # NEW: Category filter button
         ttk.Button(toolbar, text="Danh mục...", command=self._open_category_filter_dialog).pack(side=tk.LEFT, padx=8)
@@ -275,19 +290,26 @@ class ProductsView(ttk.Frame):
         if not event or event.widget != self:
             return
 
-        # Only resize when significantly changed
-        current_size = (event.width, event.height)
-        if self._last_window_size:
-            width_diff = abs(current_size - self._last_window_size)
-            height_diff = abs(current_size - self._last_window_size)
+        current_width = event.width
+        current_height = event.height
+        current_size = (current_width, current_height)
 
-            # Only refresh if change > 50px
-            if width_diff < 50 and height_diff < 50:
-                return
+        # Đảm bảo self._last_window_size được khởi tạo.
+        # Nếu chưa, gán kích thước hiện tại và không làm gì thêm trong lần này.
+        if not hasattr(self, '_last_window_size') or self._last_window_size is None:
+            self._last_window_size = current_size
+            return
+
+        # Chỉ tính toán sự khác biệt nếu _last_window_size đã có giá trị
+        width_diff = abs(current_width - self._last_window_size[0])
+        height_diff = abs(current_height - self._last_window_size[1])  # <-- Lỗi được sửa tại đây
+
+        # Chỉ refresh nếu sự thay đổi đáng kể (> 50px)
+        if width_diff < 50 and height_diff < 50:
+            return
 
         self._last_window_size = current_size
         self._debounced_resize_refresh(500)
-
 
     def _debounced_search_refresh(self, delay=800):
         """Separate debounced refresh for search"""
@@ -520,14 +542,14 @@ class ProductsView(ttk.Frame):
         name_label.pack(pady=(0, 3))
 
         price = product.get('price', 0)
-        price_text = f"{price:,.0f}₫" if price < 1000000 else f"{price / 1000000:.1f}M₫"
+        price_text = f"{price:,.0f}₫"
         price_label = tk.Label(info_frame, text=price_text,
                                foreground=gcfg["price_color"], font=gcfg["price_font"])
         price_label.pack()
 
-        sku = product.get('sku', '')
-        meta_text = f"SKU: {sku[:6]}{'...' if len(sku) > 6 else ''}"
-        tk.Label(info_frame, text=meta_text, font=gcfg["meta_font"]).pack()
+        # sku = product.get('sku', '')
+        # meta_text = f"SKU: {sku[:6]}{'...' if len(sku) > 6 else ''}"
+        # tk.Label(info_frame, text=meta_text, font=gcfg["meta_font"]).pack()
 
         stock = product.get('stock', 0)
         stock_color = "#28a745" if stock > 10 else "#ffc107" if stock > 0 else "#dc3545"
@@ -557,10 +579,8 @@ class ProductsView(ttk.Frame):
             edit_frame = tk.Frame(btn_frame)
             edit_frame.pack(pady=1)
 
-            ttk.Button(edit_frame, text="✏️", width=4,
-                       command=partial(self.edit, product["id"])).pack(side=tk.LEFT, padx=1)
-            ttk.Button(edit_frame, text="🗑️", width=4,
-                       command=partial(self.delete, product["id"])).pack(side=tk.LEFT, padx=1)
+            ttk.Button(edit_frame, text="Sửa", width=8, command=partial(self.edit, product["id"])).pack(side=tk.LEFT, padx=1)
+            ttk.Button(edit_frame, text="Xóa", width=8, command=partial(self.delete, product["id"])).pack(side=tk.LEFT, padx=1)
 
     def _add_to_cart(self, product):
         """Add 1 product to cart and show notification."""

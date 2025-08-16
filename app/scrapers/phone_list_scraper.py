@@ -1,5 +1,5 @@
 import os
-
+import random
 import requests
 import uuid
 from datetime import datetime
@@ -198,7 +198,8 @@ class PhoneListScraper(BaseScraper):
                 self._progress_updated += 1
             else:
                 now_iso = datetime.now().isoformat()
-                new_product = Product(id=str(uuid.uuid4()), stock=100, created_at=now_iso, updated_at=now_iso,
+
+                new_product = Product(id=str(uuid.uuid4()), stock=random.randint(100, 300), created_at=now_iso, updated_at=now_iso,
                                       **product_patch)
                 self.product_storage.create(asdict(new_product))
                 self._progress_created += 1

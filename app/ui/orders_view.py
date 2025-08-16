@@ -6,7 +6,8 @@ from tkcalendar import DateEntry
 class OrdersView(ttk.Frame):
     """Giao diện nâng cao để xem và quản lý lịch sử đơn hàng."""
 
-    def __init__(self, master, order_service, customer_service, product_service, current_user, can_edit: bool, initial_customer_id=None):
+    def __init__(self, master, order_service, customer_service, product_service, current_user, can_edit: bool,
+                 initial_customer_id=None):
         super().__init__(master)
         self.order_service = order_service
         self.customer_service = customer_service
@@ -20,6 +21,10 @@ class OrdersView(ttk.Frame):
         self.sort_var = tk.StringVar(value="Ngày tạo (mới nhất)")
 
         self._search_timer = None
+
+        # New: Sorting state for columns
+        self.sort_column = None
+        self.sort_direction = {}  # Stores 'asc', 'desc', or '' for each column
 
         self._create_widgets()
         self._bind_events()
@@ -60,7 +65,7 @@ class OrdersView(ttk.Frame):
         ttk.Button(toolbar, text="X", width=2, command=lambda: self.to_date_entry.delete(0, "end")).pack(side=tk.LEFT,
                                                                                                          padx=(0, 10))
 
-        # Sắp xếp
+        # Sắp xếp (Existing dropdown, can be removed if column sorting is primary)
         ttk.Label(toolbar, text="Sắp xếp:").pack(side=tk.LEFT, padx=(5, 2))
         sort_options = {
             "Ngày tạo (mới nhất)": "date_desc", "Ngày tạo (cũ nhất)": "date_asc",
@@ -79,10 +84,22 @@ class OrdersView(ttk.Frame):
         # Treeview
         tree_frame = ttk.Frame(self)
         tree_frame.pack(expand=True, fill=tk.BOTH, pady=5)
-        columns = ("customer_name", "total_amount", "status", "order_date", "user_id")
-        headings = ("Khách hàng", "Tổng tiền", "Trạng thái", "Ngày tạo", "Nhân viên tạo")
+        self.columns_info = {  # Store column and corresponding data key
+            "customer_name": {"heading": "Khách hàng", "data_key": "customer_info.name"},
+            "total_amount": {"heading": "Tổng tiền", "data_key": "total_amount"},
+            "status": {"heading": "Trạng thái", "data_key": "status"},
+            "order_date": {"heading": "Ngày tạo", "data_key": "order_date"},
+            "user_id": {"heading": "Nhân viên tạo", "data_key": "user_id"},
+        }
+        columns = list(self.columns_info.keys())
+        headings = [info["heading"] for info in self.columns_info.values()]
+
         self.tree = ttk.Treeview(tree_frame, columns=columns, show="headings")
-        for col, head in zip(columns, headings): self.tree.heading(col, text=head)
+
+        for col, head in zip(columns, headings):
+            self.tree.heading(col, text=head, command=lambda c=col: self._sort_column(c))
+            self.sort_direction[col] = ''  # Initialize sort direction for each column
+
         scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
         self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -101,6 +118,27 @@ class OrdersView(ttk.Frame):
     def _debounced_refresh(self):
         if self._search_timer: self.after_cancel(self._search_timer)
         self._search_timer = self.after(500, self.refresh)
+
+    def _sort_column(self, col):
+        # Cycle through sort directions: '', 'asc', 'desc'
+        current_direction = self.sort_direction.get(col, '')
+        new_direction = ''
+        if current_direction == '':
+            new_direction = 'asc'
+        elif current_direction == 'asc':
+            new_direction = 'desc'
+        else:
+            new_direction = ''  # Reset to default
+
+        # Reset all other columns to default direction
+        for c in self.sort_direction:
+            if c != col:
+                self.sort_direction[c] = ''
+                self.tree.heading(c, text=self.columns_info[c]["heading"])
+
+        self.sort_column = col
+        self.sort_direction[col] = new_direction
+        self.refresh()
 
     def refresh(self):
         all_orders = self.order_service.list_orders()
@@ -132,18 +170,41 @@ class OrdersView(ttk.Frame):
                 continue
             filtered_orders.append(order)
 
-        # Sắp xếp và hiển thị (giữ nguyên logic)
-        sort_map = {
-            "Ngày tạo (mới nhất)": ("order_date", True), "Ngày tạo (cũ nhất)": ("order_date", False),
-            "Giá trị (cao-thấp)": ("total_amount", True), "Giá trị (thấp-cao)": ("total_amount", False),
-            "Tên khách hàng (A-Z)": ("customer_info.name", False), "Tên khách hàng (Z-A)": ("customer_info.name", True),
-        }
-        sort_field, reverse = sort_map.get(self.sort_var.get(), ("order_date", True))
-        if "." in sort_field:
-            key1, key2 = sort_field.split('.')
-            filtered_orders.sort(key=lambda o: str(o.get(key1, {}).get(key2, "")).lower(), reverse=reverse)
-        else:
-            filtered_orders.sort(key=lambda o: o.get(sort_field, 0), reverse=reverse)
+        # Sắp xếp (prioritize column header sorting if active)
+        if self.sort_column and self.sort_direction[self.sort_column]:
+            sort_key_path = self.columns_info[self.sort_column]["data_key"]
+            reverse_sort = (self.sort_direction[self.sort_column] == 'desc')
+
+            if "." in sort_key_path:
+                key1, key2 = sort_key_path.split('.')
+                filtered_orders.sort(key=lambda o: str(o.get(key1, {}).get(key2, "")).lower(), reverse=reverse_sort)
+            else:
+                filtered_orders.sort(key=lambda o: o.get(sort_key_path, 0), reverse=reverse_sort)
+
+            # Update heading with arrow
+            arrow = ""
+            if self.sort_direction[self.sort_column] == 'asc':
+                arrow = " \u25b2"  # Up arrow
+            elif self.sort_direction[self.sort_column] == 'desc':
+                arrow = " \u25bc"  # Down arrow
+            self.tree.heading(self.sort_column, text=self.columns_info[self.sort_column]["heading"] + arrow)
+        else:  # Fallback to existing sort_var if no column sorting
+            sort_map = {
+                "Ngày tạo (mới nhất)": ("order_date", True), "Ngày tạo (cũ nhất)": ("order_date", False),
+                "Giá trị (cao-thấp)": ("total_amount", True), "Giá trị (thấp-cao)": ("total_amount", False),
+                "Tên khách hàng (A-Z)": ("customer_info.name", False),
+                "Tên khách hàng (Z-A)": ("customer_info.name", True),
+            }
+            sort_field, reverse = sort_map.get(self.sort_var.get(), ("order_date", True))
+            if "." in sort_field:
+                key1, key2 = sort_field.split('.')
+                filtered_orders.sort(key=lambda o: str(o.get(key1, {}).get(key2, "")).lower(), reverse=reverse)
+            else:
+                filtered_orders.sort(key=lambda o: o.get(sort_field, 0), reverse=reverse)
+
+            # Clear all column arrows if sorting is by dropdown
+            for col in self.columns_info:
+                self.tree.heading(col, text=self.columns_info[col]["heading"])
 
         self.tree.delete(*self.tree.get_children())
         for order in filtered_orders:
@@ -228,3 +289,4 @@ class OrderDetailView(tk.Toplevel):
         label_widget = ttk.Label(row_frame, text=label_text, font=("Arial", 9, "bold"), width=15)
         label_widget.pack(side=tk.LEFT)
         ttk.Label(row_frame, text=value_text, foreground=value_color, wraplength=500).pack(side=tk.LEFT, padx=5)
+
