@@ -4,4 +4,3 @@ tkcalendar~=1.6.1
 matplotlib~=3.10.5
 beautifulsoup4~=4.13.4
 python-dotenv~=1.0.1
-re~=2.2.1

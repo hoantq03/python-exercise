@@ -2,7 +2,7 @@
   {
     "id": "065d9b72-6c84-4116-b089-9931e5e1e099",
     "username": "123123",
-    "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "password_hash": "4bd5b0c4be2ec3ae7391094c05404668a10773d44f0e2fd706af62036515f5ba",
     "role": "sales_manager",
     "name": "123",
     "dob": "2025-08-09",
@@ -17,7 +17,7 @@
   },
   {
     "id": "d956bc7f-6fe0-4c60-a427-1f671a7b2e91",
-    "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "password_hash": "4bd5b0c4be2ec3ae7391094c05404668a10773d44f0e2fd706af62036515f5ba",
     "created_at": "2025-08-10T15:17:00",
     "updated_at": "2025-08-10T15:17:00",
     "last_login": "",
@@ -33,14 +33,14 @@
   },
   {
     "id": "53ec115a-8bb7-4799-8bd6-e88b329bca54",
-    "username": "0123456789",
-    "password_hash": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646",
+    "username": "administrator",
+    "password_hash": "4bd5b0c4be2ec3ae7391094c05404668a10773d44f0e2fd706af62036515f5ba",
     "role": "administrator",
     "name": "admin"
   },
   {
     "id": "d4aec4c0-c028-4e9f-9c94-5b8ea6fc3d69",
-    "password_hash": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646",
+    "password_hash": "4bd5b0c4be2ec3ae7391094c05404668a10773d44f0e2fd706af62036515f5ba",
     "created_at": "2025-08-16T15:55:40",
     "updated_at": "2025-08-16T15:55:40",
     "last_login": "",
@@ -73,8 +73,8 @@
   {
     "id": "0d29fedd-e7c2-4ef5-b7c0-d76ad0078efe",
     "username": "0123456789",
-    "password_hash": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646",
-    "role": "admin"
+    "password_hash": "4bd5b0c4be2ec3ae7391094c05404668a10773d44f0e2fd706af62036515f5ba",
+    "role": "administrator"
   },
   {
     "id": "7015d2c7-e602-4e5a-bdee-ac3a751f85da",

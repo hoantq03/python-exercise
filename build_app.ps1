@@ -1,238 +1,173 @@
-# =========================
-# build_app.ps1 — PyInstaller + Realtime 60fps ASCII animation + Bottom Progress
-# Compatible: PowerShell 5.1 / 7+
-# =========================
+# Build script for Product Management App
+# Author: Generated for user
+# Date: $(Get-Date)
 
-# 1) Console UTF-8 (best effort)
-try { chcp 65001 | Out-Null } catch {}
-try { [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new() } catch {}
-try { [Console]::InputEncoding  = [System.Text.UTF8Encoding]::new() } catch {}
+Write-Host "=== Product Management App Build Script ===" -ForegroundColor Green
+Write-Host ""
 
-# 2) App config
+# 1) App config
 $MAIN_SCRIPT = "main.py"
 $APP_ICON    = "app/assets/icons/app_icon.ico"
 $DATA_DIR    = "app/data"
 $APP_NAME    = "ProductManagementApp"
 
-# 3) PyInstaller args
-$pyinstallerArgs = @(
-  "--name", $APP_NAME,
-  "--onefile",
-  "--windowed",
-  "--add-data", "$DATA_DIR/products.json;.",
-  "--add-data", "$DATA_DIR/carts.json;.",
-  "--add-data", "$DATA_DIR/categories.json;.",
-  "--add-data", "$DATA_DIR/customers.json;.",
-  "--add-data", "$DATA_DIR/orders.json;.",
-  "--add-data", "$DATA_DIR/users.json;.",
-  "--icon", $APP_ICON,
-  $MAIN_SCRIPT
+Write-Host "App Name: $APP_NAME" -ForegroundColor Cyan
+Write-Host "Main Script: $MAIN_SCRIPT" -ForegroundColor Cyan
+Write-Host "Icon: $APP_ICON" -ForegroundColor Cyan
+Write-Host ""
+
+# 2) Check if required files exist
+Write-Host "Checking required files..." -ForegroundColor Yellow
+$requiredFiles = @(
+    $MAIN_SCRIPT,
+    $APP_ICON,
+    "requirements.txt",
+    "$DATA_DIR/products.json",
+    "$DATA_DIR/carts.json",
+    "$DATA_DIR/categories.json",
+    "$DATA_DIR/customers.json",
+    "$DATA_DIR/orders.json",
+    "$DATA_DIR/users.json"
 )
 
-# 4) Lock buffer height = window height (avoid scroll)
+$missingFiles = @()
+foreach ($file in $requiredFiles) {
+    if (!(Test-Path $file)) {
+        $missingFiles += $file
+        Write-Host "❌ Missing: $file" -ForegroundColor Red
+    } else {
+        Write-Host "✅ Found: $file" -ForegroundColor Green
+    }
+}
+
+if ($missingFiles.Count -gt 0) {
+    Write-Host ""
+    Write-Host "❌ Build failed! Missing required files." -ForegroundColor Red
+    exit 1
+}
+
+Write-Host ""
+Write-Host "✅ All required files found!" -ForegroundColor Green
+Write-Host ""
+
+# 3) Install requirements
+Write-Host "Installing requirements..." -ForegroundColor Yellow
 try {
-  $raw = $Host.UI.RawUI
-  $ws = $raw.WindowSize
-  $bs = $raw.BufferSize
-  if ($bs.Height -ne $ws.Height) {
-    $raw.BufferSize = New-Object System.Management.Automation.Host.Size($bs.Width, $ws.Height)
-  }
-} catch {}
-
-# 5) ANSI helpers (safe fallbacks)
-$Esc = [char]27
-function Ansi([string]$code) { return "$Esc[$code" + "m" }
-$CLR = @{
-  green   = (Ansi "32")
-  red     = (Ansi "31")
-  yellow  = (Ansi "33")
-  blue    = (Ansi "34")
-  magenta = (Ansi "35")
-  cyan    = (Ansi "36")
-  bold    = (Ansi "1")
-  reset   = (Ansi "0")
-}
-function ColorWrap([string]$s,[string]$c) { return $CLR[$c] + $s + $CLR.reset }
-
-# 6) Console utilities
-function Get-ConsoleSize {
-  try { return @{ W=[Console]::WindowWidth; H=[Console]::WindowHeight } }
-  catch { return @{ W=120; H=30 } }
-}
-function Write-Fixed([int]$row, [string]$text) {
-  $s = Get-ConsoleSize
-  $t = $text
-  if ($t.Length -gt ($s.W - 1)) { $t = $t.Substring(0, $s.W - 1) }
-  [Console]::CursorVisible = $false
-  [Console]::SetCursorPosition(0, [Math]::Max(0,$row))
-  $pad = " " * ([Math]::Max(0, $s.W - $t.Length - 1))
-  Write-Host -NoNewline ($t + $pad)
-}
-function Clear-Region([int]$top, [int]$bottom) {
-  $s = Get-ConsoleSize
-  for ($r=$top; $r -le $bottom; $r++) { Write-Fixed $r "" }
+    pip install -r requirements.txt
+    Write-Host "✅ Requirements installed successfully!" -ForegroundColor Green
+} catch {
+    Write-Host "❌ Failed to install requirements!" -ForegroundColor Red
+    Write-Host $_.Exception.Message -ForegroundColor Red
+    exit 1
 }
 
-# 7) Bottom progress renderer (ASCII only)
-# Bar chars use only ASCII to avoid encoding issues
-function Render-Progress([int]$percent, [string]$status, [TimeSpan]$elapsed) {
-  $s = Get-ConsoleSize
-  $rowProgress = $s.H - 1
-  $rowStatus   = $s.H - 2
+Write-Host ""
 
-  $p = [Math]::Max(0,[Math]::Min(100,$percent))
-  $elapsedStr = [string]::Format("{0:mm\:ss}", $elapsed)
-
-  $prefix = $CLR.bold + $CLR.cyan + $status + $CLR.reset
-  $right  = $CLR.yellow + $elapsedStr + $CLR.reset
-
-  $minBar = 20
-  $spaceForBar = $s.W - ($prefix.Length + $right.Length + 8)
-  $barW = [Math]::Max($minBar, $spaceForBar)
-
-  $filled = [int]([math]::Round($p/100 * $barW))
-  if ($filled -lt 0) { $filled = 0 }
-  if ($filled -gt $barW) { $filled = $barW }
-
-  $bar = $CLR.green + ("#" * $filled) + $CLR.blue + ("-" * ($barW - $filled)) + $CLR.reset
-  Write-Fixed $rowStatus (ColorWrap("PyInstaller is packaging...", "magenta"))
-  Write-Fixed $rowProgress ("$prefix $bar $p% $right")
-}
-
-# 8) 60fps Cube ASCII frames (pure ASCII, no accents)
-$cubes = @(
-@"
-   ________
-  /|      /|
- / | hoan/ |
-+--+----+  |
-|  |tq03|  |
-|  +----+--+
-| /      | /
-|/_______|/
-"@,
-@"
-   ________
-  /      /|
- / hoan / |
-+----+ +  |
-|tq03| |  |
-|----+ +--+
-|      / /
-|______/ /
-"@,
-@"
-   ________
-  |\      \
-  | \ hoan \
-  |  +----++
-  |  |tq03| |
-  +--+----+ |
-   \      \ |
-    \______\|
-"@,
-@"
-   ________
-  |\      \
-  | \      \
-  |  +----+ \
-  |  |hoan|  \
-  +--+tq03+--+
-   \  ----\  |
-    \      \ |
-     \______\|
-"@
+# 4) PyInstaller args
+$pyinstallerArgs = @(
+    "--name", $APP_NAME,
+    "--onefile",
+    "--windowed",
+    "--add-data", "$DATA_DIR/products.json;.",
+    "--add-data", "$DATA_DIR/carts.json;.",
+    "--add-data", "$DATA_DIR/categories.json;.",
+    "--add-data", "$DATA_DIR/customers.json;.",
+    "--add-data", "$DATA_DIR/orders.json;.",
+    "--add-data", "$DATA_DIR/users.json;.",
+    "--icon", $APP_ICON,
+    $MAIN_SCRIPT
 )
 
-function Render-Cube([int]$frame) {
-  $s = Get-ConsoleSize
-  # Reserve 2 lines for status+progress
-  $top = [Math]::Max(0, $s.H - 2 - 8) # 8 lines height of the cube block
-  $art = $cubes[$frame % $cubes.Count] -split "`r?`n"
-  for ($i=0; $i -lt $art.Count; $i++) {
-    $line = $art[$i]
-    if ($line.Length -gt ($s.W - 1)) { $line = $line.Substring(0, $s.W - 1) }
-    Write-Fixed ($top + $i) $line
-  }
+# 5) Clean previous build
+Write-Host "Cleaning previous build..." -ForegroundColor Yellow
+if (Test-Path "build") {
+    Remove-Item -Recurse -Force "build"
+    Write-Host "✅ Cleaned build directory" -ForegroundColor Green
+}
+if (Test-Path "dist") {
+    Remove-Item -Recurse -Force "dist"
+    Write-Host "✅ Cleaned dist directory" -ForegroundColor Green
+}
+if (Test-Path "$APP_NAME.spec") {
+    Remove-Item -Force "$APP_NAME.spec"
+    Write-Host "✅ Cleaned spec file" -ForegroundColor Green
 }
 
-# 9) Start PyInstaller process
-Write-Host "Starting package: $APP_NAME"
-$sw = [System.Diagnostics.Stopwatch]::StartNew()
+Write-Host ""
 
-$psi = [System.Diagnostics.ProcessStartInfo]::new()
-$psi.FileName = "pyinstaller"
-$psi.Arguments = ($pyinstallerArgs -join " ")
-$psi.RedirectStandardOutput = $true
-$psi.RedirectStandardError  = $true
-$psi.UseShellExecute = $false
-$psi.CreateNoWindow = $true
-$proc = [System.Diagnostics.Process]::Start($psi)
+# 6) Run PyInstaller
+Write-Host "Building executable with PyInstaller..." -ForegroundColor Yellow
+Write-Host "Command: pyinstaller $($pyinstallerArgs -join ' ')" -ForegroundColor Cyan
+Write-Host ""
 
-# Prepare logs
-$sbOut = [System.Text.StringBuilder]::new()
-$sbErr = [System.Text.StringBuilder]::new()
+try {
+    & pyinstaller @pyinstallerArgs
 
-# 10) Main loop — target 60fps
-$frame = 0
-$progress = 0
-# target frame interval ~16ms
-$targetMs = 16
-$lastTick = [Environment]::TickCount
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host ""
+        Write-Host "🎉 Build completed successfully!" -ForegroundColor Green
+        Write-Host "📁 Executable location: dist/$APP_NAME.exe" -ForegroundColor Cyan
 
-# Pre-clear visual area (cube + status + progress)
-$s = Get-ConsoleSize
-Clear-Region ([Math]::Max(0, $s.H-12)) ($s.H-1)
-
-while (-not $proc.HasExited) {
-  # Read stdout/stderr in small batches to avoid blocking
-  for ($k=0; $k -lt 120 -and -not $proc.StandardOutput.EndOfStream; $k++) {
-    [void]$sbOut.AppendLine($proc.StandardOutput.ReadLine())
-  }
-  for ($k=0; $k -lt 120 -and -not $proc.StandardError.EndOfStream; $k++) {
-    [void]$sbErr.AppendLine($proc.StandardError.ReadLine())
-  }
-
-  # Render (if enough time passed to target 60fps)
-  $now = [Environment]::TickCount
-  $delta = $now - $lastTick
-  if ($delta -ge $targetMs) {
-    $lastTick = $now
-    Render-Cube $frame
-    $frame++
-
-    # Time-based progress up to 97%
-    $target = [int][Math]::Min(97, $sw.Elapsed.TotalSeconds * 9.0)  # ~11s -> 97%
-    if ($target -gt $progress) { $progress = $target }
-    Render-Progress $progress "Packaging:" $sw.Elapsed
-  }
-
-  # Short sleep to give CPU breath; 0-5ms depending on delta
-  Start-Sleep -Milliseconds 5
+        # Check if executable was created
+        if (Test-Path "dist/$APP_NAME.exe") {
+            $exeSize = (Get-Item "dist/$APP_NAME.exe").Length / 1MB
+            Write-Host "📊 File size: $([math]::Round($exeSize, 2)) MB" -ForegroundColor Cyan
+        }
+    } else {
+        Write-Host ""
+        Write-Host "❌ Build failed with exit code: $LASTEXITCODE" -ForegroundColor Red
+        exit 1
+    }
+} catch {
+    Write-Host ""
+    Write-Host "❌ Build failed with error:" -ForegroundColor Red
+    Write-Host $_.Exception.Message -ForegroundColor Red
+    exit 1
 }
 
-# Flush remaining logs
-while (-not $proc.StandardOutput.EndOfStream) { [void]$sbOut.AppendLine($proc.StandardOutput.ReadLine()) }
-while (-not $proc.StandardError.EndOfStream)  { [void]$sbErr.AppendLine($proc.StandardError.ReadLine()) }
+Write-Host ""
 
-# Save logs UTF-8 BOM
-$utf8bom = New-Object System.Text.UTF8Encoding($true)
-[IO.File]::WriteAllText("build_stdout.log", $sbOut.ToString(), $utf8bom)
-[IO.File]::WriteAllText("build_stderr.log", $sbErr.ToString(), $utf8bom)
-
-# Final visuals
-Render-Cube $frame
-Render-Progress 100 "Done:" $sw.Elapsed
-[Console]::CursorVisible = $true
-
-# 11) Report result
-if ($proc.ExitCode -eq 0) {
-  Write-Host ""
-  Write-Host ($CLR.green + "Success!" + $CLR.reset + " Executable in 'dist/'.")
-  Write-Host ("File: dist/" + $APP_NAME + ".exe")
-} else {
-  Write-Host ""
-  Write-Host ($CLR.red + "Failed." + $CLR.reset + " ExitCode: " + $proc.ExitCode)
-  Write-Host "See: build_stdout.log, build_stderr.log"
-}
-Write-Host "Finished."
+Write-Host ""
+Write-Host "╔════════════════════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "║                                  🎯 BUILD SUCCESS 🎯                                        ║" -ForegroundColor Magenta
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "║  ██████  ██    ██ ██ ██      ██████       ██████  ██   ██                                  ║" -ForegroundColor Green
+Write-Host "║  ██   ██ ██    ██ ██ ██      ██   ██     ██    ██ ██  ██                                   ║" -ForegroundColor Green
+Write-Host "║  ██████  ██    ██ ██ ██      ██   ██     ██    ██ █████                                    ║" -ForegroundColor Green
+Write-Host "║  ██   ██ ██    ██ ██ ██      ██   ██     ██    ██ ██  ██                                   ║" -ForegroundColor Green
+Write-Host "║  ██████   ██████  ██ ███████ ██████       ██████  ██   ██                                  ║" -ForegroundColor Green
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "║          ██████  ██████  ███    ███ ██████  ██      ███████                                ║" -ForegroundColor Yellow
+Write-Host "║         ██      ██    ██ ████  ████ ██   ██ ██      ██                                     ║" -ForegroundColor Yellow
+Write-Host "║         ██      ██    ██ ██ ████ ██ ██████  ██      █████                                  ║" -ForegroundColor Yellow
+Write-Host "║         ██      ██    ██ ██  ██  ██ ██      ██      ██                                     ║" -ForegroundColor Yellow
+Write-Host "║          ██████  ██████  ██      ██ ██      ███████ ███████                                ║" -ForegroundColor Yellow
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "║    ╔══════════════════════════════════════════════════════════════════════════════════╗    ║" -ForegroundColor DarkCyan
+Write-Host "║    ║                              ✨ BUILT BY ✨                                      ║    ║" -ForegroundColor DarkCyan
+Write-Host "║    ╚══════════════════════════════════════════════════════════════════════════════════╝    ║" -ForegroundColor DarkCyan
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "║   ______                    ____                      __  __                               ║" -ForegroundColor Green
+Write-Host "║  /_  __/________ _____     / __ \__  ______  _____   / / / /___  ____ _____                ║" -ForegroundColor Green
+Write-Host "║   / / / ___/ __ `/ __ \   / / / / / / / __ \/ ___/  / /_/ / __ \/ __ `/ __ \               ║" -ForegroundColor Green
+Write-Host "║  / / / /  / /_/ / / / /  / /_/ / /_/ / /_/ / /__   / __  / /_/ / /_/ / / / /               ║" -ForegroundColor Green
+Write-Host "║ /_/ /_/   \__,_/_/ /_/   \___\_\__,_/\____/\___/  /_/ /_/\____/\__,_/_/ /_/                ║" -ForegroundColor Green
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "║  ┌──────────────────────────────────────────────────────────────────────────────────────┐  ║" -ForegroundColor White
+Write-Host "║  │                            📅 BUILD INFORMATION                                        │  ║" -ForegroundColor White
+Write-Host "║  │                                                                                      │  ║" -ForegroundColor White
+Write-Host "║  │    🗓️  Date: $(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')                                            │  ║" -ForegroundColor White
+Write-Host "║  │    📍 Location: Ho Chi Minh City, Vietnam                                           │  ║" -ForegroundColor White
+Write-Host "║  │    💻 Platform: Windows PowerShell                                                  │  ║" -ForegroundColor White
+Write-Host "║  │    🎯 Status: BUILD COMPLETED SUCCESSFULLY                                          │  ║" -ForegroundColor White
+Write-Host "║  │                                                                                      │  ║" -ForegroundColor White
+Write-Host "║  └──────────────────────────────────────────────────────────────────────────────────────┘  ║" -ForegroundColor White
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "║                        ⭐ Thank you for using this build script! ⭐                        ║" -ForegroundColor Magenta
+Write-Host "║                                                                                            ║" -ForegroundColor Cyan
+Write-Host "╚════════════════════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "                              🚀 Build completed successfully! 🚀                            " -ForegroundColor Green
+Write-Host "                                 Ready to launch your application                            " -ForegroundColor Blue
+Write-Host ""
