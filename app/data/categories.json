@@ -390,5 +390,13 @@
     "id": "72b9672d-a068-48a9-9831-44c1874beeff",
     "created_at": "2025-08-16T15:29:28",
     "updated_at": "2025-08-16T15:29:28"
+  },
+  {
+    "categoryId": 861,
+    "categoryName": "iPhone 12 Series",
+    "categoryUri": "iphone-12-vna",
+    "id": "c32d89ed-8e9c-4e1e-a4da-728ec94782df",
+    "created_at": "2025-08-17T07:18:29",
+    "updated_at": "2025-08-17T07:18:29"
   }
 ]

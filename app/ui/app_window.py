@@ -10,8 +10,7 @@ class AppWindow(tk.Toplevel):
 
         # Gọi phương thức cấu hình UI
         self._setup_ui_config()
-
-        self.title(f"Dashboard - Xin chào, {session_user.get('username', 'user')}")
+        self.title(f"Dashboard - Xin chào {session_user.get('role')}, {session_user.get('username', 'user')}")
         self.geometry(self.config['window_geometry'])
         self.minsize(self.config['min_window_size'][0], self.config['min_window_size'][1])
 

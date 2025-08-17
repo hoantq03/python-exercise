@@ -7,17 +7,17 @@ class UserPermissions:
         self.role = self.current_user.get('role')
 
     def can_add_user(self):
-        return self.role in ['admin', 'staff']
+        return self.role in ['administrator', 'employee_manager']
 
     def get_creatable_roles(self):
-        if self.role == 'admin':
-            return ['staff', 'viewer']
-        if self.role == 'staff':
-            return ['viewer']
+        if self.role == 'administrator':
+            return ['employee_manager', 'sales_manager', 'accountant', 'sales_person']
+        if self.role == 'employee_manager':
+            return ['sales_manager', 'accountant', 'sales_person']
         return []
 
     def can_delete_user(self, target_user):
-        return self.role in ['admin'] and self.current_user.get('id') != target_user.get('id')
+        return self.role in ['administrator'] and self.current_user.get('id') != target_user.get('id')
 
     def can_change_role(self):
         return False

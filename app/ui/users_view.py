@@ -11,8 +11,10 @@ import re
 
 from app.auth.user_permission import UserPermissions
 from app.services.auth import hash_password
+from app.utils.password_utils import is_strong_password
+from app.utils.phone_util import is_vietnamese_phone
 
-ROLES = ("admin", "staff", "viewer")
+ROLES = ('administrator', 'employee_manager', 'sales_manager', 'accountant', 'sales_person')
 GENDERS = ("Nam", "Nữ", "Khác")
 
 
@@ -407,6 +409,17 @@ class UserDialog(tk.Toplevel):
                 self.entries[key] = var
 
         main_frame.grid_columnconfigure(1, weight=1)
+
+        # Add password note label (NEW)
+        if self.kwargs.get("ask_password", True):
+            # Placing it at the current row 'i' (which is after the last field added)
+            # You might need to adjust its grid placement depending on where 'password' field is
+            # if not the last. Here it assumes password is effectively the last field added or close.
+            note_label = ttk.Label(main_frame,
+                                   text="Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
+                                   foreground="red", font=("Arial", 8, "italic"))
+            note_label.grid(row=len(fields), column=0, columnspan=2, sticky="w", pady=(0, 5)) # Place below the last field
+
         btn_frame = ttk.Frame(self)
         btn_frame.pack(fill="x", padx=15, pady=(5, 15))
         ttk.Button(btn_frame, text="Lưu", command=self._submit).pack(side="right")
@@ -417,10 +430,20 @@ class UserDialog(tk.Toplevel):
         pw = None
         for key, var in self.entries.items():
             if key == 'dob':
-                value = var.get_date().isoformat()
+                try:
+                    value = var.get_date().isoformat()
+                except AttributeError: # If DateEntry is empty
+                    value = ""
             elif key == 'password':
                 pw = var.get()
-                continue
+                is_password_required = self.kwargs.get("ask_password", True)
+                if is_password_required and not pw:
+                    messagebox.showerror("Lỗi", "Trường 'Mật khẩu' không được để trống.", parent=self)
+                    return
+                elif pw and not is_strong_password(pw):
+                    messagebox.showerror("Lỗi", "Mật khẩu không đủ mạnh. Vui lòng nhập mật khẩu thỏa mãn yêu cầu: ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt.", parent=self)
+                    return
+                continue # Skip adding password to user_data directly
             else:
                 value = var.get().strip()
 
@@ -428,14 +451,16 @@ class UserDialog(tk.Toplevel):
             if key == 'email' and value and not re.match(r"[^@]+@[^@]+\.[^@]+", value):
                 messagebox.showerror("Lỗi", "Định dạng email không hợp lệ.", parent=self)
                 return
-            if key == 'phone' and value and not re.match(r"^0\d{9}$", value):
+            if key == 'phone' and value and not is_vietnamese_phone(value):
                 messagebox.showerror("Lỗi", "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số.", parent=self)
                 return
 
-            is_password_required = self.kwargs.get("ask_password", True)
-            if not value and (key in ["username", "role"] or (key == 'password' and is_password_required)):
+            # Check for empty required fields (other than password, already handled)
+            if not value and (key in ["username", "role"]):
                 messagebox.showerror("Lỗi", f"Trường '{key}' không được để trống.", parent=self)
                 return
             user_data[key] = value
+
         self.on_submit(user_data, pw)
         self.destroy()
+

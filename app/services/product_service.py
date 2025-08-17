@@ -76,3 +76,22 @@ class ProductService:
             if c.get('id') == category_id:
                 return c
         return None
+
+    def get_cost_by_sku(self, sku: str) -> float:
+        """
+        Retrieves the cost ('bought_product') of a product by its SKU.
+        Returns 0 if the product or cost is not found.
+        """
+        if not sku:
+            return 0.0
+
+        all_products = self.list()
+        for product in all_products:
+            if product.get('sku') == sku:
+                # The cost is stored in the 'bought_product' field
+                cost = product.get('bought_product')
+                # Ensure the returned value is a float, defaulting to 0.0
+                return float(cost or 0.0)
+
+        # Return 0 if no product with the given SKU is found
+        return 0.0

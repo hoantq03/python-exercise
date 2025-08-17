@@ -24,6 +24,7 @@ from app.services.user_service import UserService  # <-- Import UserService
 from app.ui.app_window import AppWindow
 from app.ui.cart_view import CartView
 from app.ui.login_view import LoginView
+from app.ui.profile_view import ProfileView
 from app.ui.report_view import ReportFrame
 from app.ui.users_view import UsersView
 from app.ui.customers_view import CustomersView
@@ -44,6 +45,14 @@ def get_bool_from_env(key: str, default: bool = False) -> bool:
     value = os.getenv(key, str(default)).lower()
     return value in ('true', '1', 't', 'on')
 
+# Các vai trò (roles) trong hệ thống của bạn
+ROLES_ENUM = {
+    'ADMIN': 'administrator',
+    'EMP_MANAGER': 'employee_manager',
+    'SALES_MANAGER': 'sales_manager',
+    'SALES_PERSON': 'sales_person',
+    'ACCOUNTANT': 'accountant',
+}
 
 def run():
     # --- Nạp các biến môi trường từ file .env ---
@@ -142,30 +151,69 @@ def run():
     def on_login_success(u):
         win = AppWindow(master=root, session_user=u)
 
-        can_manage_users = auth.authorize(u, ("admin",))
-        can_edit_data = auth.authorize(u, ("admin", "staff"))
+        # --- Xác định quyền hạn theo vai trò ---
 
-        # Add navigation buttons using the updated add_nav_button
+        # Quyền quản lý người dùng: Admin và Employee Manager
+        can_manage_users = auth.authorize(u, (ROLES_ENUM['ADMIN'], ROLES_ENUM['EMP_MANAGER']))
+
+        # Quyền truy cập sản phẩm: Admin, Sales Manager và Sales Person
+        can_access_products = auth.authorize(u, (
+            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
+
+        # Quyền truy cập giỏ hàng: Admin, Sales Manager và Sales Person
+        can_access_cart = auth.authorize(u, (
+            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
+
+        # Quyền truy cập khách hàng: Admin và Sales Manager
+        can_access_customers = auth.authorize(u, (
+            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
+
+        # Quyền truy cập đơn hàng: Admin và Sales Manager
+        can_access_orders = auth.authorize(u, (
+            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['ACCOUNTANT']))
+
+        # Quyền xem báo cáo: Admin, Sales Manager và Accountant
+        can_view_reports = auth.authorize(u, (
+            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['ACCOUNTANT']))
+
+        # --- Thêm các nút điều hướng (tab) dựa trên quyền hạn ---
+
+        # Tab "Thông tin cá nhân": Luôn hiển thị cho tất cả người dùng đã đăng nhập
+        win.add_nav_button("Thông tin cá nhân", ProfileView, u)
+
+        # Tab "Người dùng": Chỉ Admin và Employee Manager
         if can_manage_users:
             win.add_nav_button("Người dùng", UsersView, users_store, u)
 
-        # Store a reference to the initial view's button for explicit selection
-        initial_view_button = win.add_nav_button("Sản phẩm", ProductsView, prod_srv, cart_srv, categories_srv,
-                                                 can_edit_data)
+        # Tab "Sản phẩm": Admin, Sales Manager và Sales Person
+        if can_access_products:
+            initial_view_button = win.add_nav_button("Sản phẩm", ProductsView, prod_srv, cart_srv, categories_srv, True)
 
-        win.add_nav_button("🛒 Giỏ hàng", CartView, cart_srv, order_srv, cust_srv, u)
-        win.add_nav_button("Khách hàng", CustomersView, cust_srv, order_srv, can_edit_data)
-        win.add_nav_button("Đơn hàng", OrdersView, order_srv, cust_srv, prod_srv, u, can_edit_data)
-        win.add_nav_button("Báo cáo", ReportFrame, order_srv, prod_srv, cust_srv, user_srv)
+        # Tab "Giỏ hàng": Admin, Sales Manager và Sales Person
+        if can_access_cart:
+            win.add_nav_button("🛒 Giỏ hàng", CartView, cart_srv, order_srv, cust_srv, u)
 
+        # Tab "Khách hàng": Admin và Sales Manager
+        if can_access_customers:
+            win.add_nav_button("Khách hàng", CustomersView, cust_srv, order_srv, True)
+
+        # Tab "Đơn hàng": Admin và Sales Manager
+        if can_access_orders:
+            win.add_nav_button("Đơn hàng", OrdersView, order_srv, cust_srv, prod_srv, u, True)
+
+        # Tab "Báo cáo": Admin, Sales Manager và Accountant
+        if can_view_reports:
+            win.add_nav_button("Báo cáo", ReportFrame, order_srv, prod_srv, cust_srv, user_srv)
+
+        # Nút "Đăng xuất": Luôn hiển thị
         def logout():
             win.destroy()
             LoginView(root, auth, on_login_success)
 
-        win.add_nav_button("Đăng xuất", command=logout)  # For direct commands, pass via kwargs
+        win.add_nav_button("Đăng xuất", command=logout)
 
-        # Show initial view
-        win.show_view(ProductsView, prod_srv, cart_srv, categories_srv, can_edit_data)
+        win.show_view(ProfileView, u)
+
         # Manually select the button for the initial view
         if initial_view_button:
             win._select_button_style(initial_view_button)

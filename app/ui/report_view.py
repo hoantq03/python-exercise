@@ -481,8 +481,8 @@ class ReportFrame(ttk.Frame):
             "Các điểm trên biểu đồ tương ứng với tổng doanh thu tích lũy của từng tháng trong năm/quý báo cáo. "
             "Giúp theo dõi hiệu suất bán hàng theo thời gian."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _plot_top_products(self):
         orders = self.order_service.list_orders()
@@ -529,11 +529,11 @@ class ReportFrame(ttk.Frame):
             "Biểu đồ này hiển thị danh sách các sản phẩm hàng đầu dựa trên doanh thu hoặc số lượng bán ra trong khoảng thời gian đã chọn. "
             "Nó giúp nhận diện những mặt hàng chủ lực, được khách hàng ưa chuộng, từ đó hỗ trợ quyết định về chiến lược marketing, tồn kho và phát triển sản phẩm."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _plot_inventory_report(self):
-        products = self.product_service.list() # Assume this lists all products regardless of time
+        products = self.product_service.list()  # Assume this lists all products regardless of time
         if not products:
             ttk.Label(self.canvas_frame, text="Không có dữ liệu sản phẩm để hiển thị tồn kho.").pack(pady=20)
             return
@@ -544,7 +544,7 @@ class ReportFrame(ttk.Frame):
 
         # Explicitly close any existing plot before creating a new one
         plt.close('all')
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(figsize=(10, 4.8))
         bars = ax.barh(range(len(names)), stocks, color='mediumseagreen')
         ax.set_yticks([])
         ax.invert_yaxis()
@@ -565,8 +565,8 @@ class ReportFrame(ttk.Frame):
         note_text = ("Báo cáo này cung cấp cái nhìn tổng quan về tình trạng tồn kho hiện tại của các sản phẩm."
                      " Nó liệt kê số lượng hàng còn lại trong kho, giúp xác định sản phẩm cần bổ sung, sản phẩm tồn đọng hoặc sản phẩm sắp hết hàng."
                      " Báo cáo này là công cụ quan trọng để quản lý chuỗi cung ứng và tránh tình trạng thiếu hụt hoặc dư thừa hàng hóa.")
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _plot_customer_summary(self):
         orders = self.order_service.list_orders()
@@ -618,27 +618,40 @@ class ReportFrame(ttk.Frame):
             " Nó có thể bao gồm tổng số khách hàng đã mua, số lượng khách hàng mới và khách hàng quay lại."
             " Báo cáo này giúp đánh giá sức khỏe của cơ sở khách hàng và hiệu quả của các chiến dịch thu hút và giữ chân khách hàng."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _calc_order_revenue_cogs(self, order):
+        """
+        Calculates revenue, cost of goods sold (COGS), gross profit, and margin for a single order.
+        """
         revenue = float(order.get('total_amount', 0))
         cogs = 0.0
-        for it in order.get('items', []):
-            qty = float(it.get('quantity', 0) or 0)
-            price = float(it.get('price', 0) or 0)
-            cost = it.get('cost')
+
+        for item in order.get('items', []):
+            qty = float(item.get('quantity', 0) or 0)
+
+            # Check if 'cost' is explicitly provided in the order item.
+            # This allows for historical cost tracking if orders store the cost at time of purchase.
+            cost = item.get('cost')
+
+            # If cost is not in the order item, fetch it from the product service using the SKU.
             if cost is None:
-                # Nếu có SKU và product_service hỗ trợ tra cost theo SKU:
-                sku = it.get('sku')
+                sku = item.get('sku')
                 if sku and hasattr(self.product_service, 'get_cost_by_sku'):
-                    cost = self.product_service.get_cost_by_sku(sku) or 0
+                    # Fetch the current cost ('bought_product') using the new method
+                    cost = self.product_service.get_cost_by_sku(sku)
                 else:
-                    # fallback: nếu không có cost, coi cost=price để tránh âm (tùy hệ thống)
-                    cost = 0
-            cogs += qty * float(cost or 0)
+                    # Fallback if no SKU is available or method doesn't exist.
+                    # Setting cost to 0 is safer than using price, as it prevents misleading profit margins.
+                    cost = 0.0
+
+            cogs += qty * float(cost or 0.0)
+
         gross_profit = revenue - cogs
+        # Calculate margin as a percentage, handling division by zero.
         margin = (gross_profit / revenue * 100) if revenue > 0 else 0.0
+
         return revenue, cogs, gross_profit, margin
 
     def _plot_sales_by_employee(self):
@@ -701,8 +714,8 @@ class ReportFrame(ttk.Frame):
             "Biểu đồ này minh họa tổng doanh thu mà mỗi nhân viên đã đóng góp trong khoảng thời gian đã chọn. "
             "Nó giúp đánh giá hiệu suất cá nhân của đội ngũ bán hàng, nhận diện những nhân viên có thành tích xuất sắc và hỗ trợ việc phân bổ nguồn lực hiệu quả hơn."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _time_key_for_dt(self, dt, group):
         if group == "Tháng":
@@ -792,8 +805,8 @@ class ReportFrame(ttk.Frame):
             " Lợi nhuận gộp được tính bằng tổng doanh thu trừ đi tổng giá vốn hàng bán."
             " Báo cáo này giúp đánh giá khả năng sinh lời của doanh nghiệp theo thời gian và là chỉ số quan trọng để phân tích sức khỏe tài chính."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _plot_peak_hours_and_days(self):
         orders = self.order_service.list_orders()
@@ -820,7 +833,8 @@ class ReportFrame(ttk.Frame):
         dow_labels = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]
 
         plt.close('all')
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 8))
+        # Changed figsize height from 8 to 7.2 (10% shorter)
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7.2))
 
         # Biểu đồ theo giờ
         ax1.plot(range(24), rev_hour_m, marker='o', color="#4C78A8")
@@ -851,8 +865,8 @@ class ReportFrame(ttk.Frame):
             "Biểu đồ này phân tích và hiển thị những khung giờ hoặc ngày trong tuần có hoạt động mua sắm cao điểm nhất."
             " Bằng cách nhận diện các khoảng thời gian bận rộn này, doanh nghiệp có thể tối ưu hóa việc phân bổ nhân sự, lập kế hoạch khuyến mãi và đảm bảo dịch vụ khách hàng tốt nhất."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _plot_customer_growth(self):
         orders = self.order_service.list_orders()
@@ -914,8 +928,8 @@ class ReportFrame(ttk.Frame):
             "Báo cáo này tập trung vào sự thay đổi trong cơ sở khách hàng của bạn, đặc biệt là số lượng khách hàng mới và khách hàng quay lại trong khoảng thời gian được phân tích."
             " Nó giúp đánh giá hiệu quả của các chiến lược thu hút khách hàng mới và khả năng duy trì mối quan hệ với khách hàng hiện có."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
 
     def _plot_customer_ltv_and_frequency(self):
         orders = self.order_service.list_orders()
@@ -965,9 +979,9 @@ class ReportFrame(ttk.Frame):
             ltvs.append(ltv / 1_000_000)  # Triệu VNĐ
             avg_freq_days.append(avg_days)
 
-        # Vẽ biểu đồ LTV (Bar chart)
+        # Vẽ biểu đồ LTV (Bar chart) - 30% shorter
         plt.close('all')
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(figsize=(10, 3.2))  # Changed height from 6 to 4.2 (30% reduction)
         bars = ax.bar(labels, ltvs, color='#4C78A8')
         ax.set_title('Giá trị vòng đời khách hàng (LTV) theo khách hàng')
         ax.set_xlabel('Khách hàng')  # Đổi nhãn
@@ -985,8 +999,8 @@ class ReportFrame(ttk.Frame):
         canvas.draw()
         canvas.get_tk_widget().pack(fill='both', expand=True)
 
-        # Vẽ biểu đồ tần suất mua (Line chart)
-        fig2, ax2 = plt.subplots(figsize=(10, 6))
+        # Vẽ biểu đồ tần suất mua (Line chart) - Unchanged size
+        fig2, ax2 = plt.subplots(figsize=(10, 3.6))
         ax2.plot(labels, avg_freq_days, marker='o', color='#F58518')
         ax2.set_title('Tần suất mua trung bình (ngày) theo khách hàng')
         ax2.set_xlabel('Khách hàng')  # Đổi nhãn
@@ -998,11 +1012,12 @@ class ReportFrame(ttk.Frame):
         canvas2 = FigureCanvasTkAgg(fig2, master=self.canvas_frame)
         canvas2.draw()
         canvas2.get_tk_widget().pack(fill='both', expand=True)
+
         note_text = (
             "Báo cáo này cung cấp thông tin chi tiết về hành vi mua sắm của từng khách hàng."
             " 'Tần suất mua' thể hiện mức độ thường xuyên khách hàng thực hiện giao dịch."
             " 'Giá trị vòng đời khách hàng (LTV)' ước tính tổng giá trị mà một khách hàng mang lại cho doanh nghiệp trong suốt mối quan hệ của họ."
             " Báo cáo này rất hữu ích để phân khúc khách hàng, xây dựng các chiến lược giữ chân khách hàng và cá nhân hóa trải nghiệm mua sắm."
         )
-        ttk.Label(self.canvas_frame, text=note_text, wraplength=800, justify='left',
-                  font=("Arial", 12, "italic")).pack(pady=10, padx=10, anchor='w')
+        ttk.Label(self.canvas_frame, text=note_text, wraplength=1200, justify='left',
+                  font=("Arial", 10, "italic")).pack(pady=10, padx=10, anchor='w')
