@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Hoặc
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import sys
 import tkinter as tk
 import os
 from dotenv import load_dotenv
@@ -18,7 +18,7 @@ from app.services.category_service import CategoryService
 from app.services.customer_service import CustomerService
 from app.services.product_service import ProductService
 from app.services.order_service import OrderService
-from app.services.user_service import UserService  # <-- Import UserService
+from app.services.user_service import UserService
 
 # UI Views
 from app.ui.app_window import AppWindow
@@ -45,6 +45,7 @@ def get_bool_from_env(key: str, default: bool = False) -> bool:
     value = os.getenv(key, str(default)).lower()
     return value in ('true', '1', 't', 'on')
 
+
 # Các vai trò (roles) trong hệ thống của bạn
 ROLES_ENUM = {
     'ADMIN': 'administrator',
@@ -54,21 +55,43 @@ ROLES_ENUM = {
     'ACCOUNTANT': 'accountant',
 }
 
+
+def resource_path(relative_path):
+    """
+    Lấy đường dẫn tuyệt đối đến tài nguyên.
+    Hoạt động cho cả môi trường dev (chạy từ terminal) và khi đã đóng gói bằng PyInstaller.
+    """
+    # Kiểm tra xem ứng dụng có đang chạy dưới dạng file đã đóng gói (frozen) không
+    if getattr(sys, 'frozen', False):
+        # NẾU ĐÃ ĐÓNG GÓI (CHẠY BẰNG FILE .EXE)
+        # base_path là thư mục tạm _MEIPASS do PyInstaller tạo ra.
+        base_path = sys._MEIPASS
+        # Dữ liệu nằm trực tiếp trong thư mục này (ví dụ: _MEIPASS/data/users.json)
+        # nên chúng ta chỉ cần nối base_path với đường dẫn tương đối.
+        return os.path.join(base_path, relative_path)
+    else:
+        # NẾU CHẠY TỪ MÃ NGUỒN (CHẠY BẰNG TERMINAL)
+        # base_path là thư mục gốc của dự án (nơi chứa main.py).
+        base_path = os.path.abspath(".")
+        # Trong mã nguồn, thư mục dữ liệu nằm bên trong 'app'.
+        # Vì vậy, chúng ta phải nối base_path với 'app' rồi mới đến đường dẫn tương đối.
+        return os.path.join(base_path, 'app', relative_path)
+
+
 def run():
     # --- Nạp các biến môi trường từ file .env ---
-    load_dotenv()
+    load_dotenv(resource_path(".env"))
 
     # --- Khởi tạo các kho lưu trữ (Storage) ---
-    users_store = JsonStorage("data/users.json")
-    customers_store = JsonStorage("data/customers.json")
-    products_store = JsonStorage("data/products.json")
-    orders_store = JsonStorage("data/orders.json")
-    carts_store = JsonStorage("data/carts.json")
-    categories_store = JsonStorage("data/categories.json")
+    users_store = JsonStorage(resource_path("data/users.json"))
+    customers_store = JsonStorage(resource_path("data/customers.json"))
+    products_store = JsonStorage(resource_path("data/products.json"))
+    orders_store = JsonStorage(resource_path("data/orders.json"))
+    carts_store = JsonStorage(resource_path("data/carts.json"))
+    categories_store = JsonStorage(resource_path("data/categories.json"))
 
     # --- Khởi tạo các dịch vụ (Services) ---
-    # KHỞI TẠO UserService TRƯỚC VÌ CÁC DỊCH VỤ KHÁC CÓ THỂ PHỤ THUỘC VÀO NÓ
-    auth = AuthService(users_store)  # auth vẫn dùng users_store trực tiếp, không sao
+    auth = AuthService(users_store)
     auth.ensure_admin_seed()
 
     cust_srv = CustomerService(customers_store)
@@ -78,7 +101,7 @@ def run():
     categories_srv = CategoryService(categories_store)
     user_srv = UserService(users_store)
 
-    # --- Cấu hình Scraper và Task --- (phần còn lại giữ nguyên)
+    # --- Cấu hình Scraper và Task ---
     SCRAPER_CONFIG = {
         'PHONE_SCRAPER_ENABLED': PhoneListScraper,
         'PHONE_DETAILS_SCRAPER_ENABLED': PhoneDetailScraper,
@@ -92,23 +115,15 @@ def run():
     for env_key, task_class in SCRAPER_CONFIG.items():
         if get_bool_from_env(env_key):
             print(f" -> Đang bật: {task_class.__name__}")
-
             task_instance = None
             if task_class == UpdateCategoryCronTask:
-                # CategoryScheduler là một scheduler cần các tham số riêng
                 category_interval = int(os.getenv('CATEGORY_UPDATE_INTERVAL_SECONDS', 600))
-                task_instance = task_class(
-                    product_service=prod_srv,
-                    category_service=categories_srv,
-                    interval_seconds=category_interval
-                )
+                task_instance = task_class(product_service=prod_srv, category_service=categories_srv,
+                                           interval_seconds=category_interval)
             elif hasattr(task_class, '__init__') and 'storage' in task_class.__init__.__code__.co_varnames:
-                # Các scraper thông thường cần tham số 'storage'
                 task_instance = task_class(storage=products_store)
             else:
-                # Các task khác không cần tham số
                 task_instance = task_class()
-
             all_initialized_tasks.append(task_instance)
         else:
             print(f" -> Đã tắt: {task_class.__name__}")
@@ -129,10 +144,7 @@ def run():
     main_scraper_scheduler = None
     if scrapers_for_main_scheduler:
         print(f"--- Tìm thấy {len(scrapers_for_main_scheduler)} scraper được bật. Khởi động ScraperScheduler. ---")
-        try:
-            interval = int(os.getenv('SCRAPER_INTERVAL_SECONDS', 300))
-        except ValueError:
-            interval = 300
+        interval = int(os.getenv('SCRAPER_INTERVAL_SECONDS', 300))
         main_scraper_scheduler = ScraperScheduler(scrapers_to_run=scrapers_for_main_scheduler,
                                                   interval_seconds=interval)
         main_scraper_scheduler.start()
@@ -148,89 +160,79 @@ def run():
     root = tk.Tk()
     root.withdraw()
 
+    # <<< THAY ĐỔI 1: TẠO HÀM SHUTDOWN TẬP TRUNG >>>
+    # Hàm này sẽ được gọi khi người dùng đóng bất kỳ cửa sổ chính nào.
+    def shutdown_app():
+        print("--- Bắt đầu quá trình tắt ứng dụng ---")
+
+        # 1. Dừng tất cả các scheduler đang chạy
+        if main_scraper_scheduler and main_scraper_scheduler.is_running:
+            print("Đang dừng ScraperScheduler chính...")
+            main_scraper_scheduler.stop()
+
+        for sched in other_schedulers_to_start_manually:
+            if sched.is_running:
+                print(f"Đang dừng scheduler: {sched.__class__.__name__}...")
+                sched.stop()
+
+        # 2. Phá hủy cửa sổ root để kết thúc ứng dụng hoàn toàn
+        print("Đang đóng giao diện người dùng...")
+        root.destroy()
+        print("--- Ứng dụng đã đóng hoàn toàn. ---")
+
     def on_login_success(u):
         win = AppWindow(master=root, session_user=u)
 
-        # --- Xác định quyền hạn theo vai trò ---
+        # <<< THAY ĐỔI 2: GẮN HÀM SHUTDOWN VÀO CỬA SỔ CHÍNH >>>
+        # Khi người dùng nhấn nút "X" trên cửa sổ AppWindow, hàm shutdown_app sẽ được gọi.
+        win.protocol("WM_DELETE_WINDOW", shutdown_app)
 
-        # Quyền quản lý người dùng: Admin và Employee Manager
+        # --- Xác định quyền hạn theo vai trò (giữ nguyên) ---
         can_manage_users = auth.authorize(u, (ROLES_ENUM['ADMIN'], ROLES_ENUM['EMP_MANAGER']))
-
-        # Quyền truy cập sản phẩm: Admin, Sales Manager và Sales Person
         can_access_products = auth.authorize(u, (
-            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
-
-        # Quyền truy cập giỏ hàng: Admin, Sales Manager và Sales Person
-        can_access_cart = auth.authorize(u, (
-            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
-
-        # Quyền truy cập khách hàng: Admin và Sales Manager
+        ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
+        can_access_cart = auth.authorize(u,
+                                         (ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
         can_access_customers = auth.authorize(u, (
-            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
+        ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['SALES_PERSON']))
+        can_access_orders = auth.authorize(u,
+                                           (ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['ACCOUNTANT']))
+        can_view_reports = auth.authorize(u,
+                                          (ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['ACCOUNTANT']))
 
-        # Quyền truy cập đơn hàng: Admin và Sales Manager
-        can_access_orders = auth.authorize(u, (
-            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['ACCOUNTANT']))
-
-        # Quyền xem báo cáo: Admin, Sales Manager và Accountant
-        can_view_reports = auth.authorize(u, (
-            ROLES_ENUM['ADMIN'], ROLES_ENUM['SALES_MANAGER'], ROLES_ENUM['ACCOUNTANT']))
-
-        # --- Thêm các nút điều hướng (tab) dựa trên quyền hạn ---
-
-        # Tab "Thông tin cá nhân": Luôn hiển thị cho tất cả người dùng đã đăng nhập
+        # --- Thêm các nút điều hướng (giữ nguyên) ---
+        initial_view_button = None
         win.add_nav_button("Thông tin cá nhân", ProfileView, u)
-
-        # Tab "Người dùng": Chỉ Admin và Employee Manager
         if can_manage_users:
             win.add_nav_button("Người dùng", UsersView, users_store, u)
-
-        # Tab "Sản phẩm": Admin, Sales Manager và Sales Person
         if can_access_products:
             initial_view_button = win.add_nav_button("Sản phẩm", ProductsView, prod_srv, cart_srv, categories_srv, True)
-
-        # Tab "Giỏ hàng": Admin, Sales Manager và Sales Person
         if can_access_cart:
             win.add_nav_button("🛒 Giỏ hàng", CartView, cart_srv, order_srv, cust_srv, u)
-
-        # Tab "Khách hàng": Admin và Sales Manager
         if can_access_customers:
             win.add_nav_button("Khách hàng", CustomersView, cust_srv, order_srv, True)
-
-        # Tab "Đơn hàng": Admin và Sales Manager
         if can_access_orders:
             win.add_nav_button("Đơn hàng", OrdersView, order_srv, cust_srv, prod_srv, u, True)
-
-        # Tab "Báo cáo": Admin, Sales Manager và Accountant
         if can_view_reports:
             win.add_nav_button("Báo cáo", ReportFrame, order_srv, prod_srv, cust_srv, user_srv)
 
-        # Nút "Đăng xuất": Luôn hiển thị
         def logout():
             win.destroy()
-            LoginView(root, auth, on_login_success)
+            # Gọi lại LoginView và truyền hàm shutdown vào
+            login_view = LoginView(root, auth, on_login_success)
+            login_view.protocol("WM_DELETE_WINDOW", shutdown_app)
 
         win.add_nav_button("Đăng xuất", command=logout)
-
         win.show_view(ProfileView, u)
-
-        # Manually select the button for the initial view
         if initial_view_button:
             win._select_button_style(initial_view_button)
 
-    LoginView(root, auth, on_login_success)
+    # <<< THAY ĐỔI 3: GẮN HÀM SHUTDOWN VÀO CỬA SỔ ĐĂNG NHẬP >>>
+    # Rất quan trọng: nếu người dùng đóng cửa sổ đăng nhập, ứng dụng cũng phải tắt hẳn.
+    login_view = LoginView(root, auth, on_login_success)
+    login_view.protocol("WM_DELETE_WINDOW", shutdown_app)
+
     root.mainloop()
-
-    # --- Dừng TẤT CẢ các schedulers khi ứng dụng đóng ---
-    if main_scraper_scheduler and main_scraper_scheduler.is_running:
-        main_scraper_scheduler.stop()
-
-    for sched in other_schedulers_to_start_manually:
-        if sched.is_running:
-            sched.stop()
-
-    print("--- Ứng dụng đã đóng. ---")
-
 
 if __name__ == "__main__":
     run()

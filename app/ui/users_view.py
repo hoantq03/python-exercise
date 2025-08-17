@@ -185,8 +185,8 @@ class UsersView(ttk.Frame):
             # Special sorting for role (optional: define a custom order for roles)
             if sort_key == "role":
                 # Example: Define a custom order for roles
-                role_order = {"admin": 0, "staff": 1, "viewer": 2}
-                filtered_users.sort(key=lambda u: role_order.get(u.get(sort_key, "viewer"), 99), reverse=reverse_sort)
+                role_order = {"administrator": 0, "employee_manager": 1, "sales_manager": 2, "sales_person": 3, "accountant": 4}
+                filtered_users.sort(key=lambda u: role_order.get(u.get(sort_key, "accountant"), 99), reverse=reverse_sort)
             else:
                 filtered_users.sort(key=lambda u: str(u.get(sort_key, "")).lower(), reverse=reverse_sort)
 

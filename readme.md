@@ -115,17 +115,17 @@ GENERATE_DUMMY_ORDERS=False
 
 **Giải thích chi tiết các biến môi trường:**
 
-| Biến | Ý nghĩa | Giá trị ví dụ |
-| :--- | :--- | :--- |
-| `ADMIN_USERNAME` | Tên đăng nhập cho tài khoản quản trị viên. | `admin` |
-| `ADMIN_PASSWORD` | Mật khẩu cho tài khoản quản trị viên. | `password123` |
-| `PHONE_SCRAPER_ENABLED` | Bật (`True`) hoặc tắt (`False`) module tự động cào dữ liệu điện thoại. | `True` |
-| `LAPTOP_SCRAPER_ENABLED` | Bật (`True`) hoặc tắt (`False`) module tự động cào dữ liệu laptop. | `False` |
-| `UPDATE_CATEGORIES_ENABLED` | Bật (`True`) hoặc tắt (`False`) tác vụ tự động cập nhật danh mục sản phẩm. | `True` |
-| `SCRAPER_INTERVAL_SECONDS` | Khoảng thời gian (tính bằng giây) giữa các lần chạy scraper. | `3600` (1 giờ) |
-| `NUMBER_SCRAPER_PHONES` | Số lượng sản phẩm điện thoại tối đa mà scraper sẽ lấy trong một lần chạy. | `100` |
-| `CATEGORY_UPDATE_INTERVAL_SECONDS` | Tần suất (tính bằng giây) để chạy lại tác vụ cập nhật danh mục. | `600` (10 phút) |
-| `GENERATE_DUMMY_ORDERS` | Bật (`True`) nếu bạn muốn hệ thống tự tạo các đơn hàng giả để kiểm thử. | `False` |
+| Biến | Ý nghĩa | Giá trị ví dụ       |
+| :--- | :--- |:--------------------|
+| `ADMIN_USERNAME` | Tên đăng nhập cho tài khoản quản trị viên. | `administrator`     |
+| `ADMIN_PASSWORD` | Mật khẩu cho tài khoản quản trị viên. | `Strongp@ssword123` |
+| `PHONE_SCRAPER_ENABLED` | Bật (`True`) hoặc tắt (`False`) module tự động cào dữ liệu điện thoại. | `True`              |
+| `LAPTOP_SCRAPER_ENABLED` | Bật (`True`) hoặc tắt (`False`) module tự động cào dữ liệu laptop. | `False`             |
+| `UPDATE_CATEGORIES_ENABLED` | Bật (`True`) hoặc tắt (`False`) tác vụ tự động cập nhật danh mục sản phẩm. | `True`              |
+| `SCRAPER_INTERVAL_SECONDS` | Khoảng thời gian (tính bằng giây) giữa các lần chạy scraper. | `3600` (1 giờ)      |
+| `NUMBER_SCRAPER_PHONES` | Số lượng sản phẩm điện thoại tối đa mà scraper sẽ lấy trong một lần chạy. | `100`               |
+| `CATEGORY_UPDATE_INTERVAL_SECONDS` | Tần suất (tính bằng giây) để chạy lại tác vụ cập nhật danh mục. | `600` (10 phút)     |
+| `GENERATE_DUMMY_ORDERS` | Bật (`True`) nếu bạn muốn hệ thống tự tạo các đơn hàng giả để kiểm thử. | `False`             |
 
 ## 🚀 Cách chạy ứng dụng
 Đảm bảo môi trường ảo đã được kích hoạt.

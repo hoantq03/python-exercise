@@ -5,53 +5,48 @@
 Write-Host "=== Product Management App Build Script ===" -ForegroundColor Green
 Write-Host ""
 
-# 1) App config
+# --- 1) Cấu hình ứng dụng ---
 $MAIN_SCRIPT = "main.py"
 $APP_ICON    = "app/assets/icons/app_icon.ico"
-$DATA_DIR    = "app/data"
+$DATA_DIR    = "app/data" # Thư mục chứa dữ liệu nguồn
 $APP_NAME    = "ProductManagementApp"
 
 Write-Host "App Name: $APP_NAME" -ForegroundColor Cyan
 Write-Host "Main Script: $MAIN_SCRIPT" -ForegroundColor Cyan
-Write-Host "Icon: $APP_ICON" -ForegroundColor Cyan
+Write-Host "Data Directory: $DATA_DIR" -ForegroundColor Cyan
 Write-Host ""
 
-# 2) Check if required files exist
-Write-Host "Checking required files..." -ForegroundColor Yellow
-$requiredFiles = @(
+# --- 2) Kiểm tra các file và thư mục cần thiết ---
+Write-Host "Checking required files and directories..." -ForegroundColor Yellow
+$requiredPaths = @(
     $MAIN_SCRIPT,
     $APP_ICON,
     "requirements.txt",
-    "$DATA_DIR/products.json",
-    "$DATA_DIR/carts.json",
-    "$DATA_DIR/categories.json",
-    "$DATA_DIR/customers.json",
-    "$DATA_DIR/orders.json",
-    "$DATA_DIR/users.json"
+    $DATA_DIR # Chỉ cần kiểm tra thư mục data là đủ
 )
 
-$missingFiles = @()
-foreach ($file in $requiredFiles) {
-    if (!(Test-Path $file)) {
-        $missingFiles += $file
-        Write-Host "❌ Missing: $file" -ForegroundColor Red
+$missingPaths = @()
+foreach ($path in $requiredPaths) {
+    if (!(Test-Path $path)) {
+        $missingPaths += $path
+        Write-Host "❌ Missing: $path" -ForegroundColor Red
     } else {
-        Write-Host "✅ Found: $file" -ForegroundColor Green
+        Write-Host "✅ Found: $path" -ForegroundColor Green
     }
 }
 
-if ($missingFiles.Count -gt 0) {
+if ($missingPaths.Count -gt 0) {
     Write-Host ""
-    Write-Host "❌ Build failed! Missing required files." -ForegroundColor Red
+    Write-Host "❌ Build failed! Missing required files/directories." -ForegroundColor Red
     exit 1
 }
 
 Write-Host ""
-Write-Host "✅ All required files found!" -ForegroundColor Green
+Write-Host "✅ All required components found!" -ForegroundColor Green
 Write-Host ""
 
-# 3) Install requirements
-Write-Host "Installing requirements..." -ForegroundColor Yellow
+# --- 3) Cài đặt các thư viện ---
+Write-Host "Installing requirements from requirements.txt..." -ForegroundColor Yellow
 try {
     pip install -r requirements.txt
     Write-Host "✅ Requirements installed successfully!" -ForegroundColor Green
@@ -63,54 +58,51 @@ try {
 
 Write-Host ""
 
-# 4) PyInstaller args
+# --- 4) Cấu hình tham số PyInstaller ---
+Write-Host "--- BUILDING IN ONE-DIR DEBUG MODE ---" -ForegroundColor Magenta
 $pyinstallerArgs = @(
     "--name", $APP_NAME,
     "--onefile",
     "--windowed",
-    "--add-data", "$DATA_DIR/products.json;.",
-    "--add-data", "$DATA_DIR/carts.json;.",
-    "--add-data", "$DATA_DIR/categories.json;.",
-    "--add-data", "$DATA_DIR/customers.json;.",
-    "--add-data", "$DATA_DIR/orders.json;.",
-    "--add-data", "$DATA_DIR/users.json;.",
+    "--add-data", "$DATA_DIR;data",
     "--icon", $APP_ICON,
     $MAIN_SCRIPT
 )
 
-# 5) Clean previous build
-Write-Host "Cleaning previous build..." -ForegroundColor Yellow
-if (Test-Path "build") {
-    Remove-Item -Recurse -Force "build"
-    Write-Host "✅ Cleaned build directory" -ForegroundColor Green
-}
-if (Test-Path "dist") {
-    Remove-Item -Recurse -Force "dist"
-    Write-Host "✅ Cleaned dist directory" -ForegroundColor Green
+
+# --- 5) Dọn dẹp các bản build cũ ---
+Write-Host "Cleaning previous build artifacts..." -ForegroundColor Yellow
+$dirsToClean = @("build", "dist")
+foreach ($dir in $dirsToClean) {
+    if (Test-Path $dir) {
+        Remove-Item -Recurse -Force $dir
+        Write-Host "✅ Cleaned directory: $dir" -ForegroundColor Green
+    }
 }
 if (Test-Path "$APP_NAME.spec") {
     Remove-Item -Force "$APP_NAME.spec"
-    Write-Host "✅ Cleaned spec file" -ForegroundColor Green
+    Write-Host "✅ Cleaned spec file: $APP_NAME.spec" -ForegroundColor Green
 }
 
 Write-Host ""
 
-# 6) Run PyInstaller
+# --- 6) Chạy PyInstaller ---
 Write-Host "Building executable with PyInstaller..." -ForegroundColor Yellow
 Write-Host "Command: pyinstaller $($pyinstallerArgs -join ' ')" -ForegroundColor Cyan
 Write-Host ""
 
 try {
+    # Chạy PyInstaller
     & pyinstaller @pyinstallerArgs
 
     if ($LASTEXITCODE -eq 0) {
         Write-Host ""
         Write-Host "🎉 Build completed successfully!" -ForegroundColor Green
-        Write-Host "📁 Executable location: dist/$APP_NAME.exe" -ForegroundColor Cyan
+        Write-Host "📁 Executable location: dist\$APP_NAME.exe" -ForegroundColor Cyan
 
-        # Check if executable was created
-        if (Test-Path "dist/$APP_NAME.exe") {
-            $exeSize = (Get-Item "dist/$APP_NAME.exe").Length / 1MB
+        # Kiểm tra file exe và báo cáo kích thước
+        if (Test-Path "dist\$APP_NAME.exe") {
+            $exeSize = (Get-Item "dist\$APP_NAME.exe").Length / 1MB
             Write-Host "📊 File size: $([math]::Round($exeSize, 2)) MB" -ForegroundColor Cyan
         }
     } else {
@@ -120,10 +112,11 @@ try {
     }
 } catch {
     Write-Host ""
-    Write-Host "❌ Build failed with error:" -ForegroundColor Red
+    Write-Host "❌ Build failed with a script error:" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1
 }
+
 
 Write-Host ""
 
