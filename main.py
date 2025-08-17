@@ -46,7 +46,6 @@ def get_bool_from_env(key: str, default: bool = False) -> bool:
     return value in ('true', '1', 't', 'on')
 
 
-# Các vai trò (roles) trong hệ thống của bạn
 ROLES_ENUM = {
     'ADMIN': 'administrator',
     'EMP_MANAGER': 'employee_manager',
@@ -61,20 +60,11 @@ def resource_path(relative_path):
     Lấy đường dẫn tuyệt đối đến tài nguyên.
     Hoạt động cho cả môi trường dev (chạy từ terminal) và khi đã đóng gói bằng PyInstaller.
     """
-    # Kiểm tra xem ứng dụng có đang chạy dưới dạng file đã đóng gói (frozen) không
     if getattr(sys, 'frozen', False):
-        # NẾU ĐÃ ĐÓNG GÓI (CHẠY BẰNG FILE .EXE)
-        # base_path là thư mục tạm _MEIPASS do PyInstaller tạo ra.
         base_path = sys._MEIPASS
-        # Dữ liệu nằm trực tiếp trong thư mục này (ví dụ: _MEIPASS/data/users.json)
-        # nên chúng ta chỉ cần nối base_path với đường dẫn tương đối.
         return os.path.join(base_path, relative_path)
     else:
-        # NẾU CHẠY TỪ MÃ NGUỒN (CHẠY BẰNG TERMINAL)
-        # base_path là thư mục gốc của dự án (nơi chứa main.py).
         base_path = os.path.abspath(".")
-        # Trong mã nguồn, thư mục dữ liệu nằm bên trong 'app'.
-        # Vì vậy, chúng ta phải nối base_path với 'app' rồi mới đến đường dẫn tương đối.
         return os.path.join(base_path, 'app', relative_path)
 
 
